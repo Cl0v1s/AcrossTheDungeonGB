@@ -21,7 +21,8 @@ struct Room
 
 void Room_create(struct Room* room);
 unsigned int Room_putDoor(struct Room* room, const unsigned int sister);
-unsigned int Room_areAllRoomsLinked(struct Room* room, const unsigned int roomsNumber);
+unsigned int Room_doorAvailable(struct Room* room);
+unsigned int Room_areAllRoomsLinked(struct Room* room, const unsigned int number);
 
 
 #endif

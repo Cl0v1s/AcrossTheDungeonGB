@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <gb/gb.h>
 #include <rand.h>
+#include <time.h>
 
 #include "helper.h"
 #include "room.h"
@@ -23,26 +24,29 @@ void initWorld()
 	unsigned int second;
 	//nombre de salles
 	roomsNumber = random(2, WORLD_MAX_ROOMS);
-
-	printf("Generating %d rooms\n", roomsNumber);
-
+	printf("generating %d rooms\n", roomsNumber);
 	//génération primaire des salles
 	for(i = 0; i != roomsNumber; i++)
 	{
 		Room_create(&world[i]);
 	};
-
 	//génération des portes
+	puts("generating doors");
 	while(Room_areAllRoomsLinked(&world[0], roomsNumber) == false)
 	{
 		//récupération d'un couple de salles
-		first = rand()%roomsNumber;
-		second = rand()%roomsNumber;
-		while(first == second || Room_putDoor(&world[first], second) == false)
+		first = random(0,roomsNumber-1);
+		second = random(0, roomsNumber-1);
+		while(first == second || Room_doorAvailable(&world[first]) == false || Room_doorAvailable(&world[second]) == false)
 		{
-			first = rand()%roomsNumber;
+			first = random(0,roomsNumber-1);
+			second = random(0, roomsNumber-1);
+			printf("trying %d and %d.\n", first, second);
+
 		};
+		Room_putDoor(&world[first], second);
 		Room_putDoor(&world[second], first);
+		printf("%d and %d linked.\n", first, second);
 	}
 	//séléction de la salle courante
 	current_room = &world[rand()%roomsNumber];
@@ -50,9 +54,12 @@ void initWorld()
 
 void initGame()
 {
-	initrand(1000000);
+	int tps = time(NULL);
+	initrand(tps+100000);
 	//création du monde
+	printf("generating world...\n");
 	initWorld();
+	printf("done.\n%d rooms created.", roomsNumber);
 }
 
 

@@ -11,43 +11,36 @@ void Room_create(struct Room* room)
 
 unsigned int Room_putDoor(struct Room* room, const unsigned int sister)
 {
-/*
-	unsigned int x = 0;
-	unsigned int y = 0;
-	if(room->sistersNumber>4)
+	unsigned int max = room->width;
+	if(room->sistersNumber==4)
 		return false;
-	switch(room->sistersNumber)
+	if(room->sistersNumber != 2 && room->sistersNumber != 0)
 	{
-		case 0:	//mur de gauche
-			y = rand()%(room->height-4)+2;
-		break;
-		case 1:	//mur du haut
-			x = rand()%(room->width-4)+2;
-		break;
-		case 2: //mur de droite
-			x = room->width;
-			y = rand()%(room->height-4)+2;
-		break;
-		case 3:	//mur du bas
-			x = rand()%(room->width-4)+2;
-			y = room->height;
-		break;
+		max = room->height;
 	}
-	//placement de la porte
-	room->map[x][y] = CELL_DOOR + sister;
-	room->sistersNumber += 1;
-	return true;*/
+	room->doorsPos[room->sistersNumber] = random(2, max - 2);
+	room->doorsTar[room->sistersNumber] = sister;
+	room->sistersNumber++;
 }
 
-unsigned int Room_areAllRoomsLinked(struct Room *room, const unsigned int roomsNumber)
+unsigned int Room_doorAvailable(struct Room* room)
 {
-	/*
+	if(room->sistersNumber ==4)
+		return false;
+	return true;
+}
+
+unsigned int Room_areAllRoomsLinked(struct Room *room, const unsigned int number)
+{
+
 	unsigned int good = true;
 	unsigned int i = 0;
-	while(i<roomsNumber && good == true)
+	while(i != number && good == true)
 	{
-		if((room+i)->sistersNumber > 0)
+		if(room->sistersNumber == 0)
 			good = false;
+		i++;
+		room++;
 	}
-	return good;*/
+	return good;
 }
