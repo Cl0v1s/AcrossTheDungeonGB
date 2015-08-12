@@ -1,0 +1,151 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : FreeWare ANSI-C Compiler
+                              3 ; Version 2.2.1 Wed Aug 12 20:36:04 2015
+                              4 
+                              5 ;--------------------------------------------------------
+                              6 	.module lcc69120
+                              7 	
+                              8 ;--------------------------------------------------------
+                              9 ; Public variables in this module
+                             10 ;--------------------------------------------------------
+                             11 	.globl _random
+                             12 	.globl _arand
+                             13 	.globl _initarand
+                             14 	.globl _randw
+                             15 	.globl _rand
+                             16 	.globl _initrand
+                             17 ;--------------------------------------------------------
+                             18 ; Externals used
+                             19 ;--------------------------------------------------------
+                             20 ;--------------------------------------------------------
+                             21 ; special function registers
+                             22 ;--------------------------------------------------------
+                             23 ;--------------------------------------------------------
+                             24 ; special function bits 
+                             25 ;--------------------------------------------------------
+                             26 ;--------------------------------------------------------
+                             27 ; internal ram data
+                             28 ;--------------------------------------------------------
+                             29 	.area _DATA
+                             30 ;--------------------------------------------------------
+                             31 ; overlayable items in internal ram 
+                             32 ;--------------------------------------------------------
+                             33 	.area _OVERLAY
+                             34 ;--------------------------------------------------------
+                             35 ; indirectly addressable internal ram data
+                             36 ;--------------------------------------------------------
+                             37 	.area _ISEG
+                             38 ;--------------------------------------------------------
+                             39 ; bit data
+                             40 ;--------------------------------------------------------
+                             41 	.area _BSEG
+                             42 ;--------------------------------------------------------
+                             43 ; external ram data
+                             44 ;--------------------------------------------------------
+                             45 	.area _XSEG
+                             46 ;--------------------------------------------------------
+                             47 ; global & static initialisations
+                             48 ;--------------------------------------------------------
+                             49 	.area _GSINIT
+                             50 	.area _GSFINAL
+                             51 	.area _GSINIT
+                             52 ;--------------------------------------------------------
+                             53 ; code
+                             54 ;--------------------------------------------------------
+                             55 	.area _CODE
+                             56 ;	helper.c 3
+                             57 ; genLabel
+                             58 ; genFunction
+                             59 ;	---------------------------------
+                             60 ; Function random
+                             61 ; ---------------------------------
+   0000                      62 ___random_start:
+   0000                      63 _random:
+   0000 C5                   64 	push	bc
+   0001 E8 FD                65 	lda sp,-3(sp)
+                             66 ;	helper.c 5
+                             67 ; genCall
+   0003 CD 00 00             68 	call	_rand
+                             69 ; AOP_STK for _random_sloc0_1_0
+   0006 F8 02                70 	lda	hl,2(sp)
+   0008 73                   71 	ld	(hl),e ; 3
+                             72 ; genMinus
+                             73 ; AOP_STK for 
+                             74 ; AOP_STK for 
+                             75 ; AOP_STK for _random_sloc1_1_0
+   0009 F8 09                76 	lda	hl,9(sp)
+   000B 7E                   77 	ld	a,(hl)
+   000C 2B                   78 	dec	hl
+   000D 2B                   79 	dec	hl
+   000E 96                   80 	sub	a,(hl)
+   000F F8 00                81 	lda	hl,0(sp)
+   0011 77                   82 	ld	(hl),a ; 3
+   0012 F8 0A                83 	lda	hl,10(sp)
+   0014 7E                   84 	ld	a,(hl)
+   0015 2B                   85 	dec	hl
+   0016 2B                   86 	dec	hl
+   0017 9E                   87 	sbc	a,(hl)
+   0018 F8 01                88 	lda	hl,1(sp)
+   001A 77                   89 	ld	(hl),a ; 3
+                             90 ; genCast
+                             91 ; AOP_STK for _random_sloc0_1_0
+   001B 23                   92 	inc	hl
+   001C 4E                   93 	ld	c,(hl)
+   001D 06 00                94 	ld	b,#0x00
+                             95 ; genAnd
+                             96 ; AOP_STK for _random_sloc1_1_0
+   001F 79                   97 	ld	a,c
+   0020 2B                   98 	dec	hl
+   0021 2B                   99 	dec	hl
+   0022 A6                  100 	and	a,(hl)
+   0023 4F                  101 	ld	c,a
+   0024 78                  102 	ld	a,b
+   0025 23                  103 	inc	hl
+   0026 A6                  104 	and	a,(hl)
+   0027 47                  105 	ld	b,a
+                            106 ; genPlus
+                            107 ; AOP_STK for 
+   0028 79                  108 	ld	a,c
+   0029 F8 07               109 	lda	hl,7(sp)
+   002B 86                  110 	add	a,(hl)
+   002C 4F                  111 	ld	c,a
+   002D 78                  112 	ld	a,b
+   002E 23                  113 	inc	hl
+   002F 8E                  114 	adc	a,(hl)
+   0030 47                  115 	ld	b,a
+                            116 ; genRet
+   0031 59                  117 	ld	e,c
+   0032 50                  118 	ld	d,b
+                            119 ; genLabel
+   0033                     120 00101$:
+                            121 ; genEndFunction
+   0033 E8 03               122 	lda	sp,3(sp)
+   0035 C1                  123 	pop bc
+   0036 C9                  124 	ret
+   0037                     125 ___random_end:
+                            126 	.area _CODE
+ASxxxx Assembler V01.75  (GameBoy Z80-like CPU), page 1.
+
+Symbol Table
+
+  0 ___random_end                      0037 R
+  0 ___random_start                    0000 R
+    _arand                             **** GX
+    _initarand                         **** GX
+    _initrand                          **** GX
+    _rand                              **** GX
+  0 _random                            0000 GR
+    _randw                             **** GX
+
+ASxxxx Assembler V01.75  (GameBoy Z80-like CPU), page 2.
+
+Area Table
+
+   0 _CODE                              size   37   flags 0
+   1 _DATA                              size    0   flags 0
+   2 _OVERLAY                           size    0   flags 0
+   3 _ISEG                              size    0   flags 0
+   4 _BSEG                              size    0   flags 0
+   5 _XSEG                              size    0   flags 0
+   6 _GSINIT                            size    0   flags 0
+   7 _GSFINAL                           size    0   flags 0

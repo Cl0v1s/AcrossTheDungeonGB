@@ -1,0 +1,809 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : FreeWare ANSI-C Compiler
+                              3 ; Version 2.2.1 Wed Aug 12 20:36:04 2015
+                              4 
+                              5 ;--------------------------------------------------------
+                              6 	.module lcc69120
+                              7 	
+                              8 ;--------------------------------------------------------
+                              9 ; Public variables in this module
+                             10 ;--------------------------------------------------------
+                             11 	.globl _main
+                             12 	.globl _playgame
+                             13 	.globl _initPlayer
+                             14 	.globl _initGame
+                             15 	.globl _initWorld
+                             16 	.globl _Player_activateCellAt
+                             17 	.globl _Player_isAlive
+                             18 	.globl _Player_setPos
+                             19 	.globl _Player_move
+                             20 	.globl _Player_create
+                             21 	.globl _Room_areAllRoomsLinked
+                             22 	.globl _Room_putDoor
+                             23 	.globl _Room_create
+                             24 	.globl _random
+                             25 	.globl _arand
+                             26 	.globl _initarand
+                             27 	.globl _randw
+                             28 	.globl _rand
+                             29 	.globl _initrand
+                             30 	.globl _get_tiles
+                             31 	.globl _set_tiles
+                             32 	.globl _get_data
+                             33 	.globl _set_data
+                             34 	.globl _scroll_sprite
+                             35 	.globl _move_sprite
+                             36 	.globl _get_sprite_prop
+                             37 	.globl _set_sprite_prop
+                             38 	.globl _get_sprite_tile
+                             39 	.globl _set_sprite_tile
+                             40 	.globl _get_sprite_data
+                             41 	.globl _set_sprite_data
+                             42 	.globl _scroll_win
+                             43 	.globl _move_win
+                             44 	.globl _get_win_tiles
+                             45 	.globl _set_win_tiles
+                             46 	.globl _set_win_data
+                             47 	.globl _scroll_bkg
+                             48 	.globl _move_bkg
+                             49 	.globl _get_bkg_tiles
+                             50 	.globl _set_bkg_tiles
+                             51 	.globl _set_bkg_data
+                             52 	.globl _hiramcpy
+                             53 	.globl _display_off
+                             54 	.globl _wait_vbl_done
+                             55 	.globl _reset
+                             56 	.globl _set_interrupts
+                             57 	.globl _disable_interrupts
+                             58 	.globl _enable_interrupts
+                             59 	.globl _waitpadup
+                             60 	.globl _waitpad
+                             61 	.globl _joypad
+                             62 	.globl _delay
+                             63 	.globl _receive_byte
+                             64 	.globl _send_byte
+                             65 	.globl _get_mode
+                             66 	.globl _mode
+                             67 	.globl _add_TIM
+                             68 	.globl _add_LCD
+                             69 	.globl _add_VBL
+                             70 	.globl _remove_JOY
+                             71 	.globl _remove_SIO
+                             72 	.globl _remove_TIM
+                             73 	.globl _remove_LCD
+                             74 	.globl _remove_VBL
+                             75 	.globl _cgb_compatibility
+                             76 	.globl _cpu_fast
+                             77 	.globl _cpu_slow
+                             78 	.globl _set_sprite_palette_entry
+                             79 	.globl _set_bkg_palette_entry
+                             80 	.globl _set_sprite_palette
+                             81 	.globl _set_bkg_palette
+                             82 	.globl _sgb_check
+                             83 	.globl _exit
+                             84 	.globl _gets
+                             85 	.globl _puts
+                             86 	.globl _sprintf
+                             87 	.globl _printf
+                             88 	.globl _putchar
+                             89 	.globl _player
+                             90 	.globl _current_room
+                             91 	.globl _roomsNumber
+                             92 	.globl _world
+                             93 ;--------------------------------------------------------
+                             94 ; Externals used
+                             95 ;--------------------------------------------------------
+                             96 	.globl __io_out
+                             97 	.globl __io_in
+                             98 	.globl __io_status
+                             99 	.globl _sys_time
+                            100 	.globl __cpu
+                            101 ;--------------------------------------------------------
+                            102 ; special function registers
+                            103 ;--------------------------------------------------------
+                            104 ;--------------------------------------------------------
+                            105 ; special function bits 
+                            106 ;--------------------------------------------------------
+                            107 ;--------------------------------------------------------
+                            108 ; internal ram data
+                            109 ;--------------------------------------------------------
+                            110 	.area _DATA
+   0000                     111 _world::
+   0000                     112 	.ds 60
+   003C                     113 _roomsNumber::
+   003C                     114 	.ds 2
+   003E                     115 _current_room::
+   003E                     116 	.ds 2
+   0040                     117 _player::
+   0040                     118 	.ds 8
+                            119 ;--------------------------------------------------------
+                            120 ; overlayable items in internal ram 
+                            121 ;--------------------------------------------------------
+                            122 	.area _OVERLAY
+                            123 ;--------------------------------------------------------
+                            124 ; indirectly addressable internal ram data
+                            125 ;--------------------------------------------------------
+                            126 	.area _ISEG
+                            127 ;--------------------------------------------------------
+                            128 ; bit data
+                            129 ;--------------------------------------------------------
+                            130 	.area _BSEG
+                            131 ;--------------------------------------------------------
+                            132 ; external ram data
+                            133 ;--------------------------------------------------------
+                            134 	.area _XSEG
+                            135 ;--------------------------------------------------------
+                            136 ; global & static initialisations
+                            137 ;--------------------------------------------------------
+                            138 	.area _GSINIT
+                            139 	.area _GSFINAL
+                            140 	.area _GSINIT
+                            141 ;	main.c 79
+                            142 ; genAssign
+                            143 ; AOP_HL for _roomsNumber
+   0000 21 3C 00            144 	ld	hl,#_roomsNumber + 0
+   0003 36 00               145 	ld	(hl),#0x00
+   0005 21 3D 00            146 	ld	hl,#_roomsNumber + 1
+   0008 36 00               147 	ld	(hl),#0x00
+                            148 ;--------------------------------------------------------
+                            149 ; code
+                            150 ;--------------------------------------------------------
+                            151 	.area _CODE
+                            152 ;	main.c 16
+                            153 ; genLabel
+                            154 ; genFunction
+                            155 ;	---------------------------------
+                            156 ; Function initWorld
+                            157 ; ---------------------------------
+   0000                     158 ___initWorld_start:
+   0000                     159 _initWorld:
+   0000 C5                  160 	push	bc
+   0001 E8 EF               161 	lda sp,-17(sp)
+                            162 ;	main.c 25
+                            163 ; genIpush
+   0003 21 14 00            164 	ld	hl,#0x0014
+   0006 E5                  165 	push	hl
+                            166 ; genIpush
+   0007 21 02 00            167 	ld	hl,#0x0002
+   000A E5                  168 	push	hl
+                            169 ; genCall
+   000B CD 00 00            170 	call	_random
+                            171 ; AOP_HL for _roomsNumber
+   000E 21 3D 00            172 	ld	hl,#_roomsNumber + 1
+   0011 72                  173 	ld	(hl),d
+   0012 21 3C 00            174 	ld	hl,#_roomsNumber + 0
+   0015 73                  175 	ld	(hl),e
+   0016 E8 04               176 	lda	sp,4(sp)
+                            177 ;	main.c 27
+                            178 ; genIpush
+                            179 ; AOP_HL for _roomsNumber
+   0018 2A                  180 	ld	a,(hl+)
+   0019 66                  181 	ld	h,(hl)
+   001A 6F                  182 	ld	l,a
+   001B E5                  183 	push	hl
+                            184 ; genIpush
+   001C 21 DF 01            185 	ld	hl,#__str_0 + 0
+   001F E5                  186 	push	hl
+                            187 ; genCall
+   0020 CD 00 00            188 	call	_printf
+   0023 E8 04               189 	lda	sp,4(sp)
+                            190 ;	main.c 30
+                            191 ; genAssign
+                            192 ; AOP_STK for _initWorld_i_1_1
+   0025 F8 0F               193 	lda	hl,15(sp)
+   0027 36 00               194 	ld	(hl),#0x00 ; 3
+   0029 23                  195 	inc	hl
+   002A 36 00               196 	ld	(hl),#0x00 ; 3
+                            197 ; genLabel
+   002C                     198 00108$:
+                            199 ; genCmpEq
+                            200 ; AOP_STK for _initWorld_i_1_1
+                            201 ; AOP_HL for _roomsNumber
+   002C 21 3C 00            202 	ld	hl,#_roomsNumber + 0
+   002F 7E                  203 	ld	a,(hl)
+   0030 F8 0F               204 	lda	hl,15(sp)
+   0032 BE                  205 	cp	(hl) ; 5
+   0033 20 0C               206 	jr	nz,00120$
+   0035 21 3D 00            207 	ld	hl,#_roomsNumber + 1
+   0038 7E                  208 	ld	a,(hl)
+   0039 F8 10               209 	lda	hl,16(sp)
+   003B BE                  210 	cp	(hl) ; 5
+   003C 20 03               211 	jr	nz,00120$
+   003E C3 6A 00            212 	jp	00105$
+   0041                     213 00120$:
+                            214 ;	main.c 32
+                            215 ; genIpush
+   0041 21 06 00            216 	ld	hl,#0x0006
+   0044 E5                  217 	push	hl
+                            218 ; genIpush
+                            219 ; AOP_STK for _initWorld_i_1_1
+   0045 F8 11               220 	lda	hl,17(sp)
+   0047 2A                  221 	ld	a,(hl+)
+   0048 66                  222 	ld	h,(hl)
+   0049 6F                  223 	ld	l,a
+   004A E5                  224 	push	hl
+                            225 ; genCall
+   004B CD 00 00            226 	call	__muluint
+   004E 42                  227 	ld	b,d
+   004F 4B                  228 	ld	c,e
+   0050 E8 04               229 	lda	sp,4(sp)
+                            230 ; genPlus
+   0052 3E 00               231 	ld	a,#<_world
+   0054 81                  232 	add	a,c
+   0055 4F                  233 	ld	c,a
+   0056 3E 00               234 	ld	a,#>_world
+   0058 88                  235 	adc	a,b
+   0059 47                  236 	ld	b,a
+                            237 ; genIpush
+   005A C5                  238 	push	bc
+                            239 ; genCall
+   005B CD 00 00            240 	call	_Room_create
+   005E E8 02               241 	lda	sp,2(sp)
+                            242 ;	main.c 30
+                            243 ; genPlus
+                            244 ; AOP_STK for _initWorld_i_1_1
+                            245 ; genPlusIncr
+   0060 F8 0F               246 	lda	hl,15(sp)
+   0062 34                  247 	inc	(hl)
+   0063 20 02               248 	jr	nz,00121$
+   0065 23                  249 	inc	hl
+   0066 34                  250 	inc	(hl)
+   0067                     251 00121$:
+                            252 ; genGoto
+   0067 C3 2C 00            253 	jp	00108$
+                            254 ;	main.c 36
+                            255 ; genLabel
+   006A                     256 00105$:
+                            257 ; genIpush
+                            258 ; AOP_HL for _roomsNumber
+   006A 21 3C 00            259 	ld	hl,#_roomsNumber + 0
+   006D 2A                  260 	ld	a,(hl+)
+   006E 66                  261 	ld	h,(hl)
+   006F 6F                  262 	ld	l,a
+   0070 E5                  263 	push	hl
+                            264 ; genIpush
+   0071 21 00 00            265 	ld	hl,#_world + 0
+   0074 E5                  266 	push	hl
+                            267 ; genCall
+   0075 CD 00 00            268 	call	_Room_areAllRoomsLinked
+   0078 42                  269 	ld	b,d
+   0079 4B                  270 	ld	c,e
+   007A E8 04               271 	lda	sp,4(sp)
+                            272 ; genCmpEq
+   007C 79                  273 	ld	a,c
+   007D B0                  274 	or	a,b
+   007E C2 83 00            275 	jp	nz,00122$
+   0081 18 03               276 	jr	00123$
+   0083                     277 00122$:
+   0083 C3 68 01            278 	jp	00107$
+   0086                     279 00123$:
+                            280 ;	main.c 39
+                            281 ; genCall
+   0086 CD 00 00            282 	call	_rand
+   0089 4B                  283 	ld	c,e
+                            284 ; genCast
+                            285 ; Removed redundent load
+   008A 06 00               286 	ld	b,#0x00
+                            287 ; genIpush
+                            288 ; AOP_HL for _roomsNumber
+   008C 21 3C 00            289 	ld	hl,#_roomsNumber + 0
+   008F 2A                  290 	ld	a,(hl+)
+   0090 66                  291 	ld	h,(hl)
+   0091 6F                  292 	ld	l,a
+   0092 E5                  293 	push	hl
+                            294 ; genIpush
+   0093 C5                  295 	push	bc
+                            296 ; genCall
+   0094 CD 00 00            297 	call	__moduint
+                            298 ; AOP_STK for _initWorld_first_1_1
+   0097 F8 12               299 	lda	hl,18(sp)
+   0099 72                  300 	ld	(hl),d ; 3
+   009A 2B                  301 	dec	hl
+   009B 73                  302 	ld	(hl),e ; 3
+   009C E8 04               303 	lda	sp,4(sp)
+                            304 ;	main.c 40
+                            305 ; genCall
+   009E CD 00 00            306 	call	_rand
+   00A1 4B                  307 	ld	c,e
+                            308 ; genCast
+                            309 ; Removed redundent load
+   00A2 06 00               310 	ld	b,#0x00
+                            311 ; genIpush
+                            312 ; AOP_HL for _roomsNumber
+   00A4 21 3C 00            313 	ld	hl,#_roomsNumber + 0
+   00A7 2A                  314 	ld	a,(hl+)
+   00A8 66                  315 	ld	h,(hl)
+   00A9 6F                  316 	ld	l,a
+   00AA E5                  317 	push	hl
+                            318 ; genIpush
+   00AB C5                  319 	push	bc
+                            320 ; genCall
+   00AC CD 00 00            321 	call	__moduint
+                            322 ; AOP_STK for _initWorld_second_1_1
+   00AF F8 10               323 	lda	hl,16(sp)
+   00B1 72                  324 	ld	(hl),d ; 3
+   00B2 2B                  325 	dec	hl
+   00B3 73                  326 	ld	(hl),e ; 3
+   00B4 E8 04               327 	lda	sp,4(sp)
+                            328 ;	main.c 41
+                            329 ; genLabel
+   00B6                     330 00102$:
+                            331 ; genCmpEq
+                            332 ; AOP_STK for _initWorld_first_1_1
+                            333 ; AOP_STK for _initWorld_second_1_1
+                            334 ; AOP_STK for _initWorld_sloc0_1_0
+   00B6 F8 0B               335 	lda	hl,11(sp)
+   00B8 2A                  336 	ld	a,(hl+)
+   00B9 23                  337 	inc	hl
+   00BA BE                  338 	cp	(hl) ; 5
+   00BB 20 0A               339 	jr	nz,00124$
+   00BD 2B                  340 	dec	hl
+   00BE 2A                  341 	ld	a,(hl+)
+   00BF 23                  342 	inc	hl
+   00C0 BE                  343 	cp	(hl) ; 5
+   00C1 20 04               344 	jr	nz,00124$
+   00C3 3E 01               345 	ld	a,#0x01
+   00C5 18 01               346 	jr	00125$
+   00C7                     347 00124$:
+   00C7 AF                  348 	xor	a,a
+   00C8                     349 00125$:
+   00C8 F8 0A               350 	lda	hl,10(sp)
+   00CA 77                  351 	ld	(hl),a ; 3
+                            352 ; genIfx
+                            353 ; AOP_STK for _initWorld_sloc0_1_0
+                            354 ; Removed redundent or a,a
+   00CB AF                  355 	xor	a,a
+   00CC B6                  356 	or	a,(hl)
+   00CD C2 19 01            357 	jp	nz,00103$
+                            358 ; genIpush
+   00D0 21 06 00            359 	ld	hl,#0x0006
+   00D3 E5                  360 	push	hl
+                            361 ; genIpush
+                            362 ; AOP_STK for _initWorld_first_1_1
+   00D4 F8 0F               363 	lda	hl,15(sp)
+   00D6 2A                  364 	ld	a,(hl+)
+   00D7 66                  365 	ld	h,(hl)
+   00D8 6F                  366 	ld	l,a
+   00D9 E5                  367 	push	hl
+                            368 ; genCall
+   00DA CD 00 00            369 	call	__muluint
+                            370 ; AOP_STK for _initWorld_sloc2_1_0
+   00DD F8 0B               371 	lda	hl,11(sp)
+   00DF 72                  372 	ld	(hl),d ; 3
+   00E0 2B                  373 	dec	hl
+   00E1 73                  374 	ld	(hl),e ; 3
+   00E2 E8 04               375 	lda	sp,4(sp)
+                            376 ; genPlus
+                            377 ; AOP_STK for _initWorld_sloc2_1_0
+                            378 ; AOP_STK for _initWorld_sloc1_1_0
+   00E4 3E 00               379 	ld	a,#<_world
+   00E6 86                  380 	add	a,(hl)
+   00E7 23                  381 	inc	hl
+   00E8 23                  382 	inc	hl
+   00E9 77                  383 	ld	(hl),a ; 3
+   00EA 3E 00               384 	ld	a,#>_world
+   00EC 2B                  385 	dec	hl
+   00ED 8E                  386 	adc	a,(hl)
+   00EE 23                  387 	inc	hl
+   00EF 23                  388 	inc	hl
+   00F0 77                  389 	ld	(hl),a ; 3
+                            390 ; genIpush
+                            391 ; AOP_STK for _initWorld_second_1_1
+   00F1 23                  392 	inc	hl
+   00F2 23                  393 	inc	hl
+   00F3 2A                  394 	ld	a,(hl+)
+   00F4 66                  395 	ld	h,(hl)
+   00F5 6F                  396 	ld	l,a
+   00F6 E5                  397 	push	hl
+                            398 ; genIpush
+                            399 ; AOP_STK for _initWorld_sloc1_1_0
+   00F7 F8 0A               400 	lda	hl,10(sp)
+   00F9 2A                  401 	ld	a,(hl+)
+   00FA 66                  402 	ld	h,(hl)
+   00FB 6F                  403 	ld	l,a
+   00FC E5                  404 	push	hl
+                            405 ; genCall
+   00FD CD 00 00            406 	call	_Room_putDoor
+                            407 ; AOP_STK for _initWorld_sloc4_1_0
+   0100 F8 08               408 	lda	hl,8(sp)
+   0102 72                  409 	ld	(hl),d ; 3
+   0103 2B                  410 	dec	hl
+   0104 73                  411 	ld	(hl),e ; 3
+   0105 E8 04               412 	lda	sp,4(sp)
+                            413 ; genCmpEq
+                            414 ; AOP_STK for _initWorld_sloc4_1_0
+                            415 ; AOP_STK for _initWorld_sloc3_1_0
+   0107 2A                  416 	ld	a,(hl+)
+   0108 B6                  417 	or	a,(hl)
+   0109 C2 10 01            418 	jp	nz,00126$
+   010C 3E 01               419 	ld	a,#0x01
+   010E 18 01               420 	jr	00127$
+   0110                     421 00126$:
+   0110 AF                  422 	xor	a,a
+   0111                     423 00127$:
+   0111 F8 05               424 	lda	hl,5(sp)
+   0113 77                  425 	ld	(hl),a ; 3
+                            426 ; genIfx
+                            427 ; AOP_STK for _initWorld_sloc3_1_0
+                            428 ; Removed redundent or a,a
+   0114 AF                  429 	xor	a,a
+   0115 B6                  430 	or	a,(hl)
+   0116 CA 40 01            431 	jp	z,00104$
+                            432 ; genLabel
+   0119                     433 00103$:
+                            434 ;	main.c 43
+                            435 ; genCall
+   0119 CD 00 00            436 	call	_rand
+                            437 ; AOP_STK for _initWorld_sloc6_1_0
+   011C F8 00               438 	lda	hl,0(sp)
+   011E 73                  439 	ld	(hl),e ; 3
+                            440 ; genCast
+                            441 ; AOP_STK for _initWorld_sloc6_1_0
+                            442 ; AOP_STK for _initWorld_sloc5_1_0
+   011F 2A                  443 	ld	a,(hl+)
+   0120 77                  444 	ld	(hl),a ; 3
+   0121 23                  445 	inc	hl
+   0122 36 00               446 	ld	(hl),#0x00 ; 3
+                            447 ; genIpush
+                            448 ; AOP_HL for _roomsNumber
+   0124 21 3C 00            449 	ld	hl,#_roomsNumber + 0
+   0127 2A                  450 	ld	a,(hl+)
+   0128 66                  451 	ld	h,(hl)
+   0129 6F                  452 	ld	l,a
+   012A E5                  453 	push	hl
+                            454 ; genIpush
+                            455 ; AOP_STK for _initWorld_sloc5_1_0
+   012B F8 03               456 	lda	hl,3(sp)
+   012D 2A                  457 	ld	a,(hl+)
+   012E 66                  458 	ld	h,(hl)
+   012F 6F                  459 	ld	l,a
+   0130 E5                  460 	push	hl
+                            461 ; genCall
+   0131 CD 00 00            462 	call	__moduint
+   0134 4A                  463 	ld	c,d
+   0135 43                  464 	ld	b,e
+   0136 E8 04               465 	lda	sp,4(sp)
+                            466 ; genAssign
+                            467 ; AOP_STK for _initWorld_first_1_1
+   0138 F8 0D               468 	lda	hl,13(sp)
+   013A 70                  469 	ld	(hl),b ; 3
+   013B 23                  470 	inc	hl
+   013C 71                  471 	ld	(hl),c ; 3
+                            472 ; genGoto
+   013D C3 B6 00            473 	jp	00102$
+                            474 ; genLabel
+   0140                     475 00104$:
+                            476 ;	main.c 45
+                            477 ; genIpush
+   0140 21 06 00            478 	ld	hl,#0x0006
+   0143 E5                  479 	push	hl
+                            480 ; genIpush
+                            481 ; AOP_STK for _initWorld_second_1_1
+   0144 F8 0D               482 	lda	hl,13(sp)
+   0146 2A                  483 	ld	a,(hl+)
+   0147 66                  484 	ld	h,(hl)
+   0148 6F                  485 	ld	l,a
+   0149 E5                  486 	push	hl
+                            487 ; genCall
+   014A CD 00 00            488 	call	__muluint
+   014D 42                  489 	ld	b,d
+   014E 4B                  490 	ld	c,e
+   014F E8 04               491 	lda	sp,4(sp)
+                            492 ; genPlus
+   0151 3E 00               493 	ld	a,#<_world
+   0153 81                  494 	add	a,c
+   0154 4F                  495 	ld	c,a
+   0155 3E 00               496 	ld	a,#>_world
+   0157 88                  497 	adc	a,b
+   0158 47                  498 	ld	b,a
+                            499 ; genIpush
+                            500 ; AOP_STK for _initWorld_first_1_1
+   0159 F8 0D               501 	lda	hl,13(sp)
+   015B 2A                  502 	ld	a,(hl+)
+   015C 66                  503 	ld	h,(hl)
+   015D 6F                  504 	ld	l,a
+   015E E5                  505 	push	hl
+                            506 ; genIpush
+   015F C5                  507 	push	bc
+                            508 ; genCall
+   0160 CD 00 00            509 	call	_Room_putDoor
+   0163 E8 04               510 	lda	sp,4(sp)
+                            511 ; genGoto
+   0165 C3 6A 00            512 	jp	00105$
+                            513 ; genLabel
+   0168                     514 00107$:
+                            515 ;	main.c 48
+                            516 ; genCall
+   0168 CD 00 00            517 	call	_rand
+   016B 4B                  518 	ld	c,e
+                            519 ; genCast
+                            520 ; Removed redundent load
+   016C 06 00               521 	ld	b,#0x00
+                            522 ; genIpush
+                            523 ; AOP_HL for _roomsNumber
+   016E 21 3C 00            524 	ld	hl,#_roomsNumber + 0
+   0171 2A                  525 	ld	a,(hl+)
+   0172 66                  526 	ld	h,(hl)
+   0173 6F                  527 	ld	l,a
+   0174 E5                  528 	push	hl
+                            529 ; genIpush
+   0175 C5                  530 	push	bc
+                            531 ; genCall
+   0176 CD 00 00            532 	call	__moduint
+   0179 42                  533 	ld	b,d
+   017A 4B                  534 	ld	c,e
+   017B E8 04               535 	lda	sp,4(sp)
+                            536 ; genIpush
+   017D 21 06 00            537 	ld	hl,#0x0006
+   0180 E5                  538 	push	hl
+                            539 ; genIpush
+   0181 C5                  540 	push	bc
+                            541 ; genCall
+   0182 CD 00 00            542 	call	__muluint
+   0185 42                  543 	ld	b,d
+   0186 4B                  544 	ld	c,e
+   0187 E8 04               545 	lda	sp,4(sp)
+                            546 ; genPlus
+                            547 ; AOP_HL for _current_room
+   0189 3E 00               548 	ld	a,#<_world
+   018B 81                  549 	add	a,c
+   018C 21 3E 00            550 	ld	hl,#_current_room + 0
+   018F 77                  551 	ld	(hl),a
+   0190 3E 00               552 	ld	a,#>_world
+   0192 88                  553 	adc	a,b
+   0193 21 3F 00            554 	ld	hl,#_current_room + 1
+   0196 77                  555 	ld	(hl),a
+                            556 ; genLabel
+   0197                     557 00112$:
+                            558 ; genEndFunction
+   0197 E8 11               559 	lda	sp,17(sp)
+   0199 C1                  560 	pop bc
+   019A C9                  561 	ret
+   019B                     562 ___initWorld_end:
+                            563 ;	main.c 51
+                            564 ; genLabel
+                            565 ; genFunction
+                            566 ;	---------------------------------
+                            567 ; Function initGame
+                            568 ; ---------------------------------
+   019B                     569 ___initGame_start:
+   019B                     570 _initGame:
+   019B C5                  571 	push	bc
+                            572 ;	main.c 53
+                            573 ; genIpush
+   019C 21 40 42            574 	ld	hl,#0xF4240
+   019F E5                  575 	push	hl
+                            576 ; genCall
+   01A0 CD 00 00            577 	call	_initrand
+   01A3 E8 02               578 	lda	sp,2(sp)
+                            579 ;	main.c 55
+                            580 ; genCall
+   01A5 CD 00 00            581 	call	_initWorld
+                            582 ; genLabel
+   01A8                     583 00101$:
+                            584 ; genEndFunction
+   01A8 C1                  585 	pop	bc
+   01A9 C9                  586 	ret
+   01AA                     587 ___initGame_end:
+                            588 ;	main.c 59
+                            589 ; genLabel
+                            590 ; genFunction
+                            591 ;	---------------------------------
+                            592 ; Function initPlayer
+                            593 ; ---------------------------------
+   01AA                     594 ___initPlayer_start:
+   01AA                     595 _initPlayer:
+   01AA C5                  596 	push	bc
+                            597 ;	main.c 62
+                            598 ; genLabel
+   01AB                     599 00101$:
+                            600 ; genEndFunction
+   01AB C1                  601 	pop	bc
+   01AC C9                  602 	ret
+   01AD                     603 ___initPlayer_end:
+                            604 ;	main.c 64
+                            605 ; genLabel
+                            606 ; genFunction
+                            607 ;	---------------------------------
+                            608 ; Function playgame
+                            609 ; ---------------------------------
+   01AD                     610 ___playgame_start:
+   01AD                     611 _playgame:
+   01AD C5                  612 	push	bc
+                            613 ;	main.c 68
+                            614 ; genLabel
+   01AE                     615 00101$:
+                            616 ; genEndFunction
+   01AE C1                  617 	pop	bc
+   01AF C9                  618 	ret
+   01B0                     619 ___playgame_end:
+                            620 ;	main.c 70
+                            621 ; genLabel
+                            622 ; genFunction
+                            623 ;	---------------------------------
+                            624 ; Function main
+                            625 ; ---------------------------------
+   01B0                     626 ___main_start:
+   01B0                     627 _main:
+   01B0 C5                  628 	push	bc
+   01B1 E8 FE               629 	lda sp,-2(sp)
+                            630 ;	main.c 72
+                            631 ; genIpush
+   01B3 21 F4 01            632 	ld	hl,#__str_1 + 0
+   01B6 E5                  633 	push	hl
+                            634 ; genCall
+   01B7 CD 00 00            635 	call	_puts
+   01BA E8 02               636 	lda	sp,2(sp)
+                            637 ;	main.c 73
+                            638 ; genCall
+   01BC CD 9B 01            639 	call	_initGame
+                            640 ;	main.c 74
+                            641 ; genCall
+   01BF CD 00 00            642 	call	_enable_interrupts
+                            643 ;	main.c 75
+                            644 ; genAssign
+                            645 ; AOP_STK for _main_sloc0_1_0
+   01C2 F8 00               646 	lda	hl,0(sp)
+   01C4 36 40               647 	ld	(hl),#0x40 ; 3
+   01C6 23                  648 	inc	hl
+   01C7 36 FF               649 	ld	(hl),#0xFF ; 3
+                            650 ; genAssign
+   01C9 11 40 FF            651 	ld	de,#0xFF40
+                            652 ; genPointerGet
+   01CC 1A                  653 	ld	a,(de)
+   01CD 4F                  654 	ld	c,a
+                            655 ; genOr
+                            656 ; Type res[2] = l[2]&r[1]
+                            657 ; Size res[1] = l[1]&r[1]
+   01CE 79                  658 	ld	a,c
+   01CF F6 80               659 	or	a,#0x80
+   01D1 4F                  660 	ld	c,a
+                            661 ; genAssign (pointer)
+                            662 ; AOP_STK for _main_sloc0_1_0
+   01D2 2B                  663 	dec	hl
+   01D3 5E                  664 	ld	e,(hl)
+   01D4 23                  665 	inc	hl
+   01D5 56                  666 	ld	d,(hl)
+   01D6 79                  667 	ld	a,c
+   01D7 12                  668 	ld	(de),a
+                            669 ;	main.c 76
+                            670 ; genCall
+   01D8 CD AD 01            671 	call	_playgame
+                            672 ; genLabel
+   01DB                     673 00101$:
+                            674 ; genEndFunction
+   01DB E8 02               675 	lda	sp,2(sp)
+   01DD C1                  676 	pop bc
+   01DE C9                  677 	ret
+   01DF                     678 ___main_end:
+                            679 	.area _CODE
+   01DF                     680 __str_0:
+   01DF 47 65 6E 65 72 61   681 	.ascii "Generating %d rooms"
+        74 69 6E 67 20 25
+        64 20 72 6F 6F 6D
+        73
+   01F2 0A                  682 	.db 10
+   01F3 00                  683 	.db 0
+   01F4                     684 __str_1:
+   01F4 73 74 61 72 74 69   685 	.ascii "starting Game..."
+        6E 67 20 47 61 6D
+        65 2E 2E 2E
+   0204 00                  686 	.db 0
+ASxxxx Assembler V01.75  (GameBoy Z80-like CPU), page 1.
+
+Symbol Table
+
+    _Player_activateCellAt             **** GX
+    _Player_create                     **** GX
+    _Player_isAlive                    **** GX
+    _Player_move                       **** GX
+    _Player_setPos                     **** GX
+    _Room_areAllRoomsLinked            **** GX
+    _Room_create                       **** GX
+    _Room_putDoor                      **** GX
+  0 ___initGame_end                    01AA R
+  0 ___initGame_start                  019B R
+  0 ___initPlayer_end                  01AD R
+  0 ___initPlayer_start                01AA R
+  0 ___initWorld_end                   019B R
+  0 ___initWorld_start                 0000 R
+  0 ___main_end                        01DF R
+  0 ___main_start                      01B0 R
+  0 ___playgame_end                    01B0 R
+  0 ___playgame_start                  01AD R
+    __cpu                              **** GX
+    __io_in                            **** GX
+    __io_out                           **** GX
+    __io_status                        **** GX
+    __moduint                          **** GX
+    __muluint                          **** GX
+  0 __str_0                            01DF R
+  0 __str_1                            01F4 R
+    _add_LCD                           **** GX
+    _add_TIM                           **** GX
+    _add_VBL                           **** GX
+    _arand                             **** GX
+    _cgb_compatibility                 **** GX
+    _cpu_fast                          **** GX
+    _cpu_slow                          **** GX
+  1 _current_room                      003E GR
+    _delay                             **** GX
+    _disable_interrupts                **** GX
+    _display_off                       **** GX
+    _enable_interrupts                 **** GX
+    _exit                              **** GX
+    _get_bkg_tiles                     **** GX
+    _get_data                          **** GX
+    _get_mode                          **** GX
+    _get_sprite_data                   **** GX
+    _get_sprite_prop                   **** GX
+    _get_sprite_tile                   **** GX
+    _get_tiles                         **** GX
+    _get_win_tiles                     **** GX
+    _gets                              **** GX
+    _hiramcpy                          **** GX
+  0 _initGame                          019B GR
+  0 _initPlayer                        01AA GR
+  0 _initWorld                         0000 GR
+    _initarand                         **** GX
+    _initrand                          **** GX
+    _joypad                            **** GX
+  0 _main                              01B0 GR
+    _mode                              **** GX
+    _move_bkg                          **** GX
+    _move_sprite                       **** GX
+    _move_win                          **** GX
+  1 _player                            0040 GR
+  0 _playgame                          01AD GR
+    _printf                            **** GX
+    _putchar                           **** GX
+    _puts                              **** GX
+    _rand                              **** GX
+    _random                            **** GX
+    _randw                             **** GX
+    _receive_byte                      **** GX
+    _remove_JOY                        **** GX
+    _remove_LCD                        **** GX
+    _remove_SIO                        **** GX
+    _remove_TIM                        **** GX
+    _remove_VBL                        **** GX
+    _reset                             **** GX
+  1 _roomsNumber                       003C GR
+    _scroll_bkg                        **** GX
+    _scroll_sprite                     **** GX
+    _scroll_win                        **** GX
+    _send_byte                         **** GX
+    _set_bkg_data                      **** GX
+    _set_bkg_palette                   **** GX
+    _set_bkg_palette_entry             **** GX
+    _set_bkg_tiles                     **** GX
+    _set_data                          **** GX
+    _set_interrupts                    **** GX
+    _set_sprite_data                   **** GX
+    _set_sprite_palette                **** GX
+    _set_sprite_palette_entry          **** GX
+    _set_sprite_prop                   **** GX
+    _set_sprite_tile                   **** GX
+    _set_tiles                         **** GX
+    _set_win_data                      **** GX
+    _set_win_tiles                     **** GX
+    _sgb_check                         **** GX
+    _sprintf                           **** GX
+    _sys_time                          **** GX
+    _wait_vbl_done                     **** GX
+    _waitpad                           **** GX
+    _waitpadup                         **** GX
+  1 _world                             0000 GR
+
+ASxxxx Assembler V01.75  (GameBoy Z80-like CPU), page 2.
+
+Area Table
+
+   0 _CODE                              size  205   flags 0
+   1 _DATA                              size   48   flags 0
+   2 _OVERLAY                           size    0   flags 0
+   3 _ISEG                              size    0   flags 0
+   4 _BSEG                              size    0   flags 0
+   5 _XSEG                              size    0   flags 0
+   6 _GSINIT                            size    A   flags 0
+   7 _GSFINAL                           size    0   flags 0

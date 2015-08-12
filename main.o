@@ -1,0 +1,180 @@
+XL
+H 8 areas 59 global symbols
+M lcc69120
+S _set_sprite_palette_entry Ref0000
+S _scroll_bkg Ref0000
+S _set_sprite_prop Ref0000
+S _reset Ref0000
+S _Player_move Ref0000
+S _move_win Ref0000
+S _mode Ref0000
+S _rand Ref0000
+S _enable_interrupts Ref0000
+S __cpu Ref0000
+S _Room_putDoor Ref0000
+S _waitpad Ref0000
+S _cpu_slow Ref0000
+S __muluint Ref0000
+S _sys_time Ref0000
+S __io_in Ref0000
+S _set_bkg_palette Ref0000
+S _get_win_tiles Ref0000
+S _move_sprite Ref0000
+S __io_out Ref0000
+S _get_sprite_data Ref0000
+S _remove_VBL Ref0000
+S _set_win_data Ref0000
+S _Player_activateCellAt Ref0000
+S _gets Ref0000
+S _Room_areAllRoomsLinked Ref0000
+S _receive_byte Ref0000
+S _putchar Ref0000
+S _remove_TIM Ref0000
+S _remove_SIO Ref0000
+S _set_win_tiles Ref0000
+S _get_data Ref0000
+S __io_status Ref0000
+S _exit Ref0000
+S _initarand Ref0000
+S _add_LCD Ref0000
+S _set_sprite_data Ref0000
+S _scroll_win Ref0000
+S _send_byte Ref0000
+S _set_bkg_palette_entry Ref0000
+S _remove_JOY Ref0000
+S _get_tiles Ref0000
+S _random Ref0000
+S _get_sprite_tile Ref0000
+S _get_mode Ref0000
+S _cgb_compatibility Ref0000
+S _scroll_sprite Ref0000
+S _set_data Ref0000
+S _sprintf Ref0000
+S _arand Ref0000
+S _joypad Ref0000
+S _move_bkg Ref0000
+S _Player_setPos Ref0000
+S _set_interrupts Ref0000
+S _puts Ref0000
+S _add_VBL Ref0000
+S _set_tiles Ref0000
+S _delay Ref0000
+S _waitpadup Ref0000
+S _set_sprite_tile Ref0000
+S _set_sprite_palette Ref0000
+S _display_off Ref0000
+S _Room_create Ref0000
+S _add_TIM Ref0000
+S _printf Ref0000
+S _disable_interrupts Ref0000
+S _get_bkg_tiles Ref0000
+S _cpu_fast Ref0000
+S _get_sprite_prop Ref0000
+S _set_bkg_data Ref0000
+S _sgb_check Ref0000
+S _initrand Ref0000
+S _Player_isAlive Ref0000
+S _randw Ref0000
+S _wait_vbl_done Ref0000
+S _hiramcpy Ref0000
+S __moduint Ref0000
+S _set_bkg_tiles Ref0000
+S _remove_LCD Ref0000
+S _Player_create Ref0000
+A _CODE size 205 flags 0
+S _main Def01B0
+S _initPlayer Def01AA
+S _initGame Def019B
+S _playgame Def01AD
+S _initWorld Def0000
+A _DATA size 48 flags 0
+S _world Def0000
+S _roomsNumber Def003C
+S _player Def0040
+S _current_room Def003E
+A _OVERLAY size 0 flags 0
+A _ISEG size 0 flags 0
+A _BSEG size 0 flags 0
+A _XSEG size 0 flags 0
+A _GSINIT size A flags 0
+A _GSFINAL size 0 flags 0
+T 00 00 21 3C 00 36 00 21 3D 00 36 00
+R 00 00 06 00 00 03 01 00 00 08 01 00
+T 00 00 C5 E8 EF 21 14 00 E5 21 02 00 E5 CD 00 00
+R 00 00 00 00 02 0E 2A 00
+T 0E 00 21 3D 00 72 21 3C 00 73 E8 04 2A 66 6F E5
+R 00 00 00 00 00 03 01 00 00 07 01 00
+T 1C 00 21 DF 01 E5 CD 00 00 E8 04 F8 0F 36 00 23
+R 00 00 00 00 00 03 00 00 02 07 40 00
+T 2A 00 36 00 21 3C 00 7E F8 0F BE 20 0C 21 3D 00
+R 00 00 00 00 00 05 01 00 00 0E 01 00
+T 38 00 7E F8 10 BE 20 03 C3 6A 00 21 06 00 E5 F8
+R 00 00 00 00 00 09 00 00
+T 46 00 11 2A 66 6F E5 CD 00 00 42 4B E8 04 3E
+R 00 00 00 00 02 08 0D 00
+T 53 00 00 00 81 4F 3E 00 00 88 47 C5 CD 00 00 E8
+R 00 00 00 00 09 02 01 00 89 07 01 00 02 0D 3E 00
+T 5F 00 02 F8 0F 34 20 02 23 34 C3 2C 00 21 3C 00
+R 00 00 00 00 00 0B 00 00 00 0E 01 00
+T 6D 00 2A 66 6F E5 21 00 00 E5 CD 00 00 42 4B E8
+R 00 00 00 00 00 07 01 00 02 0B 19 00
+T 7B 00 04 79 B0 C2 83 00 18 03 C3 68 01 CD 00 00
+R 00 00 00 00 00 06 00 00 00 0B 00 00 02 0E 07 00
+T 89 00 4B 06 00 21 3C 00 2A 66 6F E5 C5 CD 00 00
+R 00 00 00 00 00 06 01 00 02 0E 4C 00
+T 97 00 F8 12 72 2B 73 E8 04 CD 00 00 4B 06 00 21
+R 00 00 00 00 02 0A 07 00
+T A5 00 3C 00 2A 66 6F E5 C5 CD 00 00 F8 10 72 2B
+R 00 00 00 00 00 02 01 00 02 0A 4C 00
+T B3 00 73 E8 04 F8 0B 2A 23 BE 20 0A 2B 2A 23 BE
+R 00 00 00 00
+T C1 00 20 04 3E 01 18 01 AF F8 0A 77 AF B6 C2
+R 00 00 00 00
+T CE 00 19 01 21 06 00 E5 F8 0F 2A 66 6F E5 CD
+R 00 00 00 00 00 02 00 00
+T DB 00 00 00 F8 0B 72 2B 73 E8 04 3E 00 00 86 23
+R 00 00 00 00 02 02 0D 00 09 0C 01 00
+T E8 00 23 77 3E 00 00 2B 8E 23 23 77 23 23 2A 66
+R 00 00 00 00 89 05 01 00
+T F5 00 6F E5 F8 0A 2A 66 6F E5 CD 00 00 F8 08 72
+R 00 00 00 00 02 0B 0A 00
+T 03 01 2B 73 E8 04 2A B6 C2 10 01 3E 01 18 01 AF
+R 00 00 00 00 00 09 00 00
+T 11 01 F8 05 77 AF B6 CA 40 01 CD 00 00 F8 00 73
+R 00 00 00 00 00 08 00 00 02 0B 07 00
+T 1F 01 2A 77 23 36 00 21 3C 00 2A 66 6F E5 F8 03
+R 00 00 00 00 00 08 01 00
+T 2D 01 2A 66 6F E5 CD 00 00 4A 43 E8 04 F8 0D 70
+R 00 00 00 00 02 07 4C 00
+T 3B 01 23 71 C3 B6 00 21 06 00 E5 F8 0D 2A 66 6F
+R 00 00 00 00 00 05 00 00
+T 49 01 E5 CD 00 00 42 4B E8 04 3E 00 00 81 4F 3E
+R 00 00 00 00 02 04 0D 00 09 0B 01 00
+T 56 01 00 00 88 47 F8 0D 2A 66 6F E5 C5 CD 00 00
+R 00 00 00 00 89 02 01 00 02 0E 0A 00
+T 63 01 E8 04 C3 6A 00 CD 00 00 4B 06 00 21 3C 00
+R 00 00 00 00 00 05 00 00 02 08 07 00 00 0E 01 00
+T 71 01 2A 66 6F E5 C5 CD 00 00 42 4B E8 04 21
+R 00 00 00 00 02 08 4C 00
+T 7E 01 06 00 E5 C5 CD 00 00 42 4B E8 04 3E 00 00
+R 00 00 00 00 02 07 0D 00 09 0E 01 00
+T 8B 01 81 21 3E 00 77 3E 00 00 88 21 3F 00 77 E8
+R 00 00 00 00 00 04 01 00 89 08 01 00 00 0C 01 00
+T 98 01 11 C1 C9 C5 21 40 42 E5 CD 00 00 E8 02 CD
+R 00 00 00 00 02 0B 47 00
+T A6 01 00 00 C1 C9 C5 C1 C9 C5 C1 C9 C5 E8 FE 21
+R 00 00 00 00 00 02 00 00
+T B4 01 F4 01 E5 CD 00 00 E8 02 CD 9B 01 CD
+R 00 00 00 00 00 02 00 00 02 06 36 00 00 0B 00 00
+T C0 01 00 00 F8 00 36 40 23 36 FF 11 40 FF 1A 4F
+R 00 00 00 00 02 02 08 00
+T CE 01 79 F6 80 4F 2B 5E 23 56 79 12 CD AD 01 E8
+R 00 00 00 00 00 0D 00 00
+T DC 01 02 C1 C9
+R 00 00 00 00
+T DF 01 47 65 6E 65 72 61 74 69 6E 67 20 25 64 20
+R 00 00 00 00
+T ED 01 72 6F 6F 6D 73 0A 00 73 74 61 72 74 69 6E
+R 00 00 00 00
+T FB 01 67 20 47 61 6D 65 2E 2E 2E 00
+R 00 00 00 00

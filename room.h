@@ -2,25 +2,26 @@
 #define ROOM_H
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <rand.h>
+#include <gb/gb.h>
+#include <types.h>
 
-#include "const.h"
+#include "helper.h"
 #include "cell.h"
 
-typedef struct
+struct Room
 {
 	unsigned int width;
 	unsigned int height;
-
-	unsigned int map[ROOM_MAX_SIDE][ROOM_MAX_SIDE];
+	unsigned int doorsPos[4];
+	unsigned int doorsTar[4];
 	unsigned int sistersNumber;
-} Room;
+};
 
-void Room_create(Room *room);
-const unsigned int Room_putDoor(Room *room, const unsigned int sister);
-const unsigned int Room_getCellAt(Room *room, const unsigned int x, const unsigned int y);
-const int Room_isCellPassableAt(Room *room, const unsigned int x, const unsigned int y);
-const unsigned int Room_areAllRoomsLinked(Room *room, const unsigned int roomsNumber);
+void Room_create(struct Room* room);
+unsigned int Room_putDoor(struct Room* room, const unsigned int sister);
+unsigned int Room_areAllRoomsLinked(struct Room* room, const unsigned int roomsNumber);
 
 
 #endif

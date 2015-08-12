@@ -1,0 +1,460 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : FreeWare ANSI-C Compiler
+                              3 ; Version 2.2.1 Wed Aug 12 20:36:04 2015
+                              4 
+                              5 ;--------------------------------------------------------
+                              6 	.module lcc69120
+                              7 	
+                              8 ;--------------------------------------------------------
+                              9 ; Public variables in this module
+                             10 ;--------------------------------------------------------
+                             11 	.globl _Player_activateCellAt
+                             12 	.globl _Player_isAlive
+                             13 	.globl _Player_setPos
+                             14 	.globl _Player_move
+                             15 	.globl _Player_create
+                             16 	.globl _Room_areAllRoomsLinked
+                             17 	.globl _Room_putDoor
+                             18 	.globl _Room_create
+                             19 	.globl _get_tiles
+                             20 	.globl _set_tiles
+                             21 	.globl _get_data
+                             22 	.globl _set_data
+                             23 	.globl _scroll_sprite
+                             24 	.globl _move_sprite
+                             25 	.globl _get_sprite_prop
+                             26 	.globl _set_sprite_prop
+                             27 	.globl _get_sprite_tile
+                             28 	.globl _set_sprite_tile
+                             29 	.globl _get_sprite_data
+                             30 	.globl _set_sprite_data
+                             31 	.globl _scroll_win
+                             32 	.globl _move_win
+                             33 	.globl _get_win_tiles
+                             34 	.globl _set_win_tiles
+                             35 	.globl _set_win_data
+                             36 	.globl _scroll_bkg
+                             37 	.globl _move_bkg
+                             38 	.globl _get_bkg_tiles
+                             39 	.globl _set_bkg_tiles
+                             40 	.globl _set_bkg_data
+                             41 	.globl _hiramcpy
+                             42 	.globl _display_off
+                             43 	.globl _wait_vbl_done
+                             44 	.globl _reset
+                             45 	.globl _set_interrupts
+                             46 	.globl _disable_interrupts
+                             47 	.globl _enable_interrupts
+                             48 	.globl _waitpadup
+                             49 	.globl _waitpad
+                             50 	.globl _joypad
+                             51 	.globl _delay
+                             52 	.globl _receive_byte
+                             53 	.globl _send_byte
+                             54 	.globl _get_mode
+                             55 	.globl _mode
+                             56 	.globl _add_TIM
+                             57 	.globl _add_LCD
+                             58 	.globl _add_VBL
+                             59 	.globl _remove_JOY
+                             60 	.globl _remove_SIO
+                             61 	.globl _remove_TIM
+                             62 	.globl _remove_LCD
+                             63 	.globl _remove_VBL
+                             64 	.globl _cgb_compatibility
+                             65 	.globl _cpu_fast
+                             66 	.globl _cpu_slow
+                             67 	.globl _set_sprite_palette_entry
+                             68 	.globl _set_bkg_palette_entry
+                             69 	.globl _set_sprite_palette
+                             70 	.globl _set_bkg_palette
+                             71 	.globl _sgb_check
+                             72 	.globl _gets
+                             73 	.globl _puts
+                             74 	.globl _sprintf
+                             75 	.globl _printf
+                             76 	.globl _putchar
+                             77 	.globl _exit
+                             78 	.globl _random
+                             79 	.globl _arand
+                             80 	.globl _initarand
+                             81 	.globl _randw
+                             82 	.globl _rand
+                             83 	.globl _initrand
+                             84 ;--------------------------------------------------------
+                             85 ; Externals used
+                             86 ;--------------------------------------------------------
+                             87 	.globl __io_out
+                             88 	.globl __io_in
+                             89 	.globl __io_status
+                             90 	.globl _sys_time
+                             91 	.globl __cpu
+                             92 ;--------------------------------------------------------
+                             93 ; special function registers
+                             94 ;--------------------------------------------------------
+                             95 ;--------------------------------------------------------
+                             96 ; special function bits 
+                             97 ;--------------------------------------------------------
+                             98 ;--------------------------------------------------------
+                             99 ; internal ram data
+                            100 ;--------------------------------------------------------
+                            101 	.area _DATA
+                            102 ;--------------------------------------------------------
+                            103 ; overlayable items in internal ram 
+                            104 ;--------------------------------------------------------
+                            105 	.area _OVERLAY
+                            106 ;--------------------------------------------------------
+                            107 ; indirectly addressable internal ram data
+                            108 ;--------------------------------------------------------
+                            109 	.area _ISEG
+                            110 ;--------------------------------------------------------
+                            111 ; bit data
+                            112 ;--------------------------------------------------------
+                            113 	.area _BSEG
+                            114 ;--------------------------------------------------------
+                            115 ; external ram data
+                            116 ;--------------------------------------------------------
+                            117 	.area _XSEG
+                            118 ;--------------------------------------------------------
+                            119 ; global & static initialisations
+                            120 ;--------------------------------------------------------
+                            121 	.area _GSINIT
+                            122 	.area _GSFINAL
+                            123 	.area _GSINIT
+                            124 ;--------------------------------------------------------
+                            125 ; code
+                            126 ;--------------------------------------------------------
+                            127 	.area _CODE
+                            128 ;	player.c 3
+                            129 ; genLabel
+                            130 ; genFunction
+                            131 ;	---------------------------------
+                            132 ; Function Player_create
+                            133 ; ---------------------------------
+   0000                     134 ___Player_create_start:
+   0000                     135 _Player_create:
+   0000 C5                  136 	push	bc
+                            137 ;	player.c 5
+                            138 ; genAssign
+                            139 ; AOP_STK for 
+   0001 F8 04               140 	lda	hl,4(sp)
+   0003 4E                  141 	ld	c,(hl)
+   0004 23                  142 	inc	hl
+   0005 46                  143 	ld	b,(hl)
+                            144 ; genAssign (pointer)
+                            145 ; AOP_STK for 
+   0006 59                  146 	ld	e,c
+   0007 50                  147 	ld	d,b
+   0008 23                  148 	inc	hl
+   0009 7E                  149 	ld	a,(hl)
+   000A 12                  150 	ld	(de),a
+   000B 13                  151 	inc	de
+   000C 23                  152 	inc	hl
+   000D 7E                  153 	ld	a,(hl)
+   000E 12                  154 	ld	(de),a
+                            155 ;	player.c 6
+                            156 ; genPlus
+                            157 ; genPlusIncr
+   000F 79                  158 	ld	a,c
+   0010 C6 06               159 	add	a,#0x06
+   0012 5F                  160 	ld	e,a
+   0013 78                  161 	ld	a,b
+   0014 CE 00               162 	adc	a,#0x00
+   0016 57                  163 	ld	d,a
+                            164 ; genAssign (pointer)
+                            165 ; AOP_STK for 
+   0017 23                  166 	inc	hl
+   0018 7E                  167 	ld	a,(hl)
+   0019 12                  168 	ld	(de),a
+   001A 13                  169 	inc	de
+   001B 23                  170 	inc	hl
+   001C 7E                  171 	ld	a,(hl)
+   001D 12                  172 	ld	(de),a
+                            173 ;	player.c 7
+                            174 ; genPlus
+                            175 ; genPlusIncr
+   001E 59                  176 	ld	e,c
+   001F 50                  177 	ld	d,b
+   0020 13                  178 	inc	de
+   0021 13                  179 	inc	de
+                            180 ; genAssign (pointer)
+                            181 ; AOP_STK for 
+   0022 23                  182 	inc	hl
+   0023 7E                  183 	ld	a,(hl)
+   0024 12                  184 	ld	(de),a
+   0025 13                  185 	inc	de
+   0026 23                  186 	inc	hl
+   0027 7E                  187 	ld	a,(hl)
+   0028 12                  188 	ld	(de),a
+                            189 ;	player.c 8
+                            190 ; genPlus
+                            191 ; genPlusIncr
+   0029 79                  192 	ld	a,c
+   002A C6 04               193 	add	a,#0x04
+   002C 5F                  194 	ld	e,a
+   002D 78                  195 	ld	a,b
+   002E CE 00               196 	adc	a,#0x00
+   0030 57                  197 	ld	d,a
+                            198 ; genAssign (pointer)
+                            199 ; AOP_STK for 
+   0031 23                  200 	inc	hl
+   0032 7E                  201 	ld	a,(hl)
+   0033 12                  202 	ld	(de),a
+   0034 13                  203 	inc	de
+   0035 23                  204 	inc	hl
+   0036 7E                  205 	ld	a,(hl)
+   0037 12                  206 	ld	(de),a
+                            207 ; genLabel
+   0038                     208 00101$:
+                            209 ; genEndFunction
+   0038 C1                  210 	pop	bc
+   0039 C9                  211 	ret
+   003A                     212 ___Player_create_end:
+                            213 ;	player.c 11
+                            214 ; genLabel
+                            215 ; genFunction
+                            216 ;	---------------------------------
+                            217 ; Function Player_setPos
+                            218 ; ---------------------------------
+   003A                     219 ___Player_setPos_start:
+   003A                     220 _Player_setPos:
+   003A C5                  221 	push	bc
+                            222 ;	player.c 14
+                            223 ; genAssign
+                            224 ; AOP_STK for 
+   003B F8 04               225 	lda	hl,4(sp)
+   003D 4E                  226 	ld	c,(hl)
+   003E 23                  227 	inc	hl
+   003F 46                  228 	ld	b,(hl)
+                            229 ; genPlus
+                            230 ; genPlusIncr
+   0040 59                  231 	ld	e,c
+   0041 50                  232 	ld	d,b
+   0042 13                  233 	inc	de
+   0043 13                  234 	inc	de
+                            235 ; genAssign (pointer)
+                            236 ; AOP_STK for 
+   0044 23                  237 	inc	hl
+   0045 7E                  238 	ld	a,(hl)
+   0046 12                  239 	ld	(de),a
+   0047 13                  240 	inc	de
+   0048 23                  241 	inc	hl
+   0049 7E                  242 	ld	a,(hl)
+   004A 12                  243 	ld	(de),a
+                            244 ;	player.c 15
+                            245 ; genPlus
+                            246 ; genPlusIncr
+   004B 79                  247 	ld	a,c
+   004C C6 04               248 	add	a,#0x04
+   004E 5F                  249 	ld	e,a
+   004F 78                  250 	ld	a,b
+   0050 CE 00               251 	adc	a,#0x00
+   0052 57                  252 	ld	d,a
+                            253 ; genAssign (pointer)
+                            254 ; AOP_STK for 
+   0053 23                  255 	inc	hl
+   0054 7E                  256 	ld	a,(hl)
+   0055 12                  257 	ld	(de),a
+   0056 13                  258 	inc	de
+   0057 23                  259 	inc	hl
+   0058 7E                  260 	ld	a,(hl)
+   0059 12                  261 	ld	(de),a
+                            262 ; genLabel
+   005A                     263 00101$:
+                            264 ; genEndFunction
+   005A C1                  265 	pop	bc
+   005B C9                  266 	ret
+   005C                     267 ___Player_setPos_end:
+                            268 ;	player.c 18
+                            269 ; genLabel
+                            270 ; genFunction
+                            271 ;	---------------------------------
+                            272 ; Function Player_move
+                            273 ; ---------------------------------
+   005C                     274 ___Player_move_start:
+   005C                     275 _Player_move:
+   005C C5                  276 	push	bc
+                            277 ;	player.c 25
+                            278 ; genRet
+   005D 11 00 00            279 	ld	de,#0x0000
+                            280 ; genLabel
+   0060                     281 00101$:
+                            282 ; genEndFunction
+   0060 C1                  283 	pop	bc
+   0061 C9                  284 	ret
+   0062                     285 ___Player_move_end:
+                            286 ;	player.c 29
+                            287 ; genLabel
+                            288 ; genFunction
+                            289 ;	---------------------------------
+                            290 ; Function Player_isAlive
+                            291 ; ---------------------------------
+   0062                     292 ___Player_isAlive_start:
+   0062                     293 _Player_isAlive:
+   0062 C5                  294 	push	bc
+                            295 ;	player.c 31
+                            296 ; genAssign
+                            297 ; AOP_STK for 
+   0063 F8 04               298 	lda	hl,4(sp)
+   0065 4E                  299 	ld	c,(hl)
+   0066 23                  300 	inc	hl
+   0067 46                  301 	ld	b,(hl)
+                            302 ; genPlus
+                            303 ; genPlusIncr
+   0068 79                  304 	ld	a,c
+   0069 C6 06               305 	add	a,#0x06
+   006B 5F                  306 	ld	e,a
+   006C 78                  307 	ld	a,b
+   006D CE 00               308 	adc	a,#0x00
+   006F 57                  309 	ld	d,a
+                            310 ; genPointerGet
+                            311 ; Removed redundent load
+                            312 ; Removed redundent load
+   0070 1A                  313 	ld	a,(de)
+   0071 4F                  314 	ld	c,a
+   0072 13                  315 	inc	de
+   0073 1A                  316 	ld	a,(de)
+   0074 47                  317 	ld	b,a
+                            318 ; genCmpEq
+   0075 79                  319 	ld	a,c
+   0076 B0                  320 	or	a,b
+                            321 ; Rule 5
+   0077 CA 80 00            322 	jp	z,00102$
+   007A                     323 00106$:
+                            324 ;	player.c 32
+                            325 ; genRet
+   007A 11 01 00            326 	ld	de,#0x0001
+   007D C3 83 00            327 	jp	00103$
+                            328 ; genLabel
+   0080                     329 00102$:
+                            330 ;	player.c 33
+                            331 ; genRet
+   0080 11 00 00            332 	ld	de,#0x0000
+                            333 ; genLabel
+   0083                     334 00103$:
+                            335 ; genEndFunction
+   0083 C1                  336 	pop	bc
+   0084 C9                  337 	ret
+   0085                     338 ___Player_isAlive_end:
+                            339 ;	player.c 36
+                            340 ; genLabel
+                            341 ; genFunction
+                            342 ;	---------------------------------
+                            343 ; Function Player_activateCellAt
+                            344 ; ---------------------------------
+   0085                     345 ___Player_activateCellAt_start:
+   0085                     346 _Player_activateCellAt:
+   0085 C5                  347 	push	bc
+                            348 ;	player.c 39
+                            349 ; genLabel
+   0086                     350 00101$:
+                            351 ; genEndFunction
+   0086 C1                  352 	pop	bc
+   0087 C9                  353 	ret
+   0088                     354 ___Player_activateCellAt_end:
+                            355 	.area _CODE
+ASxxxx Assembler V01.75  (GameBoy Z80-like CPU), page 1.
+
+Symbol Table
+
+  0 _Player_activateCellAt             0085 GR
+  0 _Player_create                     0000 GR
+  0 _Player_isAlive                    0062 GR
+  0 _Player_move                       005C GR
+  0 _Player_setPos                     003A GR
+    _Room_areAllRoomsLinked            **** GX
+    _Room_create                       **** GX
+    _Room_putDoor                      **** GX
+  0 ___Player_activateCellAt_end       0088 R
+  0 ___Player_activateCellAt_start     0085 R
+  0 ___Player_create_end               003A R
+  0 ___Player_create_start             0000 R
+  0 ___Player_isAlive_end              0085 R
+  0 ___Player_isAlive_start            0062 R
+  0 ___Player_move_end                 0062 R
+  0 ___Player_move_start               005C R
+  0 ___Player_setPos_end               005C R
+  0 ___Player_setPos_start             003A R
+    __cpu                              **** GX
+    __io_in                            **** GX
+    __io_out                           **** GX
+    __io_status                        **** GX
+    _add_LCD                           **** GX
+    _add_TIM                           **** GX
+    _add_VBL                           **** GX
+    _arand                             **** GX
+    _cgb_compatibility                 **** GX
+    _cpu_fast                          **** GX
+    _cpu_slow                          **** GX
+    _delay                             **** GX
+    _disable_interrupts                **** GX
+    _display_off                       **** GX
+    _enable_interrupts                 **** GX
+    _exit                              **** GX
+    _get_bkg_tiles                     **** GX
+    _get_data                          **** GX
+    _get_mode                          **** GX
+    _get_sprite_data                   **** GX
+    _get_sprite_prop                   **** GX
+    _get_sprite_tile                   **** GX
+    _get_tiles                         **** GX
+    _get_win_tiles                     **** GX
+    _gets                              **** GX
+    _hiramcpy                          **** GX
+    _initarand                         **** GX
+    _initrand                          **** GX
+    _joypad                            **** GX
+    _mode                              **** GX
+    _move_bkg                          **** GX
+    _move_sprite                       **** GX
+    _move_win                          **** GX
+    _printf                            **** GX
+    _putchar                           **** GX
+    _puts                              **** GX
+    _rand                              **** GX
+    _random                            **** GX
+    _randw                             **** GX
+    _receive_byte                      **** GX
+    _remove_JOY                        **** GX
+    _remove_LCD                        **** GX
+    _remove_SIO                        **** GX
+    _remove_TIM                        **** GX
+    _remove_VBL                        **** GX
+    _reset                             **** GX
+    _scroll_bkg                        **** GX
+    _scroll_sprite                     **** GX
+    _scroll_win                        **** GX
+    _send_byte                         **** GX
+    _set_bkg_data                      **** GX
+    _set_bkg_palette                   **** GX
+    _set_bkg_palette_entry             **** GX
+    _set_bkg_tiles                     **** GX
+    _set_data                          **** GX
+    _set_interrupts                    **** GX
+    _set_sprite_data                   **** GX
+    _set_sprite_palette                **** GX
+    _set_sprite_palette_entry          **** GX
+    _set_sprite_prop                   **** GX
+    _set_sprite_tile                   **** GX
+    _set_tiles                         **** GX
+    _set_win_data                      **** GX
+    _set_win_tiles                     **** GX
+    _sgb_check                         **** GX
+    _sprintf                           **** GX
+    _sys_time                          **** GX
+    _wait_vbl_done                     **** GX
+    _waitpad                           **** GX
+    _waitpadup                         **** GX
+
+ASxxxx Assembler V01.75  (GameBoy Z80-like CPU), page 2.
+
+Area Table
+
+   0 _CODE                              size   88   flags 0
+   1 _DATA                              size    0   flags 0
+   2 _OVERLAY                           size    0   flags 0
+   3 _ISEG                              size    0   flags 0
+   4 _BSEG                              size    0   flags 0
+   5 _XSEG                              size    0   flags 0
+   6 _GSINIT                            size    0   flags 0
+   7 _GSFINAL                           size    0   flags 0
