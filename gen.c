@@ -5,7 +5,7 @@ void initWorld(struct World* world)
   unsigned int i;
 
   puts("initWorld");
-  world->roomsNumber = random(2, WORLD_MAX_ROOMS);
+  world->roomsNumber =random(2, WORLD_MAX_ROOMS);
   for(i = 0; i != world->roomsNumber; i++)
   {
     Room_create(&world->rooms[i]);
@@ -34,7 +34,7 @@ void initLinks(struct World* world)
       Room_addDoor(&world->rooms[first], second);
       Room_addDoor(&world->rooms[second], first);
       printf("linked %d and %d\n", first, second);
-      try = 0;
+      try -= 50;
     }
     i = 0;
     done = true;
@@ -48,33 +48,14 @@ void initLinks(struct World* world)
   //vérification des liens
   if(try == 150)
   {
-    for(i = 0; i != world->roomsNumber; i++)
-    {
-      //si on trouve une pièce non reliée
-      if(world->rooms[i].sisters == 0)
-      {
-        //alors on la relie de force
-        try = 0;
-        while(try != world->roomsNumber && try != 100)
-        {
-          if(try != i && world->rooms[try].sisters != 0 && world->rooms[try].sisters != 4)
-          {
-            Room_addDoor(&world->rooms[i], try);
-            Room_addDoor(&world->rooms[try], i);
-            printf("flinked %d and %d\n", first, second);
-            try = 100;
-          }
-          try++;
-        }
-        if(try != 100) //si on arrive pas à la relier de force on recommence la génération de 0
-        {
-          i = world->roomsNumber;
-          initWorld(world);
-        }
-      }
-    }
+    //si on a du arreter, on recommence la génération
+    initWorld(world);
   }
-
+  else
+  {
+    //sinon on continue
+    initBiomes(world);
+  }
 
 
 }
