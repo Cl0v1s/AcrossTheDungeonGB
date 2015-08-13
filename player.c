@@ -1,11 +1,23 @@
 #include "player.h"
 
-void Player_create(struct Player* player, struct Room *room, const unsigned int life, const unsigned int x, const unsigned int y)
+void Player_create(struct Player* player, struct ActiveRoom* active)
 {
-	player->room = room;
-	player->life = life;
-	player->x =x ;
-	player->y = y;
+	player->active = active;
+	player->life = PLAYER_INIT_LIFE;
+	//paramétrage de la position x et y
+	player->x =random(1, active->room->width -1);
+	player->y = random(1, active->room->height -1);
+	while(ActiveRoom_isCellPassable(active, player->x, player->y))
+	{
+		player->x =random(1, active->room->width -1);
+		player->y = random(1, active->room->height -1);
+	}
+	printf("player in %d/%d\n", player->x, player->y);
+}
+
+void Player_fromSave(struct Player* player, struct ActiveRoom *active, const unsigned int life, const unsigned int x, const unsigned int y)
+{
+
 }
 
 void Player_setPos(struct Player *player, const unsigned int x, const unsigned int y)
@@ -17,11 +29,11 @@ void Player_setPos(struct Player *player, const unsigned int x, const unsigned i
 
 int Player_move(struct Player *player, const unsigned int x, const unsigned int y)
 {
-	/*if(Room_isCellPassableAt(player->room, player->x+x,player->y+y))
+	if(ActiveRoom_isCellPassable(player->active, player->x+x, player->y+y))
 	{
-		Player_setPos(player, player->x+x, player->y+y);
-		return true;
-	}*/
+			Player_setPos(player, player->x+x, player->y+y);
+			return true;
+	}
 	return false;
 }
 

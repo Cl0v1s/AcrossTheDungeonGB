@@ -12,6 +12,7 @@
 
 struct World world;
 struct ActiveRoom activeRoom;
+struct Player player;
 
 
 void initGame()
@@ -19,6 +20,7 @@ void initGame()
 		initrand(time(NULL)+10000);
 		initWorld(&world);
 		initActiveRoom(&world, &activeRoom);
+		Player_create(&player, &activeRoom);
 		puts("done.");
 }
 

@@ -73,8 +73,3 @@ void initActiveRoom(struct World* world, struct ActiveRoom* active)
   //Lancement de la matérialisation de la salle
   ActiveRoom_create(active, room);
 }
-
-void initPlayer(struct World* world)
-{
-
-}

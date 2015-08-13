@@ -14,6 +14,10 @@
 //définition du nombre maximum de salles par étage
 #define WORLD_MAX_ROOMS 10
 
+//déifinition des stats de base du joueur
+#define PLAYER_INIT_LIFE 20
+
+
 
 //définition des fonctions usuelles
 unsigned int random(const unsigned int min, const unsigned int max);
