@@ -14,15 +14,14 @@ struct Room
 {
 	unsigned int width;
 	unsigned int height;
-	unsigned int doorsPos[4];
-	unsigned int doorsTar[4];
-	unsigned int sistersNumber;
+	unsigned int sisters;
+	int doorPos[4];
+	int doorTar[4];
 };
 
 void Room_create(struct Room* room);
-unsigned int Room_putDoor(struct Room* room, const unsigned int sister);
-unsigned int Room_doorAvailable(struct Room* room);
-unsigned int Room_areAllRoomsLinked(struct Room* room, const unsigned int number);
+
+void Room_addDoor(struct Room* room, const unsigned int other);
 
 
 #endif

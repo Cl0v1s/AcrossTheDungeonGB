@@ -2,4 +2,5 @@
 *.lst
 *.map
 *.o
-
+*.exe
+*.ini
