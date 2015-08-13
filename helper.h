@@ -12,7 +12,7 @@
 #define ROOM_MIN_SIDE 5
 
 //définition du nombre maximum de salles par étage
-#define WORLD_MAX_ROOMS 15
+#define WORLD_MAX_ROOMS 12
 
 
 //définition des fonctions usuelles

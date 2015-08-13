@@ -11,7 +11,15 @@
 
 struct World world;
 
+void initGame()
+{
+		initrand(time(NULL)+10000);
+		initWorld(&world);
+		puts("done.");
+}
+
+
 void main(void)
 {
-	initWorld(&world);
+	initGame();
 }
