@@ -3,11 +3,13 @@
 
 #include "room.h"
 #include "helper.h"
+#include "activeroom.h"
 
 typedef struct Room Rooms[WORLD_MAX_ROOMS];
 
 struct World
 {
+
   Rooms rooms;
   unsigned int roomsNumber;
 };
@@ -15,6 +17,7 @@ struct World
 void initWorld(struct World* world);
 void initLinks(struct World* world);
 void initBiomes(struct World* world);
+void initActiveRoom(struct World* world,struct ActiveRoom* active);
 void initPlayer(struct World* world);
 
 #endif
