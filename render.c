@@ -33,7 +33,7 @@ void loadBackground()
 
 void loadSprites()
 {
-  set_sprite_data(0,10,spriteplayer);
+  set_sprite_data(0,14,spriteplayer);
   //chargement en mémoire video du sprite du joueur
   set_sprite_tile(SPRITE_PLAYER_TOPL, 0);
   set_sprite_tile(SPRITE_PLAYER_TOPR, 0);
@@ -69,8 +69,8 @@ void drawPlayer(struct Player* player)
   unsigned int downL[] = {1,2,1,3};
   unsigned int downR[] = {1,3,1,2};
   unsigned int side[] = {6,8,6,8};
-  unsigned int upL[] = {10};
-  unsigned int upR[] = {10};
+  unsigned int upL[] = {11,12,11,13};
+  unsigned int upR[] = {11,13,11,12};
   //TODO: ajouter code pour le bas
   //gestion des frames
   if(frameCounter == 0)
