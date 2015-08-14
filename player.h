@@ -11,6 +11,7 @@ struct Player
 	unsigned int x;
 	unsigned int y;
 	unsigned int frame;
+	unsigned int dir;
 	unsigned int life;
 	//TODO: ajouter les autres attributs du joueur
 };

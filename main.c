@@ -32,7 +32,7 @@ void updateGame()
 	while(1)
 	{
 		updateRender();
-		
+
 		drawPlayer(&player);
 		delay(15);
 	}
