@@ -28,9 +28,10 @@ void Player_setPos(struct Player *player, const unsigned int x, const unsigned i
 	player->y = y;
 }
 
-int Player_move(struct Player *player, const unsigned int x, const unsigned int y)
+int Player_move(struct Player *player, unsigned int x, unsigned int y)
 {
-	if(ActiveRoom_isCellPassable(player->active, player->x+x, player->y+y))
+	//TODO: à vérifier lorsque le dessin de la salle sera effectif
+	if(ActiveRoom_isCellPassable(player->active, ((player->x+x) >> 4),((player->y+y) >> 4) ) )
 	{
 			Player_setPos(player, player->x+x, player->y+y);
 			return true;
@@ -49,4 +50,28 @@ int Player_isAlive(struct Player *player)
 void Player_activateCellAt(struct Player *player, const unsigned int x, const unsigned int y)
 {
 	//TODO: Définir les actions du joueurs en fonction de la case qu'il vient d'activer
+}
+
+void Player_moveDown(struct Player* player)
+{
+	player->dir = 0;
+	Player_move(player, 0, PLAYER_MOVING_SPEED);
+}
+
+void Player_moveUp(struct Player* player)
+{
+	player->dir = 2;
+	Player_move(player, 0, 0-PLAYER_MOVING_SPEED);
+}
+
+void Player_moveLeft(struct Player* player)
+{
+	player->dir = 3;
+	Player_move(player, 0-PLAYER_MOVING_SPEED, 0);
+}
+
+void Player_moveRight(struct Player* player)
+{
+	player->dir = 1;
+	Player_move(player, PLAYER_MOVING_SPEED, 0);
 }

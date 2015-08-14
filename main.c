@@ -25,16 +25,38 @@ void initGame()
 		puts("done.");
 }
 
+void updateInput()
+{
+	unsigned int input;
+	input = joypad();
+	if(input & J_DOWN)
+	{
+		Player_moveDown(&player);
+	}
+	else if(input & J_UP)
+	{
+		Player_moveUp(&player);
+	}
+	else if(input & J_LEFT)
+	{
+		Player_moveLeft(&player);
+	}
+	else if(input & J_RIGHT)
+	{
+		Player_moveRight(&player);
+	}
+}
+
 void updateGame()
 {
 	clearDisplay();
 	initRender();
 	while(1)
 	{
+		wait_vbl_done();
+		updateInput();
 		updateRender();
-
 		drawPlayer(&player);
-		delay(15);
 	}
 }
 

@@ -72,8 +72,6 @@ void drawPlayer(struct Player* player)
   unsigned int upL[] = {10};
   unsigned int upR[] = {10};
   //TODO: ajouter code pour le bas
-
-  player->dir = 1;
   //gestion des frames
   if(frameCounter == 0)
     player->frame = player->frame + 1;
