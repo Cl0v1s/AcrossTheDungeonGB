@@ -9,6 +9,7 @@
 #include "player.h"
 #include "gen.h"
 #include "activeroom.h"
+#include "render.h"
 
 struct World world;
 struct ActiveRoom activeRoom;
@@ -24,8 +25,24 @@ void initGame()
 		puts("done.");
 }
 
+void updateGame()
+{
+	clearDisplay();
+	initRender();
+	while(1)
+	{
+		updateRender();
+		
+		drawPlayer(&player);
+		delay(15);
+	}
+}
+
 
 void main(void)
 {
+	disableDisplay();
 	initGame();
+	enableDisplay();
+	updateGame();
 }

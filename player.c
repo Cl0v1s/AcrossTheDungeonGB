@@ -5,13 +5,14 @@ void Player_create(struct Player* player, struct ActiveRoom* active)
 	player->active = active;
 	player->life = PLAYER_INIT_LIFE;
 	//paramétrage de la position x et y
-	player->x =random(1, active->room->width -1);
-	player->y = random(1, active->room->height -1);
-	while(ActiveRoom_isCellPassable(active, player->x, player->y))
+	player->x =(random(1, active->room->width -1)*16);
+	player->y =(random(1, active->room->height -1)*16);
+	while(ActiveRoom_isCellPassable(active, player->x, player->y) == false)
 	{
-		player->x =random(1, active->room->width -1);
-		player->y = random(1, active->room->height -1);
+		player->x =(random(1, active->room->width -1)*16);
+		player->y = (random(1, active->room->height -1)*16);
 	}
+	player->frame = 0;
 	printf("player in %d/%d\n", player->x, player->y);
 }
 

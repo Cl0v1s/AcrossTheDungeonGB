@@ -10,6 +10,7 @@ struct Player
 	struct ActiveRoom* active;
 	unsigned int x;
 	unsigned int y;
+	unsigned int frame;
 	unsigned int life;
 	//TODO: ajouter les autres attributs du joueur
 };
