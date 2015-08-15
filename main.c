@@ -22,7 +22,6 @@ void initGame()
 		initWorld(&world);
 		initActiveRoom(&world, &activeRoom);
 		Player_create(&player, &activeRoom);
-		puts("done.");
 }
 
 void updateInput()
@@ -51,6 +50,8 @@ void updateGame()
 {
 	clearDisplay();
 	initRender();
+	wait_vbl_done();
+	drawRoom(&activeRoom);
 	while(1)
 	{
 		wait_vbl_done();

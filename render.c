@@ -9,6 +9,7 @@ void initRender()
   loadBackground();
   loadSprites();
 
+  SHOW_BKG;
   SHOW_SPRITES;
 
   enableDisplay();
@@ -28,19 +29,12 @@ void enableDisplay()
 
 void loadBackground()
 {
-
+  set_bkg_data(0,9,tileset);
 }
 
 void loadSprites()
 {
   set_sprite_data(0,14,spriteplayer);
-  //chargement en mémoire video du sprite du joueur
-  set_sprite_tile(SPRITE_PLAYER_TOPL, 0);
-  set_sprite_tile(SPRITE_PLAYER_TOPR, 0);
-  set_sprite_prop(SPRITE_PLAYER_TOPR, S_FLIPX);
-  set_sprite_tile(SPRITE_PLAYER_BOTL, 1);
-  set_sprite_tile(SPRITE_PLAYER_BOTR, 1);
-  set_sprite_prop(SPRITE_PLAYER_BOTR, S_FLIPX);
 
 
 
@@ -49,7 +43,16 @@ void loadSprites()
 
 void clearDisplay()
 {
-  box(-8,-8,160,144, SOLID);
+  unsigned int x, y;
+  unsigned char empty[] = {1,1};
+  //effacement du texte
+  for(x = 0; x != 32; x++)
+  {
+    for(y = 0; y != 32; y++)
+    {
+      set_bkg_tiles(x,y,1,1,empty);
+    }
+  }
 }
 
 void updateRender()
@@ -61,7 +64,39 @@ void updateRender()
 
 void drawRoom(struct ActiveRoom* active)
 {
-
+  unsigned int x,y;
+  unsigned char current[4] = {1,1};
+  for(x = 0; x != active->room->width; x++)
+  {
+    for(y = 0; y != active->room->height+1; y++)
+    {
+      current[0] = 0;
+      current[1] = 0;
+      current[2] = 0;
+      current[3] = 0;
+      switch(active->map[x+y*active->room->width])
+      {
+        case CELL_WALL:
+          current[0] = 2;
+          current[1] = 2;
+          current[2] = 2;
+          current[3] = 2;
+          if(active->map[x+(y+1)*active->room->width] != CELL_WALL)
+          {
+            current[0] = 7;
+            current[1] = 7;
+            current[2] = 8;
+            current[3] = 8;
+          }
+          set_bkg_tiles(x << 1,y << 1,2,2, current);
+        break;
+        case CELL_GROUND:
+          current[0] = 0;current[1] = 0;current[2] = 0;current[3] = 0;
+          set_bkg_tiles(x << 1,y << 1,2,2, current);
+        break;
+      }
+    }
+  }
 }
 
 void drawPlayer(struct Player* player)
@@ -85,7 +120,7 @@ void drawPlayer(struct Player* player)
     set_sprite_tile(SPRITE_PLAYER_TOPR, 0);
     if(get_sprite_prop(SPRITE_PLAYER_TOPL) != 0x00U) //si le prop est celui par défaut
       set_sprite_prop(SPRITE_PLAYER_TOPL, 0x00U);
-    if(get_sprite_prop(SPRITE_PLAYER_TOPR) == 0x00U) //si le prop est celui par défaut
+    if(get_sprite_prop(SPRITE_PLAYER_TOPR) !=  S_FLIPX) //si le prop est celui par défaut
       set_sprite_prop(SPRITE_PLAYER_TOPR, S_FLIPX);
   }
   else if(player->dir == 3 && get_sprite_tile(SPRITE_PLAYER_TOPL) != 4)

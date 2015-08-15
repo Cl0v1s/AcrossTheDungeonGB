@@ -6,8 +6,10 @@
 
 #include "activeroom.h"
 #include "player.h"
+#include "cell.h"
 
 #include "sprites/spriteplayer.h"
+#include "sprites/tileset.h"
 
 #define SPRITE_PLAYER_TOPL 0
 #define SPRITE_PLAYER_TOPR 1

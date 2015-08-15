@@ -13,7 +13,7 @@ void Player_create(struct Player* player, struct ActiveRoom* active)
 		player->y = (random(1, active->room->height -1)*16);
 	}
 	player->frame = 0;
-	printf("player in %d/%d\n", player->x, player->y);
+
 }
 
 void Player_fromSave(struct Player* player, struct ActiveRoom *active, const unsigned int life, const unsigned int x, const unsigned int y)
