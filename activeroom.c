@@ -9,7 +9,6 @@ void ActiveRoom_create(struct ActiveRoom* active, struct Room* room)
   active->room = room;
   //TODO: ajouter ici le code relatif aux biomes
   //initialisation primaire de la salle
-
   for(i = 0; i != room->width; i++)
   {
     for(u = 0; u != room->height; u++)
@@ -28,7 +27,6 @@ void ActiveRoom_create(struct ActiveRoom* active, struct Room* room)
   {
     active->map[i+h*room->width] = CELL_WALL;
   }
-
 }
 
 unsigned int ActiveRoom_isCellPassable(struct ActiveRoom* active, const unsigned int x, const unsigned int y)

@@ -21,6 +21,7 @@ void initGame()
 		initrand(time(NULL)+10000);
 		initWorld(&world);
 		initActiveRoom(&world, &activeRoom);
+		delay(1500);
 		Player_create(&player, &activeRoom);
 }
 
