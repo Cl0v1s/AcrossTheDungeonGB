@@ -11,8 +11,12 @@ void initRender()
   frameCounter = 0;
   loadBackground();
   loadSprites();
+  loadFont();
+
+  move_win(0,120);
 
   SHOW_BKG;
+  SHOW_WIN;
   SHOW_SPRITES;
 
   enableDisplay();
@@ -37,11 +41,13 @@ void loadBackground()
 
 void loadSprites()
 {
+  //chargement du sprite du joueur
   set_sprite_data(0,14,spriteplayer);
+}
 
-
-
-
+void loadFont()
+{
+  set_win_data(0x80,0x5e, font);
 }
 
 void clearDisplay()
@@ -79,7 +85,6 @@ void updateRender()
   frameCounter += 1;
   if(frameCounter == 20)
     frameCounter = 0;
-
   move_bkg(canvasX, canvasY);
 }
 
