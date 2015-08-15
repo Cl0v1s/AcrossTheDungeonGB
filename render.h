@@ -16,17 +16,25 @@
 #define SPRITE_PLAYER_BOTL 2
 #define SPRITE_PLAYER_BOTR 3
 
+unsigned int canvasX = 0;
+unsigned int canvasY = 0;
 unsigned int frameCounter = 0;
 
 void initRender();
 
 void updateRender();
 
+void moveCanvas(const unsigned int x, const unsigned int y);
+
+void setCanvasPos(const unsigned int x, const unsigned int y);
+
 void clearDisplay();
 
 void disableDisplay();
 
 void enableDisplay();
+
+void focusRender(const unsigned int x, const unsigned int y);
 
 void loadBackground();
 

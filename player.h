@@ -5,7 +5,7 @@
 #include "activeroom.h"
 #include "room.h"
 
-#define PLAYER_MOVING_SPEED 2
+
 
 struct Player
 {
@@ -24,9 +24,9 @@ int Player_move(struct Player *player, unsigned int x, unsigned int y);
 void Player_setPos(struct Player *player, const unsigned int x, const unsigned int y);
 int Player_isAlive(struct Player *player);
 void Player_activateCellAt(struct Player *player, const unsigned int x, const unsigned int y);
-void Player_moveDown(struct Player* player);
-void Player_moveUp(struct Player* player);
-void Player_moveLeft(struct Player* player);
-void Player_moveRight(struct Player* player);
+unsigned int Player_moveDown(struct Player* player);
+unsigned int Player_moveUp(struct Player* player);
+unsigned int Player_moveLeft(struct Player* player);
+unsigned int Player_moveRight(struct Player* player);
 
 #endif

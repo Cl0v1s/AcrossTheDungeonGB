@@ -20,9 +20,12 @@ void initGame()
 {
 		initrand(time(NULL)+10000);
 		initWorld(&world);
+		activeRoom.room = 0x00; //"fixation" en mémoire de la pièce active, juste pour être sûr
 		initActiveRoom(&world, &activeRoom);
 		delay(1500);
+		player.life = 0; //"fixation" en mémoire du joueur
 		Player_create(&player, &activeRoom);
+
 }
 
 void updateInput()
@@ -31,19 +34,23 @@ void updateInput()
 	input = joypad();
 	if(input & J_DOWN)
 	{
-		Player_moveDown(&player);
+		if(Player_moveDown(&player) == true)
+			moveCanvas(0,PLAYER_MOVING_SPEED);
 	}
 	else if(input & J_UP)
 	{
-		Player_moveUp(&player);
+		if(Player_moveUp(&player) == true)
+			moveCanvas(0,-PLAYER_MOVING_SPEED);
 	}
 	else if(input & J_LEFT)
 	{
-		Player_moveLeft(&player);
+		if(Player_moveLeft(&player) == true)
+			moveCanvas(-PLAYER_MOVING_SPEED,0);
 	}
 	else if(input & J_RIGHT)
 	{
-		Player_moveRight(&player);
+		if(Player_moveRight(&player) == true)
+			moveCanvas(PLAYER_MOVING_SPEED,0);
 	}
 }
 
@@ -53,6 +60,8 @@ void updateGame()
 	initRender();
 	wait_vbl_done();
 	drawRoom(&activeRoom);
+	wait_vbl_done();
+	focusRender(player.x, player.y);
 	while(1)
 	{
 		wait_vbl_done();

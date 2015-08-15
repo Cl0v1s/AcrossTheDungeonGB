@@ -6,6 +6,9 @@ void initRender()
 
   SPRITES_8x8;
 
+  canvasX = 0;
+  canvasY = 0;
+  frameCounter = 0;
   loadBackground();
   loadSprites();
 
@@ -55,11 +58,29 @@ void clearDisplay()
   }
 }
 
+void moveCanvas(const unsigned int x, const unsigned int y)
+{
+  setCanvasPos(canvasX+x, canvasY+y);
+}
+
+void setCanvasPos(const unsigned int x, const unsigned int y)
+{
+  canvasX = x;
+  canvasY = y;
+}
+
+void focusRender(const unsigned int x, const unsigned int y)
+{
+  setCanvasPos(x-(HARDWARE_WIDTH/2), y-(HARDWARE_HEIGHT/2));
+}
+
 void updateRender()
 {
   frameCounter += 1;
   if(frameCounter == 20)
     frameCounter = 0;
+
+  move_bkg(canvasX, canvasY);
 }
 
 void drawRoom(struct ActiveRoom* active)
@@ -190,10 +211,10 @@ void drawPlayer(struct Player* player)
   }
 
 
-  move_sprite(SPRITE_PLAYER_TOPL, player->x+8, player->y+16-8);
-  move_sprite(SPRITE_PLAYER_TOPR, player->x+8+8, player->y+16-8);
-  move_sprite(SPRITE_PLAYER_BOTL, player->x+8, player->y+16);
-  move_sprite(SPRITE_PLAYER_BOTR, player->x+8+8, player->y+16);
+  move_sprite(SPRITE_PLAYER_TOPL, player->x+8-canvasX, player->y+16-8-canvasY);
+  move_sprite(SPRITE_PLAYER_TOPR, player->x+8+8-canvasX, player->y+16-8-canvasY);
+  move_sprite(SPRITE_PLAYER_BOTL, player->x+8-canvasX, player->y+16-canvasY);
+  move_sprite(SPRITE_PLAYER_BOTR, player->x+8+8-canvasX, player->y+16-canvasY);
 
 
 

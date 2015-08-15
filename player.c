@@ -52,26 +52,34 @@ void Player_activateCellAt(struct Player *player, const unsigned int x, const un
 	//TODO: Définir les actions du joueurs en fonction de la case qu'il vient d'activer
 }
 
-void Player_moveDown(struct Player* player)
+unsigned int Player_moveDown(struct Player* player)
 {
+	unsigned int r;
 	player->dir = 0;
-	Player_move(player, 0, PLAYER_MOVING_SPEED);
+	r = Player_move(player, 0, PLAYER_MOVING_SPEED);
+	return r;
 }
 
-void Player_moveUp(struct Player* player)
+unsigned int Player_moveUp(struct Player* player)
 {
+	unsigned int r;
 	player->dir = 2;
-	Player_move(player, 0, 0-PLAYER_MOVING_SPEED);
+	r= Player_move(player, 0, 0-PLAYER_MOVING_SPEED);
+	return r;
 }
 
-void Player_moveLeft(struct Player* player)
+unsigned int Player_moveLeft(struct Player* player)
 {
+	unsigned int r;
 	player->dir = 3;
-	Player_move(player, 0-PLAYER_MOVING_SPEED, 0);
+	r = Player_move(player, 0-PLAYER_MOVING_SPEED, 0);
+	return r;
 }
 
-void Player_moveRight(struct Player* player)
+unsigned int Player_moveRight(struct Player* player)
 {
+	unsigned int r;
 	player->dir = 1;
-	Player_move(player, PLAYER_MOVING_SPEED, 0);
+	r = Player_move(player, PLAYER_MOVING_SPEED, 0);
+	return r;
 }
