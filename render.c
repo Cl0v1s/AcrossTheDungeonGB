@@ -89,7 +89,7 @@ void drawRoom(struct ActiveRoom* active)
   unsigned char current[4] = {1,1};
   for(x = 0; x != active->room->width; x++)
   {
-    for(y = 0; y != active->room->height+1; y++)
+    for(y = 0; y != active->room->height; y++)
     {
       current[0] = 0;
       current[1] = 0;
@@ -135,7 +135,7 @@ void drawPlayer(struct Player* player)
     player->frame = 0;
 
   //gestion de la tête
-  if(player->dir == 0 && get_sprite_tile(SPRITE_PLAYER_TOPL) != 0)
+  if(player->dir == 0)
   {
     set_sprite_tile(SPRITE_PLAYER_TOPL, 0);
     set_sprite_tile(SPRITE_PLAYER_TOPR, 0);
