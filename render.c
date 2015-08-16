@@ -13,7 +13,7 @@ void initRender()
   loadSprites();
   loadFont();
 
-  move_win(0,120);
+  move_win(7,120);
 
   SHOW_BKG;
   SHOW_WIN;
@@ -36,18 +36,22 @@ void enableDisplay()
 
 void loadBackground()
 {
+  SWITCH_ROM_MBC1(3);
   set_bkg_data(0,9,tileset);
+  SWITCH_ROM_MBC1(1);
 }
 
 void loadSprites()
 {
+  SWITCH_ROM_MBC1(3);
   //chargement du sprite du joueur
   set_sprite_data(0,14,spriteplayer);
+  SWITCH_ROM_MBC1(1);
 }
 
 void loadFont()
 {
-  set_win_data(0x80,0x5e, font);
+  //set_win_data(0x80,0x5e, font);
 }
 
 void clearDisplay()

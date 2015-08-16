@@ -8,8 +8,6 @@
 #include "player.h"
 #include "cell.h"
 
-#include "font/font.h"
-
 #include "sprites/spriteplayer.h"
 #include "sprites/tileset.h"
 

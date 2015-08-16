@@ -23,8 +23,6 @@
 */
 
 
-/* Bank of tiles. */
-#define spriteplayerBank 0
 /* Start of tile array. */
 extern unsigned char spriteplayer[];
 
