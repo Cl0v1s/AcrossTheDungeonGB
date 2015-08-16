@@ -58,16 +58,16 @@ void updateGame()
 {
 	clearDisplay();
 	initRender();
-	wait_vbl_done();
 	drawRoom(&activeRoom);
-	wait_vbl_done();
 	focusRender(player.x, player.y);
 	while(1)
 	{
 		wait_vbl_done();
-		updateInput();
-		updateRender();
-		drawPlayer(&player);
+
+			updateInput();
+			updateRender();
+			drawPlayer(&player);
+
 	}
 }
 
@@ -76,6 +76,5 @@ void main(void)
 {
 	disableDisplay();
 	initGame();
-	enableDisplay();
 	updateGame();
 }

@@ -9,9 +9,10 @@ void initRender()
   canvasX = 0;
   canvasY = 0;
   frameCounter = 0;
+  loadFont();
   loadBackground();
   loadSprites();
-  loadFont();
+
 
   move_win(7,120);
 
@@ -36,6 +37,7 @@ void enableDisplay()
 
 void loadBackground()
 {
+  DISPLAY_OFF;
   SWITCH_ROM_MBC1(3);
   set_bkg_data(0,9,tileset);
   SWITCH_ROM_MBC1(1);
@@ -43,6 +45,7 @@ void loadBackground()
 
 void loadSprites()
 {
+  DISPLAY_OFF;
   SWITCH_ROM_MBC1(3);
   //chargement du sprite du joueur
   set_sprite_data(0,14,spriteplayer);
@@ -51,13 +54,61 @@ void loadSprites()
 
 void loadFont()
 {
-  //set_win_data(0x80,0x5e, font);
+  unsigned char* source = 0x9300;
+  unsigned char* target = 0x8800;
+  puts("Loading font"); //chargement du texte en mémoire
+  DISPLAY_OFF;
+  //copie des nombres de 0 à 9
+  while(source != 0x93A0)
+  {
+    (*target) = (*source);
+    target++;
+    source++;
+  }
+  source = 0x9610;
+  //copies des lettres de a à z
+  while(source != 0x97B0)
+  {
+    (*target) = (*source);
+    target++;
+    source++;
+  }
+  //copie de quelques caractères spéciaux
+  source = 0x9210; //!
+  while(source != 0x9220)
+  {
+    (*target) = (*source);
+    target++;
+    source++;
+  }
+  source = 0x93F0; //?
+  while(source != 0x9400)
+  {
+    (*target) = (*source);
+    target++;
+    source++;
+  }
+  source = 0x92E0; //.
+  while(source != 0x92F0)
+  {
+    (*target) = (*source);
+    target++;
+    source++;
+  }
+  source = 0x9270;//'
+  while(source != 0x9280)
+  {
+    (*target) = (*source);
+    target++;
+    source++;
+  }
 }
 
 void clearDisplay()
 {
   unsigned int x, y;
   unsigned char empty[] = {1,1};
+  DISPLAY_OFF;
   //effacement du texte
   for(x = 0; x != 32; x++)
   {
@@ -66,6 +117,7 @@ void clearDisplay()
       set_bkg_tiles(x,y,1,1,empty);
     }
   }
+  DISPLAY_ON;
 }
 
 void moveCanvas(const unsigned int x, const unsigned int y)
@@ -96,6 +148,7 @@ void drawRoom(struct ActiveRoom* active)
 {
   unsigned int x,y;
   unsigned char current[4] = {1,1};
+  DISPLAY_OFF;
   for(x = 0; x != active->room->width; x++)
   {
     for(y = 0; y != active->room->height; y++)
@@ -127,6 +180,7 @@ void drawRoom(struct ActiveRoom* active)
       }
     }
   }
+  DISPLAY_ON;
 }
 
 void drawPlayer(struct Player* player)
