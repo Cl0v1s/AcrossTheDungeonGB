@@ -102,19 +102,42 @@ void loadFont()
     target++;
     source++;
   }
+  source = 0x9200;//'
+  while(source != 0x9210)
+  {
+    (*target) = (*source);
+    target++;
+    source++;
+  }
 }
 
-void clearDisplay()
+void clearBackground()
 {
   unsigned int x, y;
   unsigned char empty[] = {1,1};
   DISPLAY_OFF;
-  //effacement du texte
+  //effacement du fond
   for(x = 0; x != 32; x++)
   {
     for(y = 0; y != 32; y++)
     {
       set_bkg_tiles(x,y,1,1,empty);
+    }
+  }
+  DISPLAY_ON;
+}
+
+void clearWindow()
+{
+  unsigned int x, y;
+  unsigned char empty[] = {1,1};
+  DISPLAY_OFF;
+  //effacement du HUD
+  for(x = 0; x != 32; x++)
+  {
+    for(y = 0; y != 32; y++)
+    {
+      set_win_tiles(x,y,1,1,empty);
     }
   }
   DISPLAY_ON;
@@ -142,6 +165,46 @@ void updateRender()
   if(frameCounter == 20)
     frameCounter = 0;
   move_bkg(canvasX, canvasY);
+}
+
+void drawText(const unsigned int x, const unsigned int y, char* text)
+{
+  //TODO: à eventuellement améliorer pour limiter les accès à la mémoire vidéo
+  unsigned int i = 0;
+  unsigned int o = 0;
+  unsigned int p = 0;
+  unsigned int v;
+  unsigned char t[2];
+  while(text[i] != '\0')
+  {
+    v = text[i];
+    //traitement et conversion
+    if(v == 0x2E)//. placement du point en premier (pas optimal) suite à un bug étrange
+          v = 0x26;
+    else if(v >0x60 && v<0x7B) //a-z
+      v = v-0x61+0xA;
+    else if(v>0x29 && v<0x3A) //0-9
+      v -= 0x30;
+    else if(v == 0x3F)//?
+        v = 0x25;
+    else if(v == 0x21)//!
+        v = 0x24;
+    else if(v == 0x27)//'
+        v = 0x27;
+    else
+        v = 0x28; //tout le reste et  espaces
+    //affichage
+    t[0] = 0x80+v;
+    t[1] = 0x80 + v;
+    set_win_tiles(x+o, y+p, 1,1, t);
+    o++;
+    if(o==20)
+    {
+      o = 0;
+      p++;
+    }
+    i++;
+  }
 }
 
 void drawRoom(struct ActiveRoom* active)

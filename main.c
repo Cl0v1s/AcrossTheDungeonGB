@@ -56,10 +56,11 @@ void updateInput()
 
 void updateGame()
 {
-	clearDisplay();
 	initRender();
+	clearBackground();
 	drawRoom(&activeRoom);
 	focusRender(player.x, player.y);
+	drawText(0,0,"hehe ! je suis un   beau sprite non ?");
 	while(1)
 	{
 		wait_vbl_done();

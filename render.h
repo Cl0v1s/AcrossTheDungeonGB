@@ -28,7 +28,9 @@ void moveCanvas(const unsigned int x, const unsigned int y);
 
 void setCanvasPos(const unsigned int x, const unsigned int y);
 
-void clearDisplay();
+void clearBackground();
+
+void clearWindow();
 
 void disableDisplay();
 
@@ -42,6 +44,7 @@ void loadSprites();
 
 void loadFont();
 
+void drawText(const unsigned int x, const unsigned int y, char* text);
 
 void drawRoom(struct ActiveRoom* active);
 
