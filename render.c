@@ -262,7 +262,7 @@ void drawText(const unsigned int x, const unsigned int y, char* text)
 
 void drawRoom(struct ActiveRoom* active)
 {
-  unsigned int x,y;
+  unsigned char x,y;
   unsigned char current[4] = {1,1};
   DISPLAY_OFF;
   for(x = 0; x != active->room->width; x++)

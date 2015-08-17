@@ -28,13 +28,29 @@ void Player_setPos(struct Player *player, const unsigned int x, const unsigned i
 	player->y = y;
 }
 
-int Player_move(struct Player *player, unsigned int x, unsigned int y)
+int Player_move(struct Player *player, char x, char y)
 {
-	//TODO: à vérifier lorsque le dessin de la salle sera effectif
-	if(ActiveRoom_isCellPassable(player->active, ((player->x+x) >> 4),((player->y+y) >> 4) ) )
+	unsigned char px = false;
+	unsigned char py = false;
+	if(x > 0) //correction dues à la hitbox
 	{
-			Player_setPos(player, player->x+x, player->y+y);
-			return true;
+		x = x + 16;
+		px = true;
+	}
+	if(y > 0)
+	{
+		y = y + 8;
+		py = true;
+	}
+
+	if(ActiveRoom_isCellPassable(player->active, ((player->x+x) >> 4), ((player->y+y) >> 4)) == 1)
+	{
+		if(py == true)
+			y = y - 8;
+		else if(px == true)
+			x = x - 16;
+		Player_setPos(player, player->x+x, player->y+y);
+		return true;
 	}
 	return false;
 }

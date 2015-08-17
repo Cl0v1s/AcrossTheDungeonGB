@@ -10,8 +10,8 @@
 struct Player
 {
 	struct ActiveRoom* active;
-	unsigned int x;
-	unsigned int y;
+	unsigned char x;
+	unsigned char y;
 	unsigned int frame;
 	unsigned int dir;
 	unsigned int life;
@@ -20,7 +20,7 @@ struct Player
 
 void Player_create(struct Player *player,struct ActiveRoom *active);
 void Player_fromSave(struct Player* player, struct ActiveRoom *active, const unsigned int life, const unsigned int x, const unsigned int y);
-int Player_move(struct Player *player, unsigned int x, unsigned int y);
+int Player_move(struct Player *player, char x, char y);
 void Player_setPos(struct Player *player, const unsigned int x, const unsigned int y);
 int Player_isAlive(struct Player *player);
 void Player_activateCellAt(struct Player *player, const unsigned int x, const unsigned int y);

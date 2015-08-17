@@ -7,11 +7,11 @@
 struct ActiveRoom
 {
   struct Room* room;
-  unsigned int map[ROOM_MAX_SIDE*ROOM_MAX_SIDE];
+  unsigned char map[ROOM_MAX_SIDE*ROOM_MAX_SIDE];
 };
 
 void ActiveRoom_create(struct ActiveRoom* active, struct Room* room);
-unsigned int ActiveRoom_isCellPassable(struct ActiveRoom* active, const unsigned int x, const unsigned int y);
+unsigned char ActiveRoom_isCellPassable(struct ActiveRoom* active, const unsigned char x, const unsigned char y);
 
 
 

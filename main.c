@@ -24,6 +24,8 @@ void initGame()
 		initActiveRoom(&world, &activeRoom);
 		delay(1500);
 		player.life = 0; //"fixation" en mémoire du joueur
+		player.x = 0;
+		player.y = 0;
 		Player_create(&player, &activeRoom);
 
 }
@@ -56,20 +58,23 @@ void updateInput()
 
 void updateGame()
 {
-	int a = 102;
+	unsigned int* b = 0xDE80;
+	struct Player* p;
+	p = &player;
 	initRender();
 	clearBackground();
 	drawRoom(&activeRoom);
 	focusRender(player.x, player.y);
-	drawInt(0,0, a);
-	//drawText(0,0,"hehe ! je suis un   beau sprite non ?");
 	while(1)
 	{
 		wait_vbl_done();
 
-			updateInput();
-			updateRender();
-			drawPlayer(&player);
+		updateInput();
+		updateRender();
+		(*b) = p->x;
+		b++;
+		(*b) = p->y;
+		drawPlayer(&player);
 
 	}
 }

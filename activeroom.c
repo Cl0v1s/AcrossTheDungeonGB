@@ -25,9 +25,11 @@ void ActiveRoom_create(struct ActiveRoom* active, struct Room* room)
 
 }
 
-unsigned int ActiveRoom_isCellPassable(struct ActiveRoom* active, const unsigned int x, const unsigned int y)
+unsigned char ActiveRoom_isCellPassable(struct ActiveRoom* active, const unsigned char x, const unsigned char y)
 {
-  unsigned int r = active->map[x+y*active->room->width] >> 7;
+  unsigned char* q = 0xDEA0;
+  unsigned char r = active->map[x+y*active->room->width] >> 7;
+
   if(r == 1)
     return false;
   else
