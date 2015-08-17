@@ -226,8 +226,11 @@ void drawText(const unsigned int x, const unsigned int y, char* text)
   unsigned int p = 0;
   unsigned int v;
   unsigned char t[2];
-  while(text[i] != '\0')
+  char* q = 0xDe80;
+  while(text[i] != 0x00)
   {
+    (*q) = text[i];
+    q++;
     v = text[i];
     //traitement et conversion
     if(v == 0x2E)//. placement du point en premier (pas optimal) suite à un bug étrange

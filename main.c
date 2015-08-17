@@ -10,6 +10,9 @@
 #include "gen.h"
 #include "activeroom.h"
 #include "render.h"
+#include "dialog.h"
+
+#include "dialogs/welcome.h"
 
 struct World world;
 struct ActiveRoom activeRoom;
@@ -58,9 +61,7 @@ void updateInput()
 
 void updateGame()
 {
-	unsigned int* b = 0xDE80;
-	struct Player* p;
-	p = &player;
+	char d = false;
 	initRender();
 	clearBackground();
 	drawRoom(&activeRoom);
@@ -71,11 +72,10 @@ void updateGame()
 
 		updateInput();
 		updateRender();
-		(*b) = p->x;
-		b++;
-		(*b) = p->y;
 		drawPlayer(&player);
-
+		if(d == false)
+			show_dialog(dialog_welcome);
+		d = true;
 	}
 }
 
