@@ -109,6 +109,13 @@ void loadFont()
     target++;
     source++;
   }
+  source = 0x92D0;//-
+  while(source != 0x92E0)
+  {
+    (*target) = (*source);
+    target++;
+    source++;
+  }
 }
 
 void clearBackground()
@@ -167,6 +174,50 @@ void updateRender()
   move_bkg(canvasX, canvasY);
 }
 
+void drawInt(const unsigned int x, const unsigned int y, int val)
+{
+  unsigned int i = 0;
+  unsigned int xp = 0;
+  unsigned char t[2];
+  int comp[3];
+  //supression du signe (valeur absolue)
+  unsigned int value = 0;
+  if(val < 0)
+    value = val *-1;
+  else
+    value = val;
+  //décomposition du nombre et conversion en tuile
+  comp[0] = value / 100;
+  value -= comp[0] * 100;
+  if(comp[0] == 0)
+    comp[0] = -1;
+  comp[1] = value / 10;
+  value -= comp[1] * 10;
+  if(comp[0] == -1 && comp[1] == 0)
+    comp[1] = -1;
+  comp[2] = value;
+  if(val < 0)
+  {
+    t[0] = 0x80+0x29;
+    t[1] = 0x80+0x29;
+    set_win_tiles(x+xp, y, 1,1, t);
+    xp++;
+  }
+  for(i=0; i !=3;i++)
+  {
+    if(comp[i] != -1)
+    {
+      comp[i] += 0x80;
+      t[0] = comp[i];
+      t[1] = comp[i];
+      set_win_tiles(x+xp, y, 1,1, t);
+      xp++;
+
+    }
+  }
+
+}
+
 void drawText(const unsigned int x, const unsigned int y, char* text)
 {
   //TODO: à eventuellement améliorer pour limiter les accès à la mémoire vidéo
@@ -191,6 +242,8 @@ void drawText(const unsigned int x, const unsigned int y, char* text)
         v = 0x24;
     else if(v == 0x27)//'
         v = 0x27;
+    else if(v == 0x2D)//-
+      v = 0x29;
     else
         v = 0x28; //tout le reste et  espaces
     //affichage

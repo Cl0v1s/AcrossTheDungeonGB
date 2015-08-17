@@ -26,4 +26,5 @@
 //définition des fonctions usuelles
 unsigned int random(const unsigned int min, const unsigned int max);
 
+
 #endif
