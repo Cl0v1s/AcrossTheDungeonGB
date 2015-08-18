@@ -43,10 +43,10 @@ void Player_activateCellAt(struct Player *player, const unsigned int x, const un
 
 void Player_update(struct Player* player)
 {
-	char* p = 0xDE80;
+	unsigned char cell;
+	//analyse des mouvements
 	if(player->moving != 0)
 	{
-		(*p) = player->moving;
 		if(player->dir == 0)
 			player->y = player->y + 1;
 		else if(player->dir == 2)
@@ -55,13 +55,20 @@ void Player_update(struct Player* player)
 			player->x = player->x - 1;
 		else if(player->dir == 1)
 			player->x = player->x + 1;
-
 		player->moving--;
 		if(player->moving  == 0 || player->moving == 0-PLAYER_MOVING_SPEED)
 		{
 			player->x = (player->x >> 4) << 4;
 			player->y = (player->y >> 3) << 3;
 			player->moving = 0;
+		}
+	}
+	else //analyse de la situation à du joueur
+	{
+		cell = ActiveRoom_getCellAt(player->active, player->x, player->y);
+		if(cell >= 127 - WORLD_MAX_ROOMS && cell <128)
+		{
+			player->active->markedForTpTo = cell - (127 - WORLD_MAX_ROOMS);
 		}
 	}
 
@@ -76,6 +83,12 @@ void Player_moveDown(struct Player* player)
 	{
 		player->moving = 8;
 	}
+	else
+	{
+		SOUND_CHANNEL_1;
+		SOUND_CHANNEL_1_PREPARE(5,0,2);
+		SOUND_CHANNEL_1_PLAY(0x02);
+	}
 }
 
 void Player_moveUp(struct Player* player)
@@ -86,6 +99,12 @@ void Player_moveUp(struct Player* player)
 	if(ActiveRoom_isCellPassable(player->active, player->x >> 4, (player->y-8) >> 4) && player->moving == 0)
 	{
 		player->moving = 8;
+	}
+	else
+	{
+		SOUND_CHANNEL_1;
+		SOUND_CHANNEL_1_PREPARE(5,0,2);
+		SOUND_CHANNEL_1_PLAY(0x02);
 	}
 }
 
@@ -98,6 +117,12 @@ void Player_moveLeft(struct Player* player)
 	{
 		player->moving = 16;
 	}
+	else
+	{
+		SOUND_CHANNEL_1;
+		SOUND_CHANNEL_1_PREPARE(5,0,2);
+		SOUND_CHANNEL_1_PLAY(0x02);
+	}
 }
 
 void Player_moveRight(struct Player* player)
@@ -108,5 +133,11 @@ void Player_moveRight(struct Player* player)
 	if(ActiveRoom_isCellPassable(player->active, (player->x+16) >> 4, (player->y) >> 4) && player->moving == 0)
 	{
 		player->moving = 16;
+	}
+	else
+	{
+		SOUND_CHANNEL_1;
+		SOUND_CHANNEL_1_PREPARE(5,0,2);
+		SOUND_CHANNEL_1_PLAY(0x02);
 	}
 }

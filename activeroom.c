@@ -8,6 +8,7 @@ void ActiveRoom_create(struct ActiveRoom* active, struct Room* room)
   height -= 1;
   //affectation de la salle de base
   active->room = room;
+  active->markedForTpTo = -1;
   SWITCH_ROM_MBC1(2);
   //TODO: ajouter ici le code relatif aux biomes
   //initialisation primaire de la salle
@@ -61,4 +62,15 @@ unsigned char ActiveRoom_isCellPassable(struct ActiveRoom* active, const unsigne
     return false;
   else
     return true;
+}
+
+unsigned char ActiveRoom_getCellAt(struct ActiveRoom* active, const unsigned char x, const unsigned char y)
+{
+  struct Room* room;
+  unsigned int width;
+  room = active->room;
+  SWITCH_ROM_MBC1(2);
+  width = room->width;
+  SWITCH_ROM_MBC1(1);
+  return active->map[x+y*width];
 }

@@ -1,6 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "sound.h"
 #include "helper.h"
 #include "activeroom.h"
 #include "room.h"

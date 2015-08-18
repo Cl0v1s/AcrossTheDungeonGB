@@ -3,6 +3,7 @@
 #include <gb/gb.h>
 #include <rand.h>
 #include <time.h>
+#include "sound.h"
 
 #include "helper.h"
 #include "room.h"
@@ -62,16 +63,29 @@ void updateInput()
 
 }
 
+
+void manageTp()
+{
+	struct Room* room;
+	if(activeRoom.markedForTpTo != -1)
+	{
+		room = &world.rooms[activeRoom.markedForTpTo];
+		ActiveRoom_create(&activeRoom, room);
+	}
+}
+
 void updateGame()
 {
 	initRender();
 	clearBackground();
 	drawRoom(&activeRoom);
 	focusRender(player.x, player.y);
+
+
 	while(1)
 	{
 		wait_vbl_done();
-
+		manageTp();
 		updateInput();
 		Player_update(&player);
 		updateRender();
@@ -83,6 +97,7 @@ void updateGame()
 
 void main(void)
 {
+	SOUND_ON;
 	disableDisplay();
 	initGame();
 	updateGame();
