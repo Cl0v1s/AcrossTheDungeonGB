@@ -16,6 +16,5 @@ struct World
 void initWorld(struct World* world);
 void initLinks(struct World* world);
 void initBiomes(struct World* world);
-void initActiveRoom(struct World* world,struct ActiveRoom* active);
 
 #endif

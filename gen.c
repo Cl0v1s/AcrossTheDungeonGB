@@ -67,11 +67,3 @@ void initBiomes(struct World* world)
 {
 
 }
-
-void initActiveRoom(struct World* world, struct ActiveRoom* active)
-{
-  //sélection d'une salle au hasard
-  struct Room* room = &(world->rooms[random(0, world->roomsNumber)]);
-  //Lancement de la matérialisation de la salle
-  ActiveRoom_create(active, room);
-}

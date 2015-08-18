@@ -21,11 +21,16 @@ struct Player player;
 
 void initGame()
 {
+		struct Room* room;
 		initrand(time(NULL)+10000);
+		SWITCH_ROM_MBC1(2);
 		initWorld(&world);
+		SWITCH_ROM_MBC1(1);
 		activeRoom.room = 0x00; //"fixation" en mémoire de la pièce active, juste pour être sûr
-		initActiveRoom(&world, &activeRoom);
-		delay(1500);
+		//sélection d'une salle au hasard
+		room = &(world.rooms[random(0, world.roomsNumber)]);
+		//Lancement de la matérialisation de la salle
+		ActiveRoom_create(&activeRoom, room);
 		player.life = 0; //"fixation" en mémoire du joueur
 		player.x = 0;
 		player.y = 0;

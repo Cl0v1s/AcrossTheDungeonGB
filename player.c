@@ -28,33 +28,6 @@ void Player_setPos(struct Player *player, const unsigned int x, const unsigned i
 	player->y = y;
 }
 
-int Player_move(struct Player *player, char x, char y)
-{
-	unsigned char px = false;
-	unsigned char py = false;
-	if(x > 0) //correction dues à la hitbox
-	{
-		x = x + 16;
-		px = true;
-	}
-	if(y > 0)
-	{
-		y = y + 8;
-		py = true;
-	}
-
-	if(ActiveRoom_isCellPassable(player->active, ((player->x+x) >> 4), ((player->y+y) >> 4)) == 1)
-	{
-		if(py == true)
-			y = y - 8;
-		else if(px == true)
-			x = x - 16;
-		Player_setPos(player, player->x+x, player->y+y);
-		return true;
-	}
-	return false;
-}
-
 
 int Player_isAlive(struct Player *player)
 {
@@ -68,34 +41,80 @@ void Player_activateCellAt(struct Player *player, const unsigned int x, const un
 	//TODO: Définir les actions du joueurs en fonction de la case qu'il vient d'activer
 }
 
-unsigned int Player_moveDown(struct Player* player)
+unsigned char Player_moveDown(struct Player* player)
 {
-	unsigned int r;
+	unsigned char r;
+	unsigned char cx,cy,cw;
 	player->dir = 0;
-	r = Player_move(player, 0, PLAYER_MOVING_SPEED);
+	cx = (player->x+1) >> 4;
+	cy = (player->y+PLAYER_MOVING_SPEED+8) >> 4;
+	cw = (player->x + 15) >> 4;
+	r = ActiveRoom_isCellPassable(player->active, cx, cy);
+	if(r == false)
+		return r;
+	r = ActiveRoom_isCellPassable(player->active, cw, cy);
+	if(r == true)
+	{
+		Player_setPos(player, player->x, player->y+PLAYER_MOVING_SPEED);
+	}
 	return r;
 }
 
-unsigned int Player_moveUp(struct Player* player)
+unsigned char Player_moveUp(struct Player* player)
 {
-	unsigned int r;
+	unsigned char r;
+	unsigned char cx,cy,cw;
 	player->dir = 2;
-	r= Player_move(player, 0, 0-PLAYER_MOVING_SPEED);
+	cx = (player->x+1) >> 4;
+	cy = (player->y-PLAYER_MOVING_SPEED) >> 4;
+	cw = (player->x + 15) >> 4;
+	r = ActiveRoom_isCellPassable(player->active, cx, cy);
+	if(r == false)
+	{
+		return r;
+	}
+	r = ActiveRoom_isCellPassable(player->active, cw, cy);
+	if(r == true)
+	{
+		Player_setPos(player, player->x, player->y-PLAYER_MOVING_SPEED);
+	}
 	return r;
 }
 
-unsigned int Player_moveLeft(struct Player* player)
+unsigned char Player_moveLeft(struct Player* player)
 {
-	unsigned int r;
+	unsigned char r;
+	unsigned char cy,cx,ch;
 	player->dir = 3;
-	r = Player_move(player, 0-PLAYER_MOVING_SPEED, 0);
+	cx = (player->x-PLAYER_MOVING_SPEED) >> 4;
+	cy = (player->y+1) >> 4;
+	ch = (player->y + 7) >> 4;
+	r = ActiveRoom_isCellPassable(player->active, cx, cy);
+	if(r == false)
+		return r;
+	r = ActiveRoom_isCellPassable(player->active, cx, ch);
+	if(r == true)
+	{
+		Player_setPos(player, player->x-PLAYER_MOVING_SPEED, player->y);
+	}
 	return r;
 }
 
-unsigned int Player_moveRight(struct Player* player)
+unsigned char Player_moveRight(struct Player* player)
 {
-	unsigned int r;
+	unsigned char r;
+	unsigned char cy,cx,ch;
 	player->dir = 1;
-	r = Player_move(player, PLAYER_MOVING_SPEED, 0);
+	cx = (player->x+PLAYER_MOVING_SPEED+16) >> 4;
+	cy = (player->y+1) >> 4;
+	ch = (player->y + 7) >> 4;
+	r = ActiveRoom_isCellPassable(player->active, cx, cy);
+	if(r == false)
+		return r;
+	r = ActiveRoom_isCellPassable(player->active, cx, ch);
+	if(r == true)
+	{
+		Player_setPos(player, player->x+PLAYER_MOVING_SPEED, player->y);
+	}
 	return r;
 }
