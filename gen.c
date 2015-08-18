@@ -2,7 +2,7 @@
 
 void initWorld(struct World* world)
 {
-  unsigned int i,u;
+  unsigned char i,u;
   world->roomsNumber =random(2, WORLD_MAX_ROOMS);
   for(i = 0; i != world->roomsNumber; i++)
   {
@@ -15,7 +15,7 @@ void initWorld(struct World* world)
   		world->rooms[i].doorPos[u] = -1;
   		world->rooms[i].doorTar[u] = -1;
   	}
-    Room_create(&world->rooms[i]);
+    Room_create(&world->rooms[i], i);
   }
   initLinks(world);
 }

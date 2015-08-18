@@ -15,8 +15,10 @@
 #define SOUND_CHANNEL_4 NR51_REG = 0x88;NR50_REG = 0x77
 
 //channel 1
+//duration (3bits): 0sweepoff, 7max  direction (1bit): 1 up, 0 down  amount (3bits): 0sweepoff, 7max 
+#define SOUND_CHANNEL_1_SWEEP(direction,duration, amount) NR10_REG = duration << 4 | direction << 3 | amount
 //volume (4bits) 0:no sound F:max, direction (1bit) 0: down, 1: up, duration (3bits): 0:off 7:max
-#define SOUND_CHANNEL_1_PREPARE(volume, direction, duration) NR12_REG = volume << 4 | direction << 3 | duration
+#define SOUND_CHANNEL_1_ENVELOPE(volume, direction, duration) NR12_REG = volume << 4 | direction << 3 | duration
 //frequency (3bits) 0:min 7:max
 #define SOUND_CHANNEL_1_PLAY(frequency) 	NR13_REG=frequency;NR14_REG = 0x80U | frequency
 

@@ -43,6 +43,7 @@ void Player_activateCellAt(struct Player *player, const unsigned int x, const un
 
 void Player_update(struct Player* player)
 {
+	unsigned char* p = 0XDE90;
 	unsigned char cell;
 	//analyse des mouvements
 	if(player->moving != 0)
@@ -63,14 +64,16 @@ void Player_update(struct Player* player)
 			player->moving = 0;
 		}
 	}
-	else //analyse de la situation à du joueur
+	else
 	{
-		cell = ActiveRoom_getCellAt(player->active, player->x, player->y);
-		if(cell >= 127 - WORLD_MAX_ROOMS && cell <128)
+		cell = ActiveRoom_getCellAt(player->active, player->x >> 4, player->y >> 4);
+		(*p) = cell;
+		if((cell >> 6) == 1 )
 		{
-			player->active->markedForTpTo = cell - (127 - WORLD_MAX_ROOMS);
+			player->active->markedForTpTo = cell - CELL_DOOR;
 		}
 	}
+
 
 }
 
@@ -86,7 +89,7 @@ void Player_moveDown(struct Player* player)
 	else
 	{
 		SOUND_CHANNEL_1;
-		SOUND_CHANNEL_1_PREPARE(5,0,2);
+		SOUND_CHANNEL_1_ENVELOPE(5,0,2);
 		SOUND_CHANNEL_1_PLAY(0x02);
 	}
 }
@@ -103,7 +106,7 @@ void Player_moveUp(struct Player* player)
 	else
 	{
 		SOUND_CHANNEL_1;
-		SOUND_CHANNEL_1_PREPARE(5,0,2);
+		SOUND_CHANNEL_1_ENVELOPE(5,0,2);
 		SOUND_CHANNEL_1_PLAY(0x02);
 	}
 }
@@ -120,7 +123,7 @@ void Player_moveLeft(struct Player* player)
 	else
 	{
 		SOUND_CHANNEL_1;
-		SOUND_CHANNEL_1_PREPARE(5,0,2);
+		SOUND_CHANNEL_1_ENVELOPE(5,0,2);
 		SOUND_CHANNEL_1_PLAY(0x02);
 	}
 }
@@ -137,7 +140,7 @@ void Player_moveRight(struct Player* player)
 	else
 	{
 		SOUND_CHANNEL_1;
-		SOUND_CHANNEL_1_PREPARE(5,0,2);
+		SOUND_CHANNEL_1_ENVELOPE(5,0,2);
 		SOUND_CHANNEL_1_PLAY(0x02);
 	}
 }

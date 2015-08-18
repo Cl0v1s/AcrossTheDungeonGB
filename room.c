@@ -1,6 +1,6 @@
 #include "room.h"
 
-void Room_create(struct Room* room)
+void Room_create(struct Room* room, unsigned char id)
 {
 	unsigned int i;
 	//détermination de la taille de la salle
@@ -12,11 +12,12 @@ void Room_create(struct Room* room)
 		room->doorPos[i] = -1;
 		room->doorTar[i] = -1;
 	}
+	room->id = id;
 }
 
 void Room_addDoor(struct Room* room, const unsigned int other)
 {
-	if(room->sisters%2 == 0)
+	if(room->sisters & 0x1 == 0)
 	{
 		room->doorPos[room->sisters] = random(2, room->width-2);
 	}

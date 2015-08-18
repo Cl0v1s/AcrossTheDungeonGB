@@ -12,14 +12,16 @@
 
 struct Room
 {
-	unsigned int width;
-	unsigned int height;
-	unsigned int sisters;
-	int doorPos[4];
-	int doorTar[4];
+	unsigned char width;
+	unsigned char height;
+	unsigned char sisters;
+	char doorPos[4];
+	char doorTar[4];
+	unsigned char id;
+
 };
 
-void Room_create(struct Room* room);
+void Room_create(struct Room* room, unsigned char id);
 
 void Room_addDoor(struct Room* room, const unsigned int other);
 

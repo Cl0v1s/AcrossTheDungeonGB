@@ -23,7 +23,7 @@ struct Player player;
 void initGame()
 {
 		struct Room* room;
-		initrand(time(NULL)+10000);
+		initrand(time(NULL));
 		SWITCH_ROM_MBC1(2);
 		initWorld(&world);
 		SWITCH_ROM_MBC1(1);
@@ -66,11 +66,21 @@ void updateInput()
 
 void manageTp()
 {
+
 	struct Room* room;
+	unsigned char last;
+	unsigned char tmp[2];
 	if(activeRoom.markedForTpTo != -1)
 	{
+		last = ActiveRoom_getId(&activeRoom);
 		room = &world.rooms[activeRoom.markedForTpTo];
 		ActiveRoom_create(&activeRoom, room);
+		ActiveRoom_getDoorTo(&activeRoom, last, tmp);
+		player.x = tmp[0] << 4;
+		player.y = tmp[1] << 4;
+		wait_vbl_done();
+		clearBackground();
+		drawRoom(&activeRoom);
 	}
 }
 

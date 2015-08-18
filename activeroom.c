@@ -2,10 +2,8 @@
 
 void ActiveRoom_create(struct ActiveRoom* active, struct Room* room)
 {
-  unsigned int i,u;
-  unsigned int cell;
-  unsigned int height = room->height; //utilisation d'une variable intermdiaire suite à un bug étrange
-  height -= 1;
+  unsigned char i,u;
+  unsigned char cell;
   //affectation de la salle de base
   active->room = room;
   active->markedForTpTo = -1;
@@ -14,10 +12,10 @@ void ActiveRoom_create(struct ActiveRoom* active, struct Room* room)
   //initialisation primaire de la salle
   for(i = 0; i != room->width; i++)
   {
-    for(u = 0; u != room->height+1; u++) //on va plus loin pour corriger un bug étrange
+    for(u = 0; u != room->height; u++) //on va plus loin pour corriger un bug étrange
     {
       cell = CELL_GROUND;
-      if(u == 0 || i == 0 || i == room->width -1 || u == height)
+      if(u == 0 || i == 0 || i == room->width -1 || u == room->height - 1)
       {
         cell = CELL_WALL;
       }
@@ -73,4 +71,51 @@ unsigned char ActiveRoom_getCellAt(struct ActiveRoom* active, const unsigned cha
   width = room->width;
   SWITCH_ROM_MBC1(1);
   return active->map[x+y*width];
+}
+
+unsigned char ActiveRoom_getId(struct ActiveRoom* active)
+{
+  unsigned char id;
+  SWITCH_ROM_MBC1(2);
+  id = active->room->id;
+  SWITCH_ROM_MBC1(1);
+  return id;
+}
+
+void ActiveRoom_getDoorTo(struct ActiveRoom* active, unsigned char room, unsigned char* tab)
+{
+  	unsigned char* p = 0xDE80;
+  unsigned char done = false;
+  unsigned char i,u, width, height;
+  SWITCH_ROM_MBC1(2);
+  width = active->room->width;
+  height = active->room->height;
+  SWITCH_ROM_MBC1(1);
+  (*p) = width;
+  p++;
+  (*p) = height;
+  i = 0;
+  while(done == false && i != width)
+  {
+    u = 0;
+    while(done == false && u != height)
+    {
+      if(active->map[i+u*width] == CELL_DOOR + room)
+      {
+        p = 0xDE70;
+        (*p) = 4+i;
+        p++;
+        (*p) = 4+u;
+        done = true;
+      }
+      else
+        u++;
+    }
+    if(done == false)
+      i++;
+  }
+
+  (*tab) = i;
+  tab++;
+  (*tab) = u;
 }

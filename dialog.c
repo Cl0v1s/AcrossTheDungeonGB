@@ -29,6 +29,9 @@ void show_dialog(char* start)
       //on affiche le texte lu et on attends
       drawText(0,1,line);
       waitpad(J_A | J_B | J_START | J_SELECT);
+      SOUND_CHANNEL_1;
+      SOUND_CHANNEL_1_ENVELOPE(5,0,2);
+      SOUND_CHANNEL_1_PLAY(0x07);
       //effacement du texte précédant dans la zone
       for(i = 0; i != 40; i++)
       {
