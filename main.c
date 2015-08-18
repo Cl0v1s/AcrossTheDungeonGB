@@ -41,32 +41,29 @@ void initGame()
 void updateInput()
 {
 	unsigned int input;
+	unsigned char i;
 	input = joypad();
 	if(input & J_DOWN)
 	{
-		if(Player_moveDown(&player) == true)
-			moveCanvas(0,PLAYER_MOVING_SPEED);
+		Player_moveDown(&player);
 	}
 	else if(input & J_UP)
 	{
-		if(Player_moveUp(&player) == true)
-			moveCanvas(0,-PLAYER_MOVING_SPEED);
+		Player_moveUp(&player);
 	}
 	else if(input & J_LEFT)
 	{
-		if(Player_moveLeft(&player) == true)
-			moveCanvas(-PLAYER_MOVING_SPEED,0);
+		Player_moveLeft(&player);
 	}
 	else if(input & J_RIGHT)
 	{
-		if(Player_moveRight(&player) == true)
-			moveCanvas(PLAYER_MOVING_SPEED,0);
+		Player_moveRight(&player);
 	}
+
 }
 
 void updateGame()
 {
-	char d = false;
 	initRender();
 	clearBackground();
 	drawRoom(&activeRoom);
@@ -76,11 +73,10 @@ void updateGame()
 		wait_vbl_done();
 
 		updateInput();
+		Player_update(&player);
 		updateRender();
 		drawPlayer(&player);
-		if(d == false)
-			show_dialog(dialog_welcome);
-		d = true;
+		focusRender(player.x, player.y);
 	}
 }
 
