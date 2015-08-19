@@ -63,6 +63,12 @@ void updateInput()
 
 }
 
+void updateHud()
+{
+	drawText(17,2,"s:");
+	drawInt(19,2, ActiveRoom_getId(&activeRoom));
+}
+
 
 void manageTp()
 {
@@ -97,6 +103,7 @@ void manageTp()
 		wait_vbl_done();
 		clearBackground();
 		drawRoom(&activeRoom);
+		updateHud();
 	}
 }
 
@@ -107,7 +114,7 @@ void updateGame()
 	drawRoom(&activeRoom);
 	focusRender(player.x, player.y);
 
-
+	updateHud();
 	while(1)
 	{
 		wait_vbl_done();

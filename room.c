@@ -17,13 +17,16 @@ void Room_create(struct Room* room, unsigned char id)
 
 void Room_addDoor(struct Room* room, const unsigned int other)
 {
-	if(room->sisters & 0x1 == 0)
+	unsigned char p = random(0,4);
+	while(room->doorTar[p] != -1)
+		p = random(0,4);
+	if(p & 0x1 == 0)
 	{
-		room->doorPos[room->sisters] = random(2, room->width-2);
+		room->doorPos[p] = random(2, room->width-2);
 	}
 	else
-		room->doorPos[room->sisters] = random(2, room->height - 2);
+		room->doorPos[p] = random(2, room->height - 2);
 
-	room->doorTar[room->sisters] = other;
+	room->doorTar[p] = other;
 	room->sisters = room->sisters + 1;
 }

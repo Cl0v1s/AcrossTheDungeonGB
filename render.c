@@ -116,6 +116,13 @@ void loadFont()
     target++;
     source++;
   }
+  source = 0x93A0;//:
+  while(source != 0x93B0)
+  {
+    (*target) = (*source);
+    target++;
+    source++;
+  }
 }
 
 void clearBackground()
@@ -247,6 +254,8 @@ void drawText(const unsigned int x, const unsigned int y, char* text)
         v = 0x27;
     else if(v == 0x2D)//-
       v = 0x29;
+    else if(v == 0x3A)//:
+      v = 0x2A;
     else
         v = 0x28; //tout le reste et  espaces
     //affichage
