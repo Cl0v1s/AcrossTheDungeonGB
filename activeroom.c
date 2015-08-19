@@ -9,10 +9,18 @@ void ActiveRoom_create(struct ActiveRoom* active, struct Room* room)
   active->markedForTpTo = -1;
   SWITCH_ROM_MBC1(2);
   //TODO: ajouter ici le code relatif aux biomes
+  //"mise à zéro" de la salle
+  for(i = 0; i != ROOM_MAX_SIDE; i++)
+  {
+    for(u = 0; u != ROOM_MAX_SIDE; u++)
+    {
+      active->map[i+u*room->width] = 0x00;
+    }
+  }
   //initialisation primaire de la salle
   for(i = 0; i != room->width; i++)
   {
-    for(u = 0; u != room->height; u++) //on va plus loin pour corriger un bug étrange
+    for(u = 0; u != room->height; u++)
     {
       cell = CELL_GROUND;
       if(u == 0 || i == 0 || i == room->width -1 || u == room->height - 1)
