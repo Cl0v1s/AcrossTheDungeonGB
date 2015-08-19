@@ -7,7 +7,7 @@
 
 #include "helper.h"
 #include "room.h"
-#include "player.h"
+#include "entity.h"
 #include "gen.h"
 #include "activeroom.h"
 #include "render.h"
@@ -32,9 +32,7 @@ void initGame()
 		room = &(world.rooms[random(0, world.roomsNumber)]);
 		//Lancement de la matérialisation de la salle
 		ActiveRoom_create(&activeRoom, room);
-		player.life = 0; //"fixation" en mémoire du joueur
-		player.x = 0;
-		player.y = 0;
+		player.spriteId = 0;
 		Entity_create(&player, &activeRoom);
 
 }

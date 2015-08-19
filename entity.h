@@ -1,5 +1,5 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#ifndef ENTITY_H
+#define ENTITY_H
 
 #include "sound.h"
 #include "helper.h"
@@ -17,6 +17,7 @@ struct Entity
 	unsigned char dir;
 	unsigned char life;
 	char moving;
+	unsigned char spriteId;
 	//TODO: ajouter les autres attributs du joueur
 };
 

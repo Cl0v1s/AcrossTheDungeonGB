@@ -5,7 +5,7 @@
 #include <gb/drawing.h>
 
 #include "activeroom.h"
-#include "player.h"
+#include "entity.h"
 #include "cell.h"
 
 #include "sprites/spriteplayer.h"

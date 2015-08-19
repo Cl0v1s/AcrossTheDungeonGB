@@ -1,4 +1,4 @@
-#include "player.h"
+#include "entity.h"
 
 void Entity_create(struct Entity* entity, struct ActiveRoom* active)
 {

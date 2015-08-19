@@ -345,11 +345,18 @@ void drawRoom(struct ActiveRoom* active)
 void drawEntity(struct Entity* entity)
 {
   unsigned char frame = 0;
-  unsigned int downL[] = {1,2,1,3};
-  unsigned int downR[] = {1,3,1,2};
-  unsigned int side[] = {6,8,6,8};
-  unsigned int upL[] = {11,12,11,13};
-  unsigned int upR[] = {11,13,11,12};
+  unsigned char start = entity->spriteId*0x0D;
+  unsigned char downL[] = {start+1,start+2,start+1,start+3};
+  unsigned char downR[] = {start+1,start+3,start+1,start+2};
+  unsigned char side[] = {start+6,start+8,start+6,start+8};
+  unsigned char upL[] = {start+11,start+12,start+11,start+13};
+  unsigned char upR[] = {start+11,start+13,start+11,start+12};
+
+  unsigned char topL = 0+(entity->spriteId << 2);
+  unsigned char topR = 1+(entity->spriteId << 2);
+  unsigned char botL = 2+(entity->spriteId << 2);
+  unsigned char botR = 3+(entity->spriteId << 2);
+
   //TODO: ajouter code pour le bas
   //gestion des frames
   if(entity->moving != 0)
@@ -363,84 +370,84 @@ void drawEntity(struct Entity* entity)
   //gestion de la tête
   if(entity->dir == 0)
   {
-    set_sprite_tile(SPRITE_PLAYER_TOPL, 0);
-    set_sprite_tile(SPRITE_PLAYER_TOPR, 0);
-    if(get_sprite_prop(SPRITE_PLAYER_TOPL) != 0x00U) //si le prop est celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_TOPL, 0x00U);
-    if(get_sprite_prop(SPRITE_PLAYER_TOPR) !=  S_FLIPX) //si le prop est celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_TOPR, S_FLIPX);
+    set_sprite_tile(topL, 0);
+    set_sprite_tile(topR, 0);
+    if(get_sprite_prop(topL) != 0x00U) //si le prop est celui par défaut
+      set_sprite_prop(topL, 0x00U);
+    if(get_sprite_prop(topR) !=  S_FLIPX) //si le prop est celui par défaut
+      set_sprite_prop(topR, S_FLIPX);
   }
-  else if(entity->dir == 3 && get_sprite_tile(SPRITE_PLAYER_TOPL) != 4)
+  else if(entity->dir == 3 && get_sprite_tile(topL) != 4)
   {
-    set_sprite_tile(SPRITE_PLAYER_TOPL, 4);
-    set_sprite_tile(SPRITE_PLAYER_TOPR, 5);
-    if(get_sprite_prop(SPRITE_PLAYER_TOPL) != 0x00U) //Si le prop n'est pas celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_TOPL, 0x00U); //On remet celui par défaut
-    if(get_sprite_prop(SPRITE_PLAYER_TOPR) != 0x00U) //Si le prop n'est celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_TOPR, 0x00U); //On remt celui par defautt
+    set_sprite_tile(topL, 4);
+    set_sprite_tile(topR, 5);
+    if(get_sprite_prop(topL) != 0x00U) //Si le prop n'est pas celui par défaut
+      set_sprite_prop(topL, 0x00U); //On remet celui par défaut
+    if(get_sprite_prop(topR) != 0x00U) //Si le prop n'est celui par défaut
+      set_sprite_prop(topR, 0x00U); //On remt celui par defautt
   }
-  else if(entity->dir == 1 && get_sprite_tile(SPRITE_PLAYER_TOPL) != 5)
+  else if(entity->dir == 1 && get_sprite_tile(topL) != 5)
   {
-    set_sprite_tile(SPRITE_PLAYER_TOPL, 5);
-    set_sprite_tile(SPRITE_PLAYER_TOPR, 4);
-    if(get_sprite_prop(SPRITE_PLAYER_TOPL) == 0x00U) //Si le prop n'est pas celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_TOPL, S_FLIPX); //On remet celui par défaut
-    if(get_sprite_prop(SPRITE_PLAYER_TOPR) == 0x00U) //Si le prop n'est pas celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_TOPR, S_FLIPX); //On remet celui par défaut
+    set_sprite_tile(topL, 5);
+    set_sprite_tile(topR, 4);
+    if(get_sprite_prop(topL) == 0x00U) //Si le prop n'est pas celui par défaut
+      set_sprite_prop(topL, S_FLIPX); //On remet celui par défaut
+    if(get_sprite_prop(topR) == 0x00U) //Si le prop n'est pas celui par défaut
+      set_sprite_prop(topR, S_FLIPX); //On remet celui par défaut
   }
-  if(entity->dir == 2 && get_sprite_tile(SPRITE_PLAYER_TOPL) != 10)
+  if(entity->dir == 2 && get_sprite_tile(topL) != 10)
   {
-    set_sprite_tile(SPRITE_PLAYER_TOPL, 10);
-    set_sprite_tile(SPRITE_PLAYER_TOPR, 10);
-    if(get_sprite_prop(SPRITE_PLAYER_TOPL) != 0x00U) //si le prop est celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_TOPL, 0x00U);
-    if(get_sprite_prop(SPRITE_PLAYER_TOPR) == 0x00U) //si le prop est celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_TOPR, S_FLIPX);
+    set_sprite_tile(topL, 10);
+    set_sprite_tile(topR, 10);
+    if(get_sprite_prop(topL) != 0x00U) //si le prop est celui par défaut
+      set_sprite_prop(topL, 0x00U);
+    if(get_sprite_prop(topR) == 0x00U) //si le prop est celui par défaut
+      set_sprite_prop(topR, S_FLIPX);
   }
 
   //gestion du corps
   if(entity->dir == 0)
   {
-    set_sprite_tile(SPRITE_PLAYER_BOTL, downL[frame]);
-    set_sprite_tile(SPRITE_PLAYER_BOTR, downR[frame]);
-    if(get_sprite_prop(SPRITE_PLAYER_BOTL) != 0x00U) //si le prop est celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_BOTL, 0x00U);
-    if(get_sprite_prop(SPRITE_PLAYER_BOTR) == 0x00U) //si le prop est celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_BOTR, S_FLIPX);
+    set_sprite_tile(botL, downL[frame]);
+    set_sprite_tile(botR, downR[frame]);
+    if(get_sprite_prop(botL) != 0x00U) //si le prop est celui par défaut
+      set_sprite_prop(botL, 0x00U);
+    if(get_sprite_prop(botR) == 0x00U) //si le prop est celui par défaut
+      set_sprite_prop(botR, S_FLIPX);
   }
   else if(entity->dir == 2)
   {
-    set_sprite_tile(SPRITE_PLAYER_BOTL, upL[frame]);
-    set_sprite_tile(SPRITE_PLAYER_BOTR, upR[frame]);
-    if(get_sprite_prop(SPRITE_PLAYER_BOTL) != 0x00U) //si le prop est celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_BOTL, 0x00U);
-    if(get_sprite_prop(SPRITE_PLAYER_BOTR) == 0x00U) //si le prop est celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_BOTR, S_FLIPX);
+    set_sprite_tile(botL, upL[frame]);
+    set_sprite_tile(botR, upR[frame]);
+    if(get_sprite_prop(botL) != 0x00U) //si le prop est celui par défaut
+      set_sprite_prop(botL, 0x00U);
+    if(get_sprite_prop(botR) == 0x00U) //si le prop est celui par défaut
+      set_sprite_prop(botR, S_FLIPX);
   }
   else if(entity->dir == 3)
   {
-    set_sprite_tile(SPRITE_PLAYER_BOTL, side[frame]);
-    set_sprite_tile(SPRITE_PLAYER_BOTR, side[frame]+1);
-    if(get_sprite_prop(SPRITE_PLAYER_BOTL) != 0x00U) //si le prop est celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_BOTL, 0x00U);
-    if(get_sprite_prop(SPRITE_PLAYER_BOTR) != 0x00U) //si le prop est celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_BOTR, 0x00U);
+    set_sprite_tile(botL, side[frame]);
+    set_sprite_tile(botR, side[frame]+1);
+    if(get_sprite_prop(botL) != 0x00U) //si le prop est celui par défaut
+      set_sprite_prop(botL, 0x00U);
+    if(get_sprite_prop(botR) != 0x00U) //si le prop est celui par défaut
+      set_sprite_prop(botR, 0x00U);
   }
   else if(entity->dir == 1)
   {
-    set_sprite_tile(SPRITE_PLAYER_BOTL, side[frame]+1);
-    set_sprite_tile(SPRITE_PLAYER_BOTR, side[frame]);
-    if(get_sprite_prop(SPRITE_PLAYER_BOTL) == 0x00U) //si le prop est celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_BOTL, S_FLIPX);
-    if(get_sprite_prop(SPRITE_PLAYER_BOTR) == 0x00U) //si le prop est celui par défaut
-      set_sprite_prop(SPRITE_PLAYER_BOTR, S_FLIPX);
+    set_sprite_tile(botL, side[frame]+1);
+    set_sprite_tile(botR, side[frame]);
+    if(get_sprite_prop(botL) == 0x00U) //si le prop est celui par défaut
+      set_sprite_prop(botL, S_FLIPX);
+    if(get_sprite_prop(botR) == 0x00U) //si le prop est celui par défaut
+      set_sprite_prop(botR, S_FLIPX);
   }
 
 
-  move_sprite(SPRITE_PLAYER_TOPL, entity->x+8-canvasX, entity->y+16-8-canvasY);
-  move_sprite(SPRITE_PLAYER_TOPR, entity->x+8+8-canvasX, entity->y+16-8-canvasY);
-  move_sprite(SPRITE_PLAYER_BOTL, entity->x+8-canvasX, entity->y+16-canvasY);
-  move_sprite(SPRITE_PLAYER_BOTR, entity->x+8+8-canvasX, entity->y+16-canvasY);
+  move_sprite(topL, entity->x+8-canvasX, entity->y+16-8-canvasY);
+  move_sprite(topR, entity->x+8+8-canvasX, entity->y+16-8-canvasY);
+  move_sprite(botL, entity->x+8-canvasX, entity->y+16-canvasY);
+  move_sprite(botR, entity->x+8+8-canvasX, entity->y+16-canvasY);
 
 
 
