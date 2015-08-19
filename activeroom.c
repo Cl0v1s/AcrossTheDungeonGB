@@ -23,6 +23,22 @@ void ActiveRoom_create(struct ActiveRoom* active, struct Room* room)
     }
   }
   //ajout des portes
+  //correction des duplicatas
+  for(i = 0; i != 4; i++)
+  {
+    if(room->doorTar[i] != -1)
+    {
+      for(u = 0; u != 4; u++)
+      {
+        if(i != u && room->doorTar[i] == room->doorTar[u])
+        {
+          room->doorPos[u] = -1;
+          room->doorTar[u] = -1;
+        }
+      }
+    }
+  }
+
   //positionnement de la porte de gauche
   if(room->doorPos[0] != -1)
   {
@@ -84,38 +100,51 @@ unsigned char ActiveRoom_getId(struct ActiveRoom* active)
 
 void ActiveRoom_getDoorTo(struct ActiveRoom* active, unsigned char room, unsigned char* tab)
 {
-  	unsigned char* p = 0xDE80;
-  unsigned char done = false;
-  unsigned char i,u, width, height;
+  unsigned char* done = 0xDE80;
+  unsigned char i = 0;
+  unsigned char u = 0;
+  unsigned char width = 0;
+  unsigned char height = 0;
+  unsigned char x = 0;
+  unsigned char y = 0;
   SWITCH_ROM_MBC1(2);
   width = active->room->width;
   height = active->room->height;
   SWITCH_ROM_MBC1(1);
-  (*p) = width;
-  p++;
-  (*p) = height;
-  i = 0;
-  while(done == false && i != width)
+  for(i = 0; i != width; i++)
   {
-    u = 0;
-    while(done == false && u != height)
+    for(u = 0; u != height; u++)
     {
+      //copie pour corriger un bug étrange
+      (*done) = active->map[i+u*width];
+      done++;
+      (*done) = CELL_DOOR + room;
+
       if(active->map[i+u*width] == CELL_DOOR + room)
       {
-        p = 0xDE70;
-        (*p) = 4+i;
-        p++;
-        (*p) = 4+u;
-        done = true;
+        x = i;
+        y = u;
       }
-      else
-        u++;
     }
-    if(done == false)
-      i++;
   }
-
-  (*tab) = i;
+  if(x == 0)
+    x = x + 1;
+  else if(x == width-1)
+    x = x - 1;
+  if(y == 0)
+      y = y + 1;
+  else if(y == height-1)
+      y = y - 1;
+  (*tab) = x;
   tab++;
-  (*tab) = u;
+  (*tab) = y;
+}
+
+void ActiveRoom_getSize(struct ActiveRoom* active, unsigned char* tab)
+{
+    SWITCH_ROM_MBC1(2);
+    (*tab) = active->room->width;
+    tab++;
+    (*tab) = active->room->height;
+    SWITCH_ROM_MBC1(1);
 }

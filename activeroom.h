@@ -16,6 +16,6 @@ unsigned char ActiveRoom_getId(struct ActiveRoom* active);
 unsigned char ActiveRoom_isCellPassable(struct ActiveRoom* active, const unsigned char x, const unsigned char y);
 unsigned char ActiveRoom_getCellAt(struct ActiveRoom* active, const unsigned char x, const unsigned char y);
 void ActiveRoom_getDoorTo(struct ActiveRoom* active, unsigned char room, unsigned char* tab);
-
+void ActiveRoom_getSize(struct ActiveRoom* active, unsigned char* tab);
 
 #endif

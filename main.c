@@ -70,14 +70,30 @@ void manageTp()
 	struct Room* room;
 	unsigned char last;
 	unsigned char tmp[2];
+	unsigned char size[2];
 	if(activeRoom.markedForTpTo != -1)
 	{
 		last = ActiveRoom_getId(&activeRoom);
 		room = &world.rooms[activeRoom.markedForTpTo];
 		ActiveRoom_create(&activeRoom, room);
 		ActiveRoom_getDoorTo(&activeRoom, last, tmp);
+		//mise à jour de la position du joueur
+		drawInt(0,0,tmp[0]);
+		drawInt(0,1,tmp[1]);
+		ActiveRoom_getSize(&activeRoom, size);
+		if(tmp[1] == 1)
+			player.dir = 0;
+		else if(tmp[0] == 1)
+			player.dir = 1;
+		else if(tmp[1] + 2 == size[1])
+			player.dir = 2;
+		else if(tmp[0] + 2 == size[0])
+			player.dir = 3;
+
 		player.x = tmp[0] << 4;
 		player.y = tmp[1] << 4;
+
+
 		wait_vbl_done();
 		clearBackground();
 		drawRoom(&activeRoom);
