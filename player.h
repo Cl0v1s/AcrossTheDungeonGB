@@ -8,7 +8,7 @@
 
 
 
-struct Player
+struct Entity
 {
 	struct ActiveRoom* active;
 	unsigned char x;
@@ -20,15 +20,15 @@ struct Player
 	//TODO: ajouter les autres attributs du joueur
 };
 
-void Player_create(struct Player *player,struct ActiveRoom *active);
-void Player_fromSave(struct Player* player, struct ActiveRoom *active, const unsigned int life, const unsigned int x, const unsigned int y);
-void Player_setPos(struct Player *player, const unsigned int x, const unsigned int y);
-int Player_isAlive(struct Player *player);
-void Player_activateCellAt(struct Player *player, const unsigned int x, const unsigned int y);
-void Player_moveDown(struct Player* player);
-void Player_moveUp(struct Player* player);
-void Player_moveLeft(struct Player* player);
-void Player_moveRight(struct Player* player);
-void Player_update(struct Player* player);
+void Entity_create(struct Entity *entity,struct ActiveRoom *active);
+void Entity_fromSave(struct Entity* entity, struct ActiveRoom *active, const unsigned int life, const unsigned int x, const unsigned int y);
+void Entity_setPos(struct Entity *entity, const unsigned int x, const unsigned int y);
+int Entity_isAlive(struct Entity *entity);
+void Entity_activateCellAt(struct Entity *entity, const unsigned int x, const unsigned int y);
+void Entity_moveDown(struct Entity* entity);
+void Entity_moveUp(struct Entity* entity);
+void Entity_moveLeft(struct Entity* entity);
+void Entity_moveRight(struct Entity* entity);
+void Entity_update(struct Entity* entity);
 
 #endif

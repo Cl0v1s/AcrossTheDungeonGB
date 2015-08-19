@@ -49,6 +49,6 @@ void drawInt(const unsigned int x, const unsigned int y, int val);
 
 void drawRoom(struct ActiveRoom* active);
 
-void drawPlayer(struct Player* player);
+void drawEntity(struct Entity* entity);
 
 #endif

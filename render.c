@@ -342,7 +342,7 @@ void drawRoom(struct ActiveRoom* active)
   DISPLAY_ON;
 }
 
-void drawPlayer(struct Player* player)
+void drawEntity(struct Entity* entity)
 {
   unsigned char frame = 0;
   unsigned int downL[] = {1,2,1,3};
@@ -352,16 +352,16 @@ void drawPlayer(struct Player* player)
   unsigned int upR[] = {11,13,11,12};
   //TODO: ajouter code pour le bas
   //gestion des frames
-  if(player->moving != 0)
+  if(entity->moving != 0)
   {
-    player->frame+=2;
-    if(player->frame == 40)
-      player->frame = 0;
-    frame = player->frame/10;
+    entity->frame+=2;
+    if(entity->frame == 40)
+      entity->frame = 0;
+    frame = entity->frame/10;
   }
 
   //gestion de la tête
-  if(player->dir == 0)
+  if(entity->dir == 0)
   {
     set_sprite_tile(SPRITE_PLAYER_TOPL, 0);
     set_sprite_tile(SPRITE_PLAYER_TOPR, 0);
@@ -370,7 +370,7 @@ void drawPlayer(struct Player* player)
     if(get_sprite_prop(SPRITE_PLAYER_TOPR) !=  S_FLIPX) //si le prop est celui par défaut
       set_sprite_prop(SPRITE_PLAYER_TOPR, S_FLIPX);
   }
-  else if(player->dir == 3 && get_sprite_tile(SPRITE_PLAYER_TOPL) != 4)
+  else if(entity->dir == 3 && get_sprite_tile(SPRITE_PLAYER_TOPL) != 4)
   {
     set_sprite_tile(SPRITE_PLAYER_TOPL, 4);
     set_sprite_tile(SPRITE_PLAYER_TOPR, 5);
@@ -379,7 +379,7 @@ void drawPlayer(struct Player* player)
     if(get_sprite_prop(SPRITE_PLAYER_TOPR) != 0x00U) //Si le prop n'est celui par défaut
       set_sprite_prop(SPRITE_PLAYER_TOPR, 0x00U); //On remt celui par defautt
   }
-  else if(player->dir == 1 && get_sprite_tile(SPRITE_PLAYER_TOPL) != 5)
+  else if(entity->dir == 1 && get_sprite_tile(SPRITE_PLAYER_TOPL) != 5)
   {
     set_sprite_tile(SPRITE_PLAYER_TOPL, 5);
     set_sprite_tile(SPRITE_PLAYER_TOPR, 4);
@@ -388,7 +388,7 @@ void drawPlayer(struct Player* player)
     if(get_sprite_prop(SPRITE_PLAYER_TOPR) == 0x00U) //Si le prop n'est pas celui par défaut
       set_sprite_prop(SPRITE_PLAYER_TOPR, S_FLIPX); //On remet celui par défaut
   }
-  if(player->dir == 2 && get_sprite_tile(SPRITE_PLAYER_TOPL) != 10)
+  if(entity->dir == 2 && get_sprite_tile(SPRITE_PLAYER_TOPL) != 10)
   {
     set_sprite_tile(SPRITE_PLAYER_TOPL, 10);
     set_sprite_tile(SPRITE_PLAYER_TOPR, 10);
@@ -399,7 +399,7 @@ void drawPlayer(struct Player* player)
   }
 
   //gestion du corps
-  if(player->dir == 0)
+  if(entity->dir == 0)
   {
     set_sprite_tile(SPRITE_PLAYER_BOTL, downL[frame]);
     set_sprite_tile(SPRITE_PLAYER_BOTR, downR[frame]);
@@ -408,7 +408,7 @@ void drawPlayer(struct Player* player)
     if(get_sprite_prop(SPRITE_PLAYER_BOTR) == 0x00U) //si le prop est celui par défaut
       set_sprite_prop(SPRITE_PLAYER_BOTR, S_FLIPX);
   }
-  else if(player->dir == 2)
+  else if(entity->dir == 2)
   {
     set_sprite_tile(SPRITE_PLAYER_BOTL, upL[frame]);
     set_sprite_tile(SPRITE_PLAYER_BOTR, upR[frame]);
@@ -417,7 +417,7 @@ void drawPlayer(struct Player* player)
     if(get_sprite_prop(SPRITE_PLAYER_BOTR) == 0x00U) //si le prop est celui par défaut
       set_sprite_prop(SPRITE_PLAYER_BOTR, S_FLIPX);
   }
-  else if(player->dir == 3)
+  else if(entity->dir == 3)
   {
     set_sprite_tile(SPRITE_PLAYER_BOTL, side[frame]);
     set_sprite_tile(SPRITE_PLAYER_BOTR, side[frame]+1);
@@ -426,7 +426,7 @@ void drawPlayer(struct Player* player)
     if(get_sprite_prop(SPRITE_PLAYER_BOTR) != 0x00U) //si le prop est celui par défaut
       set_sprite_prop(SPRITE_PLAYER_BOTR, 0x00U);
   }
-  else if(player->dir == 1)
+  else if(entity->dir == 1)
   {
     set_sprite_tile(SPRITE_PLAYER_BOTL, side[frame]+1);
     set_sprite_tile(SPRITE_PLAYER_BOTR, side[frame]);
@@ -437,10 +437,10 @@ void drawPlayer(struct Player* player)
   }
 
 
-  move_sprite(SPRITE_PLAYER_TOPL, player->x+8-canvasX, player->y+16-8-canvasY);
-  move_sprite(SPRITE_PLAYER_TOPR, player->x+8+8-canvasX, player->y+16-8-canvasY);
-  move_sprite(SPRITE_PLAYER_BOTL, player->x+8-canvasX, player->y+16-canvasY);
-  move_sprite(SPRITE_PLAYER_BOTR, player->x+8+8-canvasX, player->y+16-canvasY);
+  move_sprite(SPRITE_PLAYER_TOPL, entity->x+8-canvasX, entity->y+16-8-canvasY);
+  move_sprite(SPRITE_PLAYER_TOPR, entity->x+8+8-canvasX, entity->y+16-8-canvasY);
+  move_sprite(SPRITE_PLAYER_BOTL, entity->x+8-canvasX, entity->y+16-canvasY);
+  move_sprite(SPRITE_PLAYER_BOTR, entity->x+8+8-canvasX, entity->y+16-canvasY);
 
 
 

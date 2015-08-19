@@ -17,7 +17,7 @@
 
 struct World world;
 struct ActiveRoom activeRoom;
-struct Player player;
+struct Entity player;
 
 
 void initGame()
@@ -35,7 +35,7 @@ void initGame()
 		player.life = 0; //"fixation" en mémoire du joueur
 		player.x = 0;
 		player.y = 0;
-		Player_create(&player, &activeRoom);
+		Entity_create(&player, &activeRoom);
 
 }
 
@@ -46,19 +46,19 @@ void updateInput()
 	input = joypad();
 	if(input & J_DOWN)
 	{
-		Player_moveDown(&player);
+		Entity_moveDown(&player);
 	}
 	else if(input & J_UP)
 	{
-		Player_moveUp(&player);
+		Entity_moveUp(&player);
 	}
 	else if(input & J_LEFT)
 	{
-		Player_moveLeft(&player);
+		Entity_moveLeft(&player);
 	}
 	else if(input & J_RIGHT)
 	{
-		Player_moveRight(&player);
+		Entity_moveRight(&player);
 	}
 
 }
@@ -118,9 +118,9 @@ void updateGame()
 		wait_vbl_done();
 		manageTp();
 		updateInput();
-		Player_update(&player);
+		Entity_update(&player);
 		updateRender();
-		drawPlayer(&player);
+		drawEntity(&player);
 		focusRender(player.x, player.y);
 	}
 }
