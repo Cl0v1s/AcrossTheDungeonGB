@@ -82,9 +82,9 @@ void Player_moveDown(struct Player* player)
 	if(player->moving != 0)
 		return;
 	player->dir = 0;
-	if(ActiveRoom_isCellPassable(player->active, player->x >> 4, (player->y+8) >> 4))
+	if(ActiveRoom_isCellPassable(player->active, player->x >> 4, (player->y+16) >> 4))
 	{
-		player->moving = 8;
+		player->moving = 16;
 	}
 	else
 	{
@@ -99,9 +99,9 @@ void Player_moveUp(struct Player* player)
 	if(player->moving != 0)
 		return;
 	player->dir = 2;
-	if(ActiveRoom_isCellPassable(player->active, player->x >> 4, (player->y-8) >> 4) && player->moving == 0)
+	if(ActiveRoom_isCellPassable(player->active, player->x >> 4, (player->y-16) >> 4) && player->moving == 0)
 	{
-		player->moving = 8;
+		player->moving = 16;
 	}
 	else
 	{

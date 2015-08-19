@@ -10,7 +10,7 @@
   Compression          : None.
   Counter              : None.
   Tile size            : 8 x 8
-  Tiles                : 0 to 8
+  Tiles                : 0 to 12
 
   Palette colors       : None.
   SGB Palette          : None.
@@ -22,6 +22,9 @@
 
 */
 
+
+/* Bank of tiles. */
+#define tilesetBank 0
 /* Start of tile array. */
 extern unsigned char tileset[];
 

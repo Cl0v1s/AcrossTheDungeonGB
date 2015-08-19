@@ -18,7 +18,6 @@
 
 unsigned int canvasX = 0;
 unsigned int canvasY = 0;
-unsigned int frameCounter = 0;
 
 void initRender();
 

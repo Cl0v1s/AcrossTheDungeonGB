@@ -8,7 +8,6 @@ void initRender()
 
   canvasX = 0;
   canvasY = 0;
-  frameCounter = 0;
   loadFont();
   loadBackground();
   loadSprites();
@@ -39,7 +38,7 @@ void loadBackground()
 {
   DISPLAY_OFF;
   SWITCH_ROM_MBC1(3);
-  set_bkg_data(0,9,tileset);
+  set_bkg_data(0,13,tileset);
   SWITCH_ROM_MBC1(1);
 }
 
@@ -175,9 +174,6 @@ void focusRender(const unsigned int x, const unsigned int y)
 
 void updateRender()
 {
-  frameCounter += 1;
-  if(frameCounter == 20)
-    frameCounter = 0;
   move_bkg(canvasX, canvasY);
 }
 
@@ -285,26 +281,61 @@ void drawRoom(struct ActiveRoom* active)
       current[1] = 0;
       current[2] = 0;
       current[3] = 0;
-      switch(active->map[x+y*active->room->width])
+      if(active->map[x+y*active->room->width] >> 6 == 1) //si il s'agit d'une porte
       {
-        case CELL_WALL:
-          current[0] = 2;
-          current[1] = 2;
-          current[2] = 2;
-          current[3] = 2;
-          if(active->map[x+(y+1)*active->room->width] != CELL_WALL)
-          {
-            current[0] = 7;
-            current[1] = 7;
-            current[2] = 8;
-            current[3] = 8;
-          }
-          set_bkg_tiles(x << 1,y << 1,2,2, current);
-        break;
-        case CELL_GROUND:
-          current[0] = 0;current[1] = 0;current[2] = 0;current[3] = 0;
-          set_bkg_tiles(x << 1,y << 1,2,2, current);
-        break;
+        current[0] = 1; //vers le bas
+        current[1] = 1;
+        current[2] = 9;
+        current[3] = 9;
+        if(x == 0) //vers la droite
+        {
+          current[0] = 1;
+          current[1] = 0xC;
+          current[2] = 1;
+          current[3] = 0xC;
+        }
+        else if(x == active->room->width - 1) //vers la gauche
+        {
+          current[0] = 0xA;
+          current[1] = 1;
+          current[2] = 0xA;
+          current[3] = 1;
+        }
+        else if(y == active->room->height - 1) //vers le haut
+        {
+          current[0] = 0xB;
+          current[1] = 0xB;
+          current[2] = 1;
+          current[3] = 1;
+        }
+
+
+
+        set_bkg_tiles(x << 1,y << 1,2,2, current);
+      }
+      else
+      {
+        switch(active->map[x+y*active->room->width])
+        {
+          case CELL_WALL:
+            current[0] = 2;
+            current[1] = 2;
+            current[2] = 2;
+            current[3] = 2;
+            if(active->map[x+(y+1)*active->room->width] != CELL_WALL)
+            {
+              current[0] = 7;
+              current[1] = 7;
+              current[2] = 8;
+              current[3] = 8;
+            }
+            set_bkg_tiles(x << 1,y << 1,2,2, current);
+          break;
+          case CELL_GROUND:
+            current[0] = 0;current[1] = 0;current[2] = 0;current[3] = 0;
+            set_bkg_tiles(x << 1,y << 1,2,2, current);
+          break;
+        }
       }
     }
   }
@@ -313,6 +344,7 @@ void drawRoom(struct ActiveRoom* active)
 
 void drawPlayer(struct Player* player)
 {
+  unsigned char frame = 0;
   unsigned int downL[] = {1,2,1,3};
   unsigned int downR[] = {1,3,1,2};
   unsigned int side[] = {6,8,6,8};
@@ -320,10 +352,13 @@ void drawPlayer(struct Player* player)
   unsigned int upR[] = {11,13,11,12};
   //TODO: ajouter code pour le bas
   //gestion des frames
-  if(frameCounter == 0)
-    player->frame = player->frame + 1;
-  if(player->frame == 4)
-    player->frame = 0;
+  if(player->moving != 0)
+  {
+    player->frame+=2;
+    if(player->frame == 40)
+      player->frame = 0;
+    frame = player->frame/10;
+  }
 
   //gestion de la tête
   if(player->dir == 0)
@@ -366,8 +401,8 @@ void drawPlayer(struct Player* player)
   //gestion du corps
   if(player->dir == 0)
   {
-    set_sprite_tile(SPRITE_PLAYER_BOTL, downL[player->frame]);
-    set_sprite_tile(SPRITE_PLAYER_BOTR, downR[player->frame]);
+    set_sprite_tile(SPRITE_PLAYER_BOTL, downL[frame]);
+    set_sprite_tile(SPRITE_PLAYER_BOTR, downR[frame]);
     if(get_sprite_prop(SPRITE_PLAYER_BOTL) != 0x00U) //si le prop est celui par défaut
       set_sprite_prop(SPRITE_PLAYER_BOTL, 0x00U);
     if(get_sprite_prop(SPRITE_PLAYER_BOTR) == 0x00U) //si le prop est celui par défaut
@@ -375,8 +410,8 @@ void drawPlayer(struct Player* player)
   }
   else if(player->dir == 2)
   {
-    set_sprite_tile(SPRITE_PLAYER_BOTL, upL[player->frame]);
-    set_sprite_tile(SPRITE_PLAYER_BOTR, upR[player->frame]);
+    set_sprite_tile(SPRITE_PLAYER_BOTL, upL[frame]);
+    set_sprite_tile(SPRITE_PLAYER_BOTR, upR[frame]);
     if(get_sprite_prop(SPRITE_PLAYER_BOTL) != 0x00U) //si le prop est celui par défaut
       set_sprite_prop(SPRITE_PLAYER_BOTL, 0x00U);
     if(get_sprite_prop(SPRITE_PLAYER_BOTR) == 0x00U) //si le prop est celui par défaut
@@ -384,8 +419,8 @@ void drawPlayer(struct Player* player)
   }
   else if(player->dir == 3)
   {
-    set_sprite_tile(SPRITE_PLAYER_BOTL, side[player->frame]);
-    set_sprite_tile(SPRITE_PLAYER_BOTR, side[player->frame]+1);
+    set_sprite_tile(SPRITE_PLAYER_BOTL, side[frame]);
+    set_sprite_tile(SPRITE_PLAYER_BOTR, side[frame]+1);
     if(get_sprite_prop(SPRITE_PLAYER_BOTL) != 0x00U) //si le prop est celui par défaut
       set_sprite_prop(SPRITE_PLAYER_BOTL, 0x00U);
     if(get_sprite_prop(SPRITE_PLAYER_BOTR) != 0x00U) //si le prop est celui par défaut
@@ -393,8 +428,8 @@ void drawPlayer(struct Player* player)
   }
   else if(player->dir == 1)
   {
-    set_sprite_tile(SPRITE_PLAYER_BOTL, side[player->frame]+1);
-    set_sprite_tile(SPRITE_PLAYER_BOTR, side[player->frame]);
+    set_sprite_tile(SPRITE_PLAYER_BOTL, side[frame]+1);
+    set_sprite_tile(SPRITE_PLAYER_BOTR, side[frame]);
     if(get_sprite_prop(SPRITE_PLAYER_BOTL) == 0x00U) //si le prop est celui par défaut
       set_sprite_prop(SPRITE_PLAYER_BOTL, S_FLIPX);
     if(get_sprite_prop(SPRITE_PLAYER_BOTR) == 0x00U) //si le prop est celui par défaut

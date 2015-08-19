@@ -65,8 +65,8 @@ void updateInput()
 
 void updateHud()
 {
-	drawText(17,2,"s:");
-	drawInt(19,2, ActiveRoom_getId(&activeRoom));
+	drawText(12,2,"salle:");
+	drawInt(18,2, ActiveRoom_getId(&activeRoom));
 }
 
 
@@ -84,8 +84,6 @@ void manageTp()
 		ActiveRoom_create(&activeRoom, room);
 		ActiveRoom_getDoorTo(&activeRoom, last, tmp);
 		//mise à jour de la position du joueur
-		drawInt(0,0,tmp[0]);
-		drawInt(0,1,tmp[1]);
 		ActiveRoom_getSize(&activeRoom, size);
 		if(tmp[1] == 1)
 			player.dir = 0;
