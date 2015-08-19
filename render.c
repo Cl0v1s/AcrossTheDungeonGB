@@ -48,6 +48,8 @@ void loadSprites()
   SWITCH_ROM_MBC1(3);
   //chargement du sprite du joueur
   set_sprite_data(0,14,spriteplayer);
+  //chargement du sprite du blob
+  set_sprite_data(14,14,spriteblob);
   SWITCH_ROM_MBC1(1);
 }
 
@@ -229,11 +231,8 @@ void drawText(const unsigned int x, const unsigned int y, char* text)
   unsigned int p = 0;
   unsigned int v;
   unsigned char t[2];
-  char* q = 0xDe80;
   while(text[i] != 0x00)
   {
-    (*q) = text[i];
-    q++;
     v = text[i];
     //traitement et conversion
     if(v == 0x2E)//. placement du point en premier (pas optimal) suite à un bug étrange
@@ -345,7 +344,7 @@ void drawRoom(struct ActiveRoom* active)
 void drawEntity(struct Entity* entity)
 {
   unsigned char frame = 0;
-  unsigned char start = entity->spriteId*0x0D;
+  unsigned char start = entity->spriteId*0x0E;
   unsigned char downL[] = {start+1,start+2,start+1,start+3};
   unsigned char downR[] = {start+1,start+3,start+1,start+2};
   unsigned char side[] = {start+6,start+8,start+6,start+8};
@@ -356,10 +355,9 @@ void drawEntity(struct Entity* entity)
   unsigned char topR = 1+(entity->spriteId << 2);
   unsigned char botL = 2+(entity->spriteId << 2);
   unsigned char botR = 3+(entity->spriteId << 2);
-
   //TODO: ajouter code pour le bas
   //gestion des frames
-  if(entity->moving != 0)
+  if(entity->moving != 0 || entity->flag & 1)
   {
     entity->frame+=2;
     if(entity->frame == 40)
@@ -370,35 +368,35 @@ void drawEntity(struct Entity* entity)
   //gestion de la tête
   if(entity->dir == 0)
   {
-    set_sprite_tile(topL, 0);
-    set_sprite_tile(topR, 0);
+    set_sprite_tile(topL, start);
+    set_sprite_tile(topR, start);
     if(get_sprite_prop(topL) != 0x00U) //si le prop est celui par défaut
       set_sprite_prop(topL, 0x00U);
     if(get_sprite_prop(topR) !=  S_FLIPX) //si le prop est celui par défaut
       set_sprite_prop(topR, S_FLIPX);
   }
-  else if(entity->dir == 3 && get_sprite_tile(topL) != 4)
+  else if(entity->dir == 3 && get_sprite_tile(topL) != start + 4)
   {
-    set_sprite_tile(topL, 4);
-    set_sprite_tile(topR, 5);
+    set_sprite_tile(topL, start + 4);
+    set_sprite_tile(topR, start + 5);
     if(get_sprite_prop(topL) != 0x00U) //Si le prop n'est pas celui par défaut
       set_sprite_prop(topL, 0x00U); //On remet celui par défaut
     if(get_sprite_prop(topR) != 0x00U) //Si le prop n'est celui par défaut
       set_sprite_prop(topR, 0x00U); //On remt celui par defautt
   }
-  else if(entity->dir == 1 && get_sprite_tile(topL) != 5)
+  else if(entity->dir == 1 && get_sprite_tile(topL) != start + 5)
   {
-    set_sprite_tile(topL, 5);
-    set_sprite_tile(topR, 4);
+    set_sprite_tile(topL, start + 5);
+    set_sprite_tile(topR, start + 4);
     if(get_sprite_prop(topL) == 0x00U) //Si le prop n'est pas celui par défaut
       set_sprite_prop(topL, S_FLIPX); //On remet celui par défaut
     if(get_sprite_prop(topR) == 0x00U) //Si le prop n'est pas celui par défaut
       set_sprite_prop(topR, S_FLIPX); //On remet celui par défaut
   }
-  if(entity->dir == 2 && get_sprite_tile(topL) != 10)
+  if(entity->dir == 2 && get_sprite_tile(topL) != start + 10)
   {
-    set_sprite_tile(topL, 10);
-    set_sprite_tile(topR, 10);
+    set_sprite_tile(topL, start + 10);
+    set_sprite_tile(topR, start + 10);
     if(get_sprite_prop(topL) != 0x00U) //si le prop est celui par défaut
       set_sprite_prop(topL, 0x00U);
     if(get_sprite_prop(topR) == 0x00U) //si le prop est celui par défaut

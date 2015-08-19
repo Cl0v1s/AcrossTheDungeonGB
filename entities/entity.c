@@ -43,7 +43,6 @@ void Entity_activateCellAt(struct Entity *entity, const unsigned int x, const un
 
 void Entity_update(struct Entity* entity)
 {
-	unsigned char* p = 0XDE90;
 	unsigned char cell;
 	//analyse des mouvements
 	if(entity->moving != 0)
@@ -67,7 +66,6 @@ void Entity_update(struct Entity* entity)
 	else
 	{
 		cell = ActiveRoom_getCellAt(entity->active, entity->x >> 4, entity->y >> 4);
-		(*p) = cell;
 		if((cell >> 6) == 1 )
 		{
 			entity->active->markedForTpTo = cell - CELL_DOOR;

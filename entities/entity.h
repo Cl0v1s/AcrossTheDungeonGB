@@ -1,10 +1,10 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "sound.h"
-#include "helper.h"
-#include "activeroom.h"
-#include "room.h"
+#include "../sound.h"
+#include "../helper.h"
+#include "../activeroom.h"
+#include "../room.h"
 
 
 
@@ -16,7 +16,10 @@ struct Entity
 	unsigned char frame;
 	unsigned char dir;
 	unsigned char life;
-	char moving;
+	unsigned char moving;
+	//ensemble de 8 bits paramétrant le comportement de l'entité
+	//1.static animated
+	unsigned char flag;
 	unsigned char spriteId;
 	//TODO: ajouter les autres attributs du joueur
 };

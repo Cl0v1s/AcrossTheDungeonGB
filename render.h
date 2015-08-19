@@ -5,16 +5,12 @@
 #include <gb/drawing.h>
 
 #include "activeroom.h"
-#include "entity.h"
+#include "entities/entity.h"
 #include "cell.h"
 
 #include "sprites/spriteplayer.h"
+#include "sprites/spriteblob.h"
 #include "sprites/tileset.h"
-
-#define SPRITE_PLAYER_TOPL 0
-#define SPRITE_PLAYER_TOPR 1
-#define SPRITE_PLAYER_BOTL 2
-#define SPRITE_PLAYER_BOTR 3
 
 unsigned int canvasX = 0;
 unsigned int canvasY = 0;
