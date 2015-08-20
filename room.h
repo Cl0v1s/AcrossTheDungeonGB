@@ -23,8 +23,8 @@ struct Room
 };
 
 void Room_create(struct Room* room, unsigned char id);
+void Room_addDoor(struct Room* room, const unsigned char other);
 
-void Room_addDoor(struct Room* room, const unsigned int other);
 
 
 #endif

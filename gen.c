@@ -33,7 +33,7 @@ void initLinks(struct World* world)
     try++;
     first = random(0, world->roomsNumber);
     second = random(0, world->roomsNumber);
-    if(world->rooms[first].sisters != 4 && world->rooms[second].sisters != 4)
+    if(world->rooms[first].sisters != 4 && world->rooms[second].sisters != 4 && first !=  second)
     {
       Room_addDoor(&world->rooms[first], second);
       Room_addDoor(&world->rooms[second], first);
@@ -62,6 +62,7 @@ void initLinks(struct World* world)
 
 
 }
+
 
 void initBiomes(struct World* world)
 {

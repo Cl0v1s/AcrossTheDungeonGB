@@ -18,7 +18,7 @@ void Room_create(struct Room* room, unsigned char id)
 	room->entitiesType = random(1, ENTITY_TYPE_NUMBER+1);
 }
 
-void Room_addDoor(struct Room* room, const unsigned int other)
+void Room_addDoor(struct Room* room, const unsigned char other)
 {
 	if(room->sisters & 0x1 == 0)
 	{
