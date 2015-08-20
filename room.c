@@ -13,6 +13,9 @@ void Room_create(struct Room* room, unsigned char id)
 		room->doorTar[i] = -1;
 	}
 	room->id = id;
+	room->entitiesNumber = random(0, ROOM_MAX_ENTITIES);
+	room->entitiesNumber = random(0, ROOM_MAX_ENTITIES);
+	room->entitiesType = random(1, ENTITY_TYPE_NUMBER+1);
 }
 
 void Room_addDoor(struct Room* room, const unsigned int other)

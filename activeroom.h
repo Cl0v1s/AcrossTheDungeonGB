@@ -18,4 +18,9 @@ unsigned char ActiveRoom_getCellAt(struct ActiveRoom* active, const unsigned cha
 void ActiveRoom_getDoorTo(struct ActiveRoom* active, unsigned char room, unsigned char* tab);
 void ActiveRoom_getSize(struct ActiveRoom* active, unsigned char* tab);
 
+unsigned char ActiveRoom_getEntitiesType(struct ActiveRoom* active);
+unsigned char ActiveRoom_getEntityNumber(struct ActiveRoom* active);
+
+
+
 #endif

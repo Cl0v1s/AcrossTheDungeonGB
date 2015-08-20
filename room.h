@@ -18,7 +18,8 @@ struct Room
 	char doorPos[4];
 	char doorTar[4];
 	unsigned char id;
-
+	unsigned char entitiesNumber;
+	unsigned char entitiesType;
 };
 
 void Room_create(struct Room* room, unsigned char id);

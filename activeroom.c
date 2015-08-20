@@ -156,3 +156,21 @@ void ActiveRoom_getSize(struct ActiveRoom* active, unsigned char* tab)
     (*tab) = active->room->height;
     SWITCH_ROM_MBC1(1);
 }
+
+unsigned char ActiveRoom_getEntitiesType(struct ActiveRoom* active)
+{
+  unsigned char t;
+  SWITCH_ROM_MBC1(2);
+  t = active->room->entitiesType;
+  SWITCH_ROM_MBC1(1);
+  return t;
+}
+
+unsigned char ActiveRoom_getEntityNumber(struct ActiveRoom* active)
+{
+  unsigned char t;
+  SWITCH_ROM_MBC1(2);
+  t = active->room->entitiesNumber;
+  SWITCH_ROM_MBC1(1);
+  return t;
+}

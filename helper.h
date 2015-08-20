@@ -14,6 +14,7 @@
 //définition du coté maximum d'une salle
 #define ROOM_MAX_SIDE 15
 #define ROOM_MIN_SIDE 5
+#define ROOM_MAX_ENTITIES 5
 
 //définition du nombre maximum de salles par étage
 #define WORLD_MAX_ROOMS 10
@@ -21,6 +22,9 @@
 //déifinition des stats de base du joueur
 #define PLAYER_INIT_LIFE 20
 #define PLAYER_MOVING_SPEED 2
+
+//définitions des informations relatives aux entités
+#define ENTITY_TYPE_NUMBER 1
 
 
 //définition des fonctions usuelles
