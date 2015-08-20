@@ -41,6 +41,7 @@ void initGame()
 		ActiveRoom_create(&activeRoom, room);
 		Player_create(&player, &activeRoom);
 		player.spriteNumber = registerSprite();
+		setPlayer(&player);
 
 }
 

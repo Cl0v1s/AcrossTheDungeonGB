@@ -10,6 +10,7 @@ typedef struct Entity Entities[ROOM_MAX_ENTITIES];
 
 struct ActiveRoom;
 
+void setPlayer(struct Entity* player);
 void populateActiveRoom(struct ActiveRoom* active, const unsigned char type, const unsigned char number);
 void updateEntities();
 unsigned char itIsEntityFreeAt(const unsigned char x, const unsigned char y);

@@ -2,6 +2,12 @@
 
 Entities entities;
 unsigned char entitiesNumber = 0;
+struct Entity* playerRef;
+
+void setPlayer(struct Entity* player)
+{
+	playerRef = player;
+}
 
 void populateActiveRoom(struct ActiveRoom* active, const unsigned char type, const unsigned char number)
 {
@@ -43,5 +49,14 @@ unsigned char itIsEntityFreeAt(const unsigned char x, const unsigned char y)
     }
     i++;
   }
+	if(done == true) //on vérifie avec le joueur
+	{
+		xe = ((playerRef->x) >> 4);
+    ye = ((playerRef->y) >> 4);
+    if(x == xe && y == ye)
+    {
+      done = false;
+    }
+	}
   return done;
 }
