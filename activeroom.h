@@ -3,6 +3,7 @@
 
 #include "room.h"
 #include "cell.h"
+#include "entitiesmanager.h"
 
 struct ActiveRoom
 {

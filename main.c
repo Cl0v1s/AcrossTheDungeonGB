@@ -11,20 +11,20 @@
 #include "activeroom.h"
 #include "render.h"
 #include "dialog.h"
+#include "entitiesmanager.h"
 
 #include "dialogs/welcome.h"
 
 #include "entities/entity.h"
 #include "entities/player.h"
-#include "entities/blob.h"
 
 
-typedef struct Entity Entities[ROOM_MAX_ENTITIES];
+
 
 struct World world;
 struct ActiveRoom activeRoom;
 struct Entity player;
-Entities entities;
+
 
 
 void initGame()
@@ -74,20 +74,7 @@ void updateHud()
 	drawInt(18,2, ActiveRoom_getId(&activeRoom));
 }
 
-void populateActiveRoom()
-{
-	unsigned char type = ActiveRoom_getEntitiesType(&activeRoom);
-	unsigned char number = ActiveRoom_getEntityNumber(&activeRoom);
-	unsigned char i = 0;
-	for(i = 0; i!=number; i++)
-	{
-		if(type == 1)
-		{
-			Blob_create(&entities[i], &activeRoom);
-			entities[i].spriteNumber = registerSprite();
-		}
-	}
-}
+
 
 
 void manageTp()
@@ -99,6 +86,7 @@ void manageTp()
 	unsigned char size[2];
 	if(activeRoom.markedForTpTo != -1)
 	{
+		disableDisplay();
 		clearSprites();
 		last = ActiveRoom_getId(&activeRoom);
 		room = &world.rooms[activeRoom.markedForTpTo];
@@ -114,17 +102,14 @@ void manageTp()
 			player.dir = 2;
 		else if(tmp[0] + 2 == size[0])
 			player.dir = 3;
-
 		player.x = tmp[0] << 4;
 		player.y = tmp[1] << 4;
 		player.spriteNumber = registerSprite();
-
-		populateActiveRoom();
-
-		wait_vbl_done();
+		populateActiveRoom(&activeRoom, ActiveRoom_getEntitiesType(&activeRoom), ActiveRoom_getEntityNumber(&activeRoom));
 		clearBackground();
 		drawRoom(&activeRoom);
 		updateHud();
+		enableDisplay();
 	}
 }
 
@@ -136,19 +121,12 @@ void updateGame()
 	clearBackground();
 	drawRoom(&activeRoom);
 	focusRender(player.x, player.y);
-
 	updateHud();
+	enableDisplay();
 	while(1)
 	{
 		wait_vbl_done();
-		entitiesNumber = ActiveRoom_getEntityNumber(&activeRoom);
-		for(i = 0; i != entitiesNumber; i++)
-		{
-			Entity_update(&entities[i]);
-			drawEntity(&entities[i]);
-		}
-
-
+		updateEntities();
 		manageTp();
 		updateInput();
 		Entity_update(&player);

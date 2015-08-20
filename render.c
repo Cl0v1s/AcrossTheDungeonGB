@@ -427,7 +427,7 @@ void drawEntity(struct Entity* entity)
     set_sprite_tile(botR, downR[frame]);
     if(get_sprite_prop(botL) != 0x00U) //si le prop est celui par défaut
       set_sprite_prop(botL, 0x00U);
-    if(get_sprite_prop(botR) == 0x00U) //si le prop est celui par défaut
+    if(get_sprite_prop(botR) != S_FLIPX) //si le prop est celui par défaut
       set_sprite_prop(botR, S_FLIPX);
   }
   else if(entity->dir == 2)

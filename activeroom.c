@@ -82,13 +82,12 @@ unsigned char ActiveRoom_isCellPassable(struct ActiveRoom* active, const unsigne
   SWITCH_ROM_MBC1(1);
   if(x == 0x0F || y == 0x0F || x == width || y == height)
     return false;
-
-
   r = active->map[x+y*width] >> 7;
   if(r == 1)
     return false;
-  else
-    return true;
+
+  return itIsEntityFreeAt(x,y);
+
 }
 
 unsigned char ActiveRoom_getCellAt(struct ActiveRoom* active, const unsigned char x, const unsigned char y)
