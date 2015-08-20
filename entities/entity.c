@@ -13,12 +13,7 @@ void Entity_create(struct Entity* entity, struct ActiveRoom* active)
 		entity->y = (random(1, active->room->height -1)*16);
 	}
 	entity->frame = 0;
-
-}
-
-void Entity_fromSave(struct Entity* entity, struct ActiveRoom *active, const unsigned int life, const unsigned int x, const unsigned int y)
-{
-
+	entity->spriteNumber = 0;
 }
 
 void Entity_setPos(struct Entity *entity, const unsigned int x, const unsigned int y)
@@ -44,6 +39,19 @@ void Entity_activateCellAt(struct Entity *entity, const unsigned int x, const un
 void Entity_update(struct Entity* entity)
 {
 	unsigned char cell;
+	//mouvement aléatoire
+	if((entity->flag & 0x02) == 0x02 && entity->moving == 0)
+	{
+		cell = random(0,100);
+		if(cell == 1)
+			Entity_moveRight(entity);
+		else if(cell == 0)
+			Entity_moveDown(entity);
+		else if(cell == 2)
+			Entity_moveUp(entity);
+		else if(cell == 3)
+			Entity_moveLeft(entity);
+	}
 	//analyse des mouvements
 	if(entity->moving != 0)
 	{
@@ -63,7 +71,7 @@ void Entity_update(struct Entity* entity)
 			entity->moving = 0;
 		}
 	}
-	else
+	else if((entity->flag & 0x02) != 0x02)
 	{
 		cell = ActiveRoom_getCellAt(entity->active, entity->x >> 4, entity->y >> 4);
 		if((cell >> 6) == 1 )

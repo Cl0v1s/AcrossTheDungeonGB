@@ -21,11 +21,11 @@ struct Entity
 	//1.static animated
 	unsigned char flag;
 	unsigned char spriteId;
+	unsigned char spriteNumber;
 	//TODO: ajouter les autres attributs du joueur
 };
 
 void Entity_create(struct Entity *entity,struct ActiveRoom *active);
-void Entity_fromSave(struct Entity* entity, struct ActiveRoom *active, const unsigned int life, const unsigned int x, const unsigned int y);
 void Entity_setPos(struct Entity *entity, const unsigned int x, const unsigned int y);
 int Entity_isAlive(struct Entity *entity);
 void Entity_activateCellAt(struct Entity *entity, const unsigned int x, const unsigned int y);

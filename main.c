@@ -40,6 +40,7 @@ void initGame()
 		//Lancement de la matérialisation de la salle
 		ActiveRoom_create(&activeRoom, room);
 		Player_create(&player, &activeRoom);
+		player.spriteNumber = registerSprite();
 
 }
 
@@ -83,6 +84,7 @@ void populateActiveRoom()
 		if(type == 1)
 		{
 			Blob_create(&entities[i], &activeRoom);
+			entities[i].spriteNumber = registerSprite();
 		}
 	}
 }
@@ -97,6 +99,7 @@ void manageTp()
 	unsigned char size[2];
 	if(activeRoom.markedForTpTo != -1)
 	{
+		clearSprites();
 		last = ActiveRoom_getId(&activeRoom);
 		room = &world.rooms[activeRoom.markedForTpTo];
 		ActiveRoom_create(&activeRoom, room);
@@ -114,6 +117,7 @@ void manageTp()
 
 		player.x = tmp[0] << 4;
 		player.y = tmp[1] << 4;
+		player.spriteNumber = registerSprite();
 
 		populateActiveRoom();
 

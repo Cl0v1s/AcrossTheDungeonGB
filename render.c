@@ -22,6 +22,23 @@ void initRender()
   enableDisplay();
 }
 
+unsigned char registerSprite()
+{
+  unsigned char t = spriteNumber;
+  spriteNumber++;
+  return t;
+}
+
+void clearSprites()
+{
+  unsigned char i;
+  for(i = 0; i != (spriteNumber << 2); i++)
+  {
+    move_sprite(i, 0, 0xAE);
+  }
+  spriteNumber = 0;
+}
+
 void disableDisplay()
 {
   disable_interrupts();
@@ -351,10 +368,10 @@ void drawEntity(struct Entity* entity)
   unsigned char upL[] = {start+11,start+12,start+11,start+13};
   unsigned char upR[] = {start+11,start+13,start+11,start+12};
 
-  unsigned char topL = 0+(entity->spriteId << 2);
-  unsigned char topR = 1+(entity->spriteId << 2);
-  unsigned char botL = 2+(entity->spriteId << 2);
-  unsigned char botR = 3+(entity->spriteId << 2);
+  unsigned char topL = 0+(entity->spriteNumber << 2);
+  unsigned char topR = 1+(entity->spriteNumber << 2);
+  unsigned char botL = 2+(entity->spriteNumber << 2);
+  unsigned char botR = 3+(entity->spriteNumber << 2);
   //TODO: ajouter code pour le bas
   //gestion des frames
   if(entity->moving != 0 || entity->flag & 1)
