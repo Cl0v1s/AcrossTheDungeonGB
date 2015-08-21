@@ -47,6 +47,29 @@ unsigned char itIsEntityFreeAt(const unsigned char x, const unsigned char y)
     {
       done = false;
     }
+		if(entities[i].moving != 0) //si l'entité se déplace on prend aussi en compte sa destination
+		{
+			if(entities[i].dir == 0)
+			{
+				ye+=1;
+			}
+			else if(entities[i].dir == 1)
+			{
+				xe += 1;
+			}
+			else if(entities[i].dir == 2)
+			{
+				ye -= 1;
+			}
+			else
+			{
+				xe -= 1;
+			}
+			if(x == xe && y == ye)
+	    {
+	      done = false;
+	    }
+		}
     i++;
   }
 	if(done == true) //on vérifie avec le joueur
@@ -57,6 +80,29 @@ unsigned char itIsEntityFreeAt(const unsigned char x, const unsigned char y)
     {
       done = false;
     }
+		if(playerRef->moving != 0) //si l'entité se déplace on prend aussi en compte sa destination
+		{
+			if(playerRef->dir == 0)
+			{
+				ye+=1;
+			}
+			else if(playerRef->dir == 1)
+			{
+				xe += 1;
+			}
+			else if(playerRef->dir == 2)
+			{
+				ye -= 1;
+			}
+			else
+			{
+				xe -= 1;
+			}
+			if(x == xe && y == ye)
+	    {
+	      done = false;
+	    }
+		}
 	}
   return done;
 }
