@@ -6,8 +6,6 @@ void initRender()
 
   SPRITES_8x8;
 
-  canvasX = 0;
-  canvasY = 0;
   loadFont();
   loadBackground();
   loadSprites();
@@ -177,23 +175,22 @@ void clearWindow()
 
 void moveCanvas(const unsigned int x, const unsigned int y)
 {
-  setCanvasPos(canvasX+x, canvasY+y);
+  unsigned char* u = 0xFF42;
+  unsigned char* c = 0xFF43;
+  setCanvasPos((*c)+x, (*u)+y);
 }
 
 void setCanvasPos(const unsigned int x, const unsigned int y)
 {
-  canvasX = x;
-  canvasY = y;
+  unsigned char* u = 0xFF42;
+  unsigned char* c = 0xFF43;
+  (*u) = y;
+  (*c) = x;
 }
 
 void focusRender(const unsigned int x, const unsigned int y)
 {
   setCanvasPos(x-(HARDWARE_WIDTH/2), y-(HARDWARE_HEIGHT/2));
-}
-
-void updateRender()
-{
-  move_bkg(canvasX, canvasY);
 }
 
 void drawInt(const unsigned int x, const unsigned int y, int val)
@@ -372,6 +369,11 @@ void drawEntity(struct Entity* entity)
   unsigned char topR = 1+(entity->spriteNumber << 2);
   unsigned char botL = 2+(entity->spriteNumber << 2);
   unsigned char botR = 3+(entity->spriteNumber << 2);
+
+
+  unsigned char* canvasX = 0xFF43;
+  unsigned char* canvasY = 0xFF42;
+
   //TODO: ajouter code pour le bas
   //gestion des frames
   if(entity->moving != 0 || entity->flag & 1)
@@ -458,11 +460,12 @@ void drawEntity(struct Entity* entity)
       set_sprite_prop(botR, S_FLIPX);
   }
 
+  move_sprite(topL, entity->x+8-(*canvasX), entity->y+16-8-(*canvasY));
+  move_sprite(topR, entity->x+8+8-(*canvasX), entity->y+16-8-(*canvasY));
 
-  move_sprite(topL, entity->x+8-canvasX, entity->y+16-8-canvasY);
-  move_sprite(topR, entity->x+8+8-canvasX, entity->y+16-8-canvasY);
-  move_sprite(botL, entity->x+8-canvasX, entity->y+16-canvasY);
-  move_sprite(botR, entity->x+8+8-canvasX, entity->y+16-canvasY);
+
+  move_sprite(botL, entity->x+8-(*canvasX), entity->y+16-(*canvasY));
+  move_sprite(botR, entity->x+8+8-(*canvasX), entity->y+16-(*canvasY));
 
 
 

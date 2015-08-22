@@ -41,7 +41,7 @@ void initGame()
 		ActiveRoom_create(&activeRoom, room);
 		Player_create(&player, &activeRoom);
 		player.spriteNumber = registerSprite();
-		setPlayer(&player);
+		Entities_setPlayer(&player);
 
 }
 
@@ -106,7 +106,7 @@ void manageTp()
 		player.x = tmp[0] << 4;
 		player.y = tmp[1] << 4;
 		player.spriteNumber = registerSprite();
-		populateActiveRoom(&activeRoom, ActiveRoom_getEntitiesType(&activeRoom), ActiveRoom_getEntityNumber(&activeRoom));
+		Entities_populateActiveRoom(&activeRoom, ActiveRoom_getEntitiesType(&activeRoom), ActiveRoom_getEntityNumber(&activeRoom));
 		clearBackground();
 		drawRoom(&activeRoom);
 		updateHud();
@@ -127,11 +127,10 @@ void updateGame()
 	while(1)
 	{
 		wait_vbl_done();
-		updateEntities();
+		Entities_update();
 		manageTp();
 		updateInput();
 		Entity_update(&player);
-		updateRender();
 		drawEntity(&player);
 		focusRender(player.x, player.y);
 	}

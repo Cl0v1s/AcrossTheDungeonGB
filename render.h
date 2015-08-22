@@ -12,8 +12,6 @@
 #include "sprites/spriteblob.h"
 #include "sprites/tileset.h"
 
-unsigned char canvasX = 0;
-unsigned char canvasY = 0;
 unsigned char spriteNumber = 0;
 
 void initRender();
@@ -21,8 +19,6 @@ void initRender();
 unsigned char registerSprite();
 
 void clearSprites();
-
-void updateRender();
 
 void moveCanvas(const unsigned int x, const unsigned int y);
 

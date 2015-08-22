@@ -86,7 +86,7 @@ unsigned char ActiveRoom_isCellPassable(struct ActiveRoom* active, const unsigne
   if(r == 1)
     return false;
 
-  return itIsEntityFreeAt(x,y);
+  return Entities_interact(x,y);
 
 }
 

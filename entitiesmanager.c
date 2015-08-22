@@ -4,12 +4,12 @@ Entities entities;
 unsigned char entitiesNumber = 0;
 struct Entity* playerRef;
 
-void setPlayer(struct Entity* player)
+void Entities_setPlayer(struct Entity* player)
 {
 	playerRef = player;
 }
 
-void populateActiveRoom(struct ActiveRoom* active, const unsigned char type, const unsigned char number)
+void Entities_populateActiveRoom(struct ActiveRoom* active, const unsigned char type, const unsigned char number)
 {
 	unsigned char i = 0;
   entitiesNumber = number;
@@ -23,7 +23,7 @@ void populateActiveRoom(struct ActiveRoom* active, const unsigned char type, con
 	}
 }
 
-void updateEntities()
+void Entities_update()
 {
   unsigned char i;
   for(i = 0; i != entitiesNumber; i++)
@@ -33,7 +33,7 @@ void updateEntities()
   }
 }
 
-unsigned char itIsEntityFreeAt(const unsigned char x, const unsigned char y)
+unsigned char Entities_interact(const unsigned char x, const unsigned char y)
 {
   unsigned char i, done;
   unsigned char xe, ye;
