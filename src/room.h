@@ -1,13 +1,6 @@
 #ifndef ROOM_H
 #define ROOM_H
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <rand.h>
-#include <gb/gb.h>
-#include <types.h>
-
-#include "helper.h"
 #include "cell.h"
 
 struct Room

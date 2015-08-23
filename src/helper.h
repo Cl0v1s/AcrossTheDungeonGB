@@ -17,7 +17,7 @@
 #define ROOM_MAX_ENTITIES 4
 
 //définition du nombre maximum de salles par étage
-#define WORLD_MAX_ROOMS 10
+#define DUNGEON_MAX_ROOMS 10
 
 //déifinition des stats de base du joueur
 #define PLAYER_INIT_LIFE 20

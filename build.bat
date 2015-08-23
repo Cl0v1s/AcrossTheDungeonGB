@@ -1,2 +1,13 @@
-lcc -Wa-l -c helper.c entitiesmanager.c activeroom.c render.c entities/entity.c entities/player.c entities/blob.c main.c dialog.c && lcc -Wa-l -Wf-bo2 -c gen.c room.c && lcc -Wa-l -Wf-bo3 -c sprites/spriteblob.s sprites/spriteplayer.s sprites/tileset.s dialogs/welcome.s && lcc -Wl-yt1 -Wl-yo4 -Wl-m -o main.gb *.o && bgb main.gb
-rm *.gb *.lst *.map *.o
+
+@echo off
+echo compiling sprites
+lcc -Wa-l -Wf-bo3 -c src/data/sprites/spriteblob.s src/data/sprites/spriteplayer.s
+echo compiling tilesets
+lcc -Wa-l -Wf-bo3 -c src/data/tilesets/tileset.s
+echo compiling font
+lcc -Wa-l -Wf-bo3 -c src/data/font/font.s
+echo compiling logic
+lcc -Wa-l -c src/main.c src/helper.c src/room.c
+echo linking
+lcc -Wl-yt1 -Wl-yo8 -Wl-m -o build/AcrossTheDungeon.gb *.o && start build/bgb build/AcrossTheDungeon.gb
+rm *.lst *.o
