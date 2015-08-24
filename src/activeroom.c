@@ -7,7 +7,6 @@ void ActiveRoom_create(struct ActiveRoom* active, struct Room* room)
   //affectation de la salle de base
   active->room = room;
   active->markedForTpTo = -1;
-  SWITCH_ROM_MBC1(2);
   //TODO: ajouter ici le code relatif aux biomes
   //"mise à zéro" de la salle
   for(i = 0; i != ROOM_MAX_SIDE; i++)
@@ -67,7 +66,6 @@ void ActiveRoom_create(struct ActiveRoom* active, struct Room* room)
   {
     active->map[room->doorPos[3]+room->height*room->width] = CELL_DOOR + room->doorTar[3];
   }
-  SWITCH_ROM_MBC1(1);
 }
 
 unsigned char ActiveRoom_isCellPassable(struct ActiveRoom* active, const unsigned char x, const unsigned char y)
@@ -76,17 +74,16 @@ unsigned char ActiveRoom_isCellPassable(struct ActiveRoom* active, const unsigne
   struct Room* room;
   unsigned char r;
   room = active->room;
-  SWITCH_ROM_MBC1(2);
   width = room->width;
   height = room->height;
-  SWITCH_ROM_MBC1(1);
   if(x == 0x0F || y == 0x0F || x == width || y == height)
     return false;
   r = active->map[x+y*width] >> 7;
   if(r == 1)
     return false;
 
-  return Entities_interact(x,y);
+  return true;
+  //return Entities_interact(x,y);
 
 }
 
@@ -95,18 +92,14 @@ unsigned char ActiveRoom_getCellAt(struct ActiveRoom* active, const unsigned cha
   struct Room* room;
   unsigned int width;
   room = active->room;
-  SWITCH_ROM_MBC1(2);
   width = room->width;
-  SWITCH_ROM_MBC1(1);
   return active->map[x+y*width];
 }
 
 unsigned char ActiveRoom_getId(struct ActiveRoom* active)
 {
   unsigned char id;
-  SWITCH_ROM_MBC1(2);
   id = active->room->id;
-  SWITCH_ROM_MBC1(1);
   return id;
 }
 
@@ -119,10 +112,8 @@ void ActiveRoom_getDoorTo(struct ActiveRoom* active, unsigned char room, unsigne
   unsigned char height = 0;
   unsigned char x = 0;
   unsigned char y = 0;
-  SWITCH_ROM_MBC1(2);
   width = active->room->width;
   height = active->room->height;
-  SWITCH_ROM_MBC1(1);
   for(i = 0; i != width; i++)
   {
     for(u = 0; u != height; u++)
@@ -154,27 +145,21 @@ void ActiveRoom_getDoorTo(struct ActiveRoom* active, unsigned char room, unsigne
 
 void ActiveRoom_getSize(struct ActiveRoom* active, unsigned char* tab)
 {
-    SWITCH_ROM_MBC1(2);
     (*tab) = active->room->width;
     tab++;
     (*tab) = active->room->height;
-    SWITCH_ROM_MBC1(1);
 }
 
 unsigned char ActiveRoom_getEntitiesType(struct ActiveRoom* active)
 {
   unsigned char t;
-  SWITCH_ROM_MBC1(2);
   t = active->room->entitiesType;
-  SWITCH_ROM_MBC1(1);
   return t;
 }
 
 unsigned char ActiveRoom_getEntityNumber(struct ActiveRoom* active)
 {
   unsigned char t;
-  SWITCH_ROM_MBC1(2);
   t = active->room->entitiesNumber;
-  SWITCH_ROM_MBC1(1);
   return t;
 }

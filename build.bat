@@ -7,7 +7,7 @@ lcc -Wa-l -Wf-bo3 -c src/data/tilesets/tileset.s
 echo compiling font
 lcc -Wa-l -Wf-bo3 -c src/data/font/font.s
 echo compiling logic
-lcc -Wa-l -c src/main.c src/helper.c src/room.c
+lcc -Wa-l -c src/main.c src/helper.c src/room.c src/activeroom.c src/entities/entity.c src/entities/player.c src/render.c
 echo linking
 lcc -Wl-yt1 -Wl-yo8 -Wl-m -o build/AcrossTheDungeon.gb *.o && start build/bgb build/AcrossTheDungeon.gb
 rm *.lst *.o

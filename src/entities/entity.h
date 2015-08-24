@@ -1,10 +1,8 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "../sound.h"
 #include "../helper.h"
 #include "../activeroom.h"
-#include "../room.h"
 
 
 
@@ -27,8 +25,6 @@ struct Entity
 
 void Entity_create(struct Entity *entity,struct ActiveRoom *active);
 void Entity_setPos(struct Entity *entity, const unsigned int x, const unsigned int y);
-int Entity_isAlive(struct Entity *entity);
-void Entity_activateCellAt(struct Entity *entity, const unsigned int x, const unsigned int y);
 void Entity_moveDown(struct Entity* entity);
 void Entity_moveUp(struct Entity* entity);
 void Entity_moveLeft(struct Entity* entity);

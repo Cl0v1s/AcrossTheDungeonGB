@@ -2,8 +2,12 @@
 #include <rand.h>
 #include <stdio.h>
 
+#include "render.h"
 #include "helper.h"
 #include "room.h"
+#include "activeroom.h"
+#include "entities/entity.h"
+#include "entities/player.h"
 
 
 //inclusion des ressources graphiques

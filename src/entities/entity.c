@@ -23,19 +23,6 @@ void Entity_setPos(struct Entity *entity, const unsigned int x, const unsigned i
 	entity->y = y;
 }
 
-
-int Entity_isAlive(struct Entity *entity)
-{
-	if(entity->life != 0)
-		return true;
-	return false;
-}
-
-void Entity_activateCellAt(struct Entity *entity, const unsigned int x, const unsigned int y)
-{
-	//TODO: Définir les actions du joueurs en fonction de la case qu'il vient d'activer
-}
-
 void Entity_update(struct Entity* entity)
 {
 	unsigned char cell;
@@ -92,12 +79,7 @@ void Entity_moveDown(struct Entity* entity)
 	{
 		entity->moving = 16;
 	}
-	else
-	{
-		SOUND_CHANNEL_1;
-		SOUND_CHANNEL_1_ENVELOPE(5,0,2);
-		SOUND_CHANNEL_1_PLAY(0x02);
-	}
+
 }
 
 void Entity_moveUp(struct Entity* entity)
@@ -109,12 +91,7 @@ void Entity_moveUp(struct Entity* entity)
 	{
 		entity->moving = 16;
 	}
-	else
-	{
-		SOUND_CHANNEL_1;
-		SOUND_CHANNEL_1_ENVELOPE(5,0,2);
-		SOUND_CHANNEL_1_PLAY(0x02);
-	}
+
 }
 
 void Entity_moveLeft(struct Entity* entity)
@@ -126,12 +103,7 @@ void Entity_moveLeft(struct Entity* entity)
 	{
 		entity->moving = 16;
 	}
-	else
-	{
-		SOUND_CHANNEL_1;
-		SOUND_CHANNEL_1_ENVELOPE(5,0,2);
-		SOUND_CHANNEL_1_PLAY(0x02);
-	}
+
 }
 
 void Entity_moveRight(struct Entity* entity)
@@ -143,10 +115,5 @@ void Entity_moveRight(struct Entity* entity)
 	{
 		entity->moving = 16;
 	}
-	else
-	{
-		SOUND_CHANNEL_1;
-		SOUND_CHANNEL_1_ENVELOPE(5,0,2);
-		SOUND_CHANNEL_1_PLAY(0x02);
-	}
+
 }
