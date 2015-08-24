@@ -20,13 +20,16 @@ void Room_create(struct Room* room, unsigned char id)
 
 void Room_addDoor(struct Room* room, const unsigned char other)
 {
-	if(room->sisters & 0x1 == 0)
+	unsigned char order = random(0,4);
+	while(room->doorPos[order] != -1)
+		order = random(0,4);
+	if(order & 0x1 == 0)
 	{
-		room->doorPos[room->sisters] = random(2, room->width-2);
+		room->doorPos[order] = random(2, room->width-2);
 	}
 	else
-		room->doorPos[room->sisters] = random(2, room->height - 2);
+		room->doorPos[order] = random(2, room->height - 2);
 
-	room->doorTar[room->sisters] = other;
+	room->doorTar[order] = other;
 	room->sisters = room->sisters + 1;
 }

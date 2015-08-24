@@ -13,7 +13,7 @@
 
 //définition du coté maximum d'une salle
 #define ROOM_MAX_SIDE 12
-#define ROOM_MIN_SIDE 5
+#define ROOM_MIN_SIDE 6
 #define ROOM_MAX_ENTITIES 4
 
 //définition du nombre maximum de salles par étage

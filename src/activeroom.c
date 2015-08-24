@@ -64,7 +64,7 @@ void ActiveRoom_create(struct ActiveRoom* active, struct Room* room)
   //porte du bas
   if(room->doorPos[3] != -1)
   {
-    active->map[room->doorPos[3]+room->height*room->width] = CELL_DOOR + room->doorTar[3];
+    active->map[room->doorPos[3]+(room->height-1)*room->width] = CELL_DOOR + room->doorTar[3];
   }
 }
 

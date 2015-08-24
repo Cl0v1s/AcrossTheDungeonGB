@@ -67,11 +67,11 @@ void manage_tp()
 		ActiveRoom_getDoorTo(&activeRoom, last, pos);
 		if(pos[0] == 1)
 			player.dir = 1;
-		else if(pos[0] == (activeRoom.room->width-1))
+		else if(pos[0] == (activeRoom.room->width-2))
 			player.dir = 3;
 		if(pos[1] == 1)
 			player.dir = 0;
-		else if(pos[1] == (activeRoom.room->height-1))
+		else if(pos[1] == (activeRoom.room->height-2))
 			player.dir = 2;
 		player.x = pos[0] << 4;player.y = pos[1] << 4;
 		//dessin de la nouvelle salle
