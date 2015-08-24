@@ -89,18 +89,12 @@ unsigned char ActiveRoom_isCellPassable(struct ActiveRoom* active, const unsigne
 
 unsigned char ActiveRoom_getCellAt(struct ActiveRoom* active, const unsigned char x, const unsigned char y)
 {
-  struct Room* room;
-  unsigned int width;
-  room = active->room;
-  width = room->width;
-  return active->map[x+y*width];
+  return active->map[x+y*(active->room->width)];
 }
 
 unsigned char ActiveRoom_getId(struct ActiveRoom* active)
 {
-  unsigned char id;
-  id = active->room->id;
-  return id;
+  return active->room->id;
 }
 
 void ActiveRoom_getDoorTo(struct ActiveRoom* active, unsigned char room, unsigned char* tab)
@@ -108,22 +102,17 @@ void ActiveRoom_getDoorTo(struct ActiveRoom* active, unsigned char room, unsigne
   unsigned char* done = 0xDE80;
   unsigned char i = 0;
   unsigned char u = 0;
-  unsigned char width = 0;
-  unsigned char height = 0;
   unsigned char x = 0;
   unsigned char y = 0;
-  width = active->room->width;
-  height = active->room->height;
-  for(i = 0; i != width; i++)
+  for(i = 0; i !=active->room->width; i++)
   {
-    for(u = 0; u != height; u++)
+    for(u = 0; u != active->room->height; u++)
     {
       //copie pour corriger un bug étrange
-      (*done) = active->map[i+u*width];
+      (*done) = active->map[i+u*active->room->width];
       done++;
       (*done) = CELL_DOOR + room;
-
-      if(active->map[i+u*width] == CELL_DOOR + room)
+      if(active->map[i+u*active->room->width] == CELL_DOOR + room)
       {
         x = i;
         y = u;
@@ -132,11 +121,11 @@ void ActiveRoom_getDoorTo(struct ActiveRoom* active, unsigned char room, unsigne
   }
   if(x == 0)
     x = x + 1;
-  else if(x == width-1)
+  else if(x == active->room->width-1)
     x = x - 1;
   if(y == 0)
       y = y + 1;
-  else if(y == height-1)
+  else if(y == active->room->height-1)
       y = y - 1;
   (*tab) = x;
   tab++;

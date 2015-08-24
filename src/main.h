@@ -32,3 +32,4 @@ void main();
 void init();
 void init_graphics();
 void init_dungeon();
+void manage_tp();

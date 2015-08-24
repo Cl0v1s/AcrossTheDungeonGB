@@ -236,5 +236,30 @@ void draw_int(const unsigned char x, const unsigned char y, char val)
 
     }
   }
+}
 
+void clear_bkg()
+{
+  unsigned char i,u;
+  unsigned char empty[] = {1,1};
+  wait_vbl_done();
+  for(i = 0; i != 32; i++)
+  {
+    for(u = 0; u!= 32; u++)
+    {
+        set_bkg_tiles(i,u,1,1,empty);
+    }
+  }
+
+}
+
+void clear_sprites()
+{
+  unsigned char* addr = 0xFE00;
+  while(addr !=0xFEA0)
+  {
+    (*addr) = 0x00;
+    addr++;
+  }
+  render_spriteNumber = 0;
 }

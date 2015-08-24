@@ -26,6 +26,8 @@ void Entity_setPos(struct Entity *entity, const unsigned int x, const unsigned i
 void Entity_update(struct Entity* entity)
 {
 	unsigned char cell;
+	unsigned char* p = 0xDA80;
+					(*p) = 0xFE;
 	//mouvement aléatoire
 	if((entity->flag & 0x02) == 0x02 && entity->moving == 0)
 	{
@@ -61,6 +63,7 @@ void Entity_update(struct Entity* entity)
 	else if((entity->flag & 0x02) != 0x02)
 	{
 		cell = ActiveRoom_getCellAt(entity->active, entity->x >> 4, entity->y >> 4);
+				(*p) = cell;
 		if((cell >> 6) == 1 )
 		{
 			entity->active->markedForTpTo = cell - CELL_DOOR;

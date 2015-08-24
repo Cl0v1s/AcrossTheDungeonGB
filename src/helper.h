@@ -12,7 +12,7 @@
 #define HARDWARE_HEIGHT 140
 
 //définition du coté maximum d'une salle
-#define ROOM_MAX_SIDE 15
+#define ROOM_MAX_SIDE 12
 #define ROOM_MIN_SIDE 5
 #define ROOM_MAX_ENTITIES 4
 

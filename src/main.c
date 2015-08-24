@@ -10,6 +10,7 @@ void main()
 	HIDE_SPRITES;
 	HIDE_BKG;
 	HIDE_WIN;
+	clear_bkg();
 	//initialisation de l'affichage
 	init_graphics();
 	//génération du donjon
@@ -42,6 +43,45 @@ void main()
 		focus_canvas(player.x, player.y);
 		//déssin du joueur
 		draw_entity(&player);
+		//procédure de changement de salle
+		manage_tp();
+	}
+}
+
+void manage_tp()
+{
+	struct Room* room;
+	unsigned char last;
+	unsigned char pos[2];
+	if(activeRoom.markedForTpTo != -1)
+	{
+		DISPLAY_OFF;
+		disable_interrupts();
+		clear_bkg();
+		//récupération de l'id de la salle que le joueur quitte
+		last=ActiveRoom_getId(&activeRoom);
+		//generation de la nouvelle salle active
+		room = &dungeon_rooms[activeRoom.markedForTpTo];
+		ActiveRoom_create(&activeRoom, room);
+		//positionnement du joueur
+		ActiveRoom_getDoorTo(&activeRoom, last, pos);
+		if(pos[0] == 1)
+			player.dir = 1;
+		else if(pos[0] == (activeRoom.room->width-1))
+			player.dir = 3;
+		if(pos[1] == 1)
+			player.dir = 0;
+		else if(pos[1] == (activeRoom.room->height-1))
+			player.dir = 2;
+		player.x = pos[0] << 4;player.y = pos[1] << 4;
+		//dessin de la nouvelle salle
+		draw_room(&activeRoom);
+		//effacement des sprites
+		clear_sprites();
+		//réenregistrement du joueur
+		player.spriteNumber = register_sprite();
+		enable_interrupts();
+		DISPLAY_ON;
 	}
 }
 

@@ -12,5 +12,7 @@ void focus_canvas(unsigned char x, unsigned char y);
 void draw_room(struct ActiveRoom* active);
 void draw_entity(struct Entity* entity);
 void draw_int(unsigned char x, unsigned char y, char val);
+void clear_bkg();
+void clear_sprites();
 
 #endif
