@@ -1,7 +1,2 @@
-*.gb
-*.lst
-*.map
-*.o
-*.exe
-*.ini
-gbtb/*
+build/*
+*~
