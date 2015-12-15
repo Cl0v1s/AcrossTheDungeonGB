@@ -15,7 +15,10 @@
 
 	; project includes
 	INCLUDE "data/tileset.asm"
-
+	INCLUDE "data/spriteplayer.asm"
+	INCLUDE "const.asm"
+	INCLUDE "sprite.asm"
+	INCLUDE "player.asm"
 	
 ;****************************************************************************************************************************************************
 ;*	user data (constants)
@@ -160,13 +163,29 @@ Start::
 	ld hl,TILESET
 	ld bc,13
 	call LOAD_TILES	;load up our tiles
+	
+	ld hl,SPRITE_PLAYER
+	ld bc,14
+	ld de,0
+	call LOAD_SPRITE
+	
 	;call LOAD_MAP	;load up our map
+	
+	
+	;Intialisation des données mémoires
+	ld b,10
+	ld c,10
+	call PLAYER_INIT
+	
 
 	ld	a,%11100100	;load a normal palette up 11 10 01 00 - dark->light
 	ldh	[rBGP],a	;load the palette
 	
 	ld	a,%10010001		;  =$91 
 	ldh	[rLCDC],a	;turn on the LCD, BG, etc
+
+	
+
 
 Loop::
 	halt
@@ -209,7 +228,37 @@ CLEAR_OAM_LOOP::
 	or c
 	jr nz,CLEAR_OAM_LOOP
 	ret
-	    
+	  
+	  
+;LOAD_SPRITE
+;hl -> adresse des sprites
+;bc -> nombre de frame/parties à charger
+;de -> index de départ de l'enregistrement mémoire (pour charger des sprites de différents fichiers)
+LOAD_SPRITE::
+	ld a,h
+	ld [_TEMP],a
+	ld a,l
+	ld [_TEMP+1],a
+	sla16 de,4
+	ld hl,_SRAM
+	add hl,de
+	ld d,h
+	ld e,l
+	ld a,[_TEMP]
+	ld h,a
+	ld a,[_TEMP+1]
+	ld l,a
+	sla16 bc,4
+LOAD_SPRITE_LOOP::
+	ld	a,[hl+]	;get a byte from our tiles, and increment.
+	ld	[de],a	;put that byte in VRAM and
+	inc	de		;increment.
+	dec	bc		;bc=bc-1.
+	ld	a,b		;if b or c != 0,
+	or	c		;
+	jr	nz,LOAD_SPRITE_LOOP	;then loop.
+	ret			;done
+	 
     
 
 ; LOAD_TILES
@@ -245,6 +294,8 @@ LOAD_MAP_LOOP::
 	dec	c		;decrement our counter
 	jr	nz,LOAD_MAP_LOOP	;and of the counter != 0 then loop
 	ret			;done
+	
+
 
 
 
