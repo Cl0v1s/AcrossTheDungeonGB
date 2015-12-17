@@ -19,6 +19,7 @@ _PAD_DOWN EQU $C7
 ;Sprite Ram, point de départ pour le stockage des sprites
 _SRAM EQU _VRAM+$0800
 _SINVX EQU $20 ;code permettant d'inverser un sprite sur l'axe des x
+_SNORM EQU 0
 
 ;BG Map DATA 1
 _BG1RAM EQU _VRAM+$1800
@@ -51,7 +52,7 @@ _PLAYER_FRAME EQU $C004
 ;X et Y du joueur (x=_PLAYER_POS et y=_PLAYER_POS) $C006 est réservé
 _PLAYER_POS EQU $C005
 ;Vitesse du joueur
-_PLAYER_MOVE_SPEED EQU 1
+_PLAYER_MOVE_SPEED EQU 2
 ;index du premier sprite du joueur
 _PLAYER_SPRITE_INDEX EQU $80
 

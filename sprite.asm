@@ -8,7 +8,7 @@ SECTION "Sprite",HOME
 
 ; SPRITE_CREATE
 ; Créer une nouvelle entrée dans l'OAM pour un nouveau sprite
-; Paramètres 
+; Paramètres
 ; a-> index du sprite dans l'OAM
 ; b-> position x du sprite
 ; c-> position y du sprite
@@ -40,35 +40,37 @@ SPRITE_CREATE::
 	inc hl ;Enregistrement meta data sprites
 	ld [hl], $00
 	ret
-	
+
 ;SPRITE_SET_META
 ; Change les meta donnees d'un sprite
 ; paramètre
-; a -> index du sprite à changer 
+; a -> index du sprite à changer
 ; b-> (voir byte3 des prite pandoc)
 SPRITE_SET_META::
-	ld h,0
-	ld l,a ;Récupération de l'index réel du sprite en terme du byte dans l'OAM
-	sla16 hl,2
-	ld a,h
-	ld [_TEMP],a
-	ld a,l
-	ld [_TEMP+1],a
-	ld hl,_OAMRAM
-	ld a,[_TEMP]
-	add a,h
-	ld h,a
-	ld a,[_TEMP+1]
-	add a,l
-	add a,3
-	ld l,a
-	ld a,b
-	ld [hl],a
+  ld h,0
+  ld l,a ;Récupération de l'index réel du sprite en terme du byte dans l'OAM
+  sla16 hl,2
+  ld a,h
+  ld [_TEMP],a
+  ld a,l
+  ld [_TEMP+1],a
+  ld hl,_OAMRAM
+  ld a,[_TEMP]
+  add a,h
+  ld h,a
+  ld a,[_TEMP+1]
+  add a,l
+  add a,3
+  ld l,a
+
+  ld a,b
+  ld [hl],a
+
 	ret
-	
+
 ;SPRITE_SET_TILE
 ; Change la tuile de référence pour un sprite
-; paramètres 
+; paramètres
 ; a -> index sprite
 ; b-> nouvel index de sprite
 SPRITE_SET_TILE::
@@ -90,7 +92,7 @@ SPRITE_SET_TILE::
 	ld a,b
 	ld [hl],b
 	ret
-	
+
 ;SPRITE_SET_POS
 ; Change la position d'un sprite
 ; paramètres:
@@ -112,7 +114,7 @@ SPRITE_SET_POS::
 	ld a,[_TEMP+1]
 	add a,l
 	ld l,a
-	
+
 	ld a,c
 	add 16
 	ld [hl],a
