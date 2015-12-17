@@ -1,4 +1,5 @@
 INCLUDE "include/Hardware.inc"
+INCLUDE "include/Shift.inc"
 INCLUDE "const.asm"
 
         IF      !DEF(PLAYER_ASM)
@@ -13,7 +14,7 @@ SECTION "Player",HOME
 PLAYER_INIT::
 	;Reglage déplacement
 	ld a,0
-	ld [_PLAYER_MOVED],a
+	ld [_PLAYER_ANIMATION],a
 	;Réglage des points de vie du joueur
 	ld a,10
 	ld [_PLAYER_LIFE],a
@@ -64,52 +65,129 @@ PLAYER_INIT::
 ;PLAYER_UPDATE
 ;Met à jour la position du joueur
 PLAYER_UPDATE::
-	ld a,[_PLAYER_MOVED]
+	;Mise à jour du sprite du joueur si il a bougé
+	ld a,[_PLAYER_ANIMATION]
+	and %10
+	cp _PLAYER_MOVED
+	jp nz,.player_update_pos_done
+	call WAIT_VBLANK
+	;Mise à jour des frames du sprite
+	;Récupération de l'index de frame
+	ld a,0
+	ld b,a
+	ld a,[_PLAYER_FRAME]
+	ld c,a
+	srl16 bc,4
+	;Mise à jour en fonction de la direction
+	ld a,[_PLAYER_ANIMATION]
+	and _PLAYER_DIRECTION
+	ld b,a
+	cp 4
+	jp z,.player_update_sprite_left
+	ld a,b
 	cp 1
-	jp z,PLAYER_UPDATE_CHANGE_SPRITE_POS
-	
+	jp z,.player_update_sprite_up
+	ld a,b
+	cp 5
+	jp z,.player_update_sprite_right
+	ld a,b
+	cp 0
+	jp z,.player_update_sprite_down
+.player_update_sprite_down
+	ld a,0
+	ld b,_PLAYER_SPRITE_INDEX
+	call SPRITE_SET_TILE
+	ld a,1
+	call SPRITE_SET_TILE
+	ld a,1
+	add a,c
+	add a,_PLAYER_SPRITE_INDEX
+	ld b,a
+	ld a,2
+	call SPRITE_SET_TILE
+	ld a,b
+	add 1
+	ld b,a
+	ld a,3
+	call SPRITE_SET_TILE
+	jp .player_update_pos
+.player_update_sprite_up
+	ld a,_PLAYER_SPRITE_INDEX
+	add $A
+	ld b,a
+	ld a,0
+	call SPRITE_SET_TILE
+	ld a,1
+	call SPRITE_SET_TILE
+	ld a,0
+	add a,c
+	add a,_PLAYER_SPRITE_INDEX
+	add a,$B
+	ld b,a
+	ld a,2
+	call SPRITE_SET_TILE
+	ld a,b
+	add 1
+	ld b,a
+	ld a,3
+	call SPRITE_SET_TILE
+	jp .player_update_pos
+.player_update_sprite_left
 
-PLAYER_UPDATE_AFTER_POS_TEST::
-		;on continue l'update ici
+	jp .player_update_pos
+.player_update_sprite_right
+
+	jp .player_update_pos
+
+
+.player_update_pos
+	;Changement de position du sprite
+	;SUP gauche
+	ld a,[_PLAYER_POS]
+	ld b,a
+	ld a,[_PLAYER_POS+1]
+	ld c,a
+	ld a,0
+	call SPRITE_SET_POS
+	;SUP droite
+	ld a,[_PLAYER_POS]
+	add 8
+	ld b,a
+	ld a,[_PLAYER_POS+1]
+	ld c,a
+	ld a,1
+	call SPRITE_SET_POS
+	;INF Gauche
+	ld a,[_PLAYER_POS]
+	ld b,a
+	ld a,[_PLAYER_POS+1]
+	add 8
+	ld c,a
+	ld a,2
+	call SPRITE_SET_POS		
+	;INF Droite
+	ld a,[_PLAYER_POS]
+	add 8
+	ld b,a
+	ld a,[_PLAYER_POS+1]
+	add 8
+	ld c,a
+	ld a,3
+	call SPRITE_SET_POS		
+	;On indique que le déplacement a été effectué
+	ld a,[_PLAYER_ANIMATION]
+	and %01
+	ld [_PLAYER_ANIMATION],a
+	;On incrémente le compteur de frame
+	ld a,[_PLAYER_FRAME]
+	add 1
+	and %00011111
+	ld [_PLAYER_FRAME],a
+
+	
+.player_update_pos_done
 	
 		ret	
-PLAYER_UPDATE_CHANGE_SPRITE_POS:: ;On arrive ici si le joueur s'est déplacé
-		call WAIT_VBLANK
-		;SUP gauche
-		ld a,[_PLAYER_POS]
-		ld b,a
-		ld a,[_PLAYER_POS+1]
-		ld c,a
-		ld a,0
-		call SPRITE_SET_POS
-		;SUP droite
-		ld a,[_PLAYER_POS]
-		add 8
-		ld b,a
-		ld a,[_PLAYER_POS+1]
-		ld c,a
-		ld a,1
-		call SPRITE_SET_POS
-		;INF Gauche
-		ld a,[_PLAYER_POS]
-		ld b,a
-		ld a,[_PLAYER_POS+1]
-		add 8
-		ld c,a
-		ld a,2
-		call SPRITE_SET_POS		
-		;INF Droite
-		ld a,[_PLAYER_POS]
-		add 8
-		ld b,a
-		ld a,[_PLAYER_POS+1]
-		add 8
-		ld c,a
-		ld a,3
-		call SPRITE_SET_POS		
-		ld a,0
-		ld [_PLAYER_MOVED],a
-		jp PLAYER_UPDATE_AFTER_POS_TEST
 		
 		
 	
@@ -119,29 +197,31 @@ PLAYER_MOVE_RIGHT::
 	ld a,[_PLAYER_POS]
 	add a,_PLAYER_MOVE_SPEED
 	ld [_PLAYER_POS],a
-	ld a,1
-	ld [_PLAYER_MOVED],a
+	ld a,[_PLAYER_ANIMATION]
+	or %10
+	ld [_PLAYER_ANIMATION],a
 	ret	
 PLAYER_MOVE_LEFT::
 	ld a,[_PLAYER_POS]
 	sub _PLAYER_MOVE_SPEED
 	ld [_PLAYER_POS],a
-	ld a,1
-	ld [_PLAYER_MOVED],a
+	ld a,[_PLAYER_ANIMATION]
+	or %10
+	ld [_PLAYER_ANIMATION],a
 	ret	
 PLAYER_MOVE_UP::
 	ld a,[_PLAYER_POS+1]
 	sub _PLAYER_MOVE_SPEED
 	ld [_PLAYER_POS+1],a
-	ld a,1
-	ld [_PLAYER_MOVED],a
+	ld a,3; direction à 1 or %10, pour gagner une commande
+	ld [_PLAYER_ANIMATION],a
 	ret	
 PLAYER_MOVE_DOWN::
 	ld a,[_PLAYER_POS+1]
 	add a,_PLAYER_MOVE_SPEED
 	ld [_PLAYER_POS+1],a
-	ld a,1
-	ld [_PLAYER_MOVED],a
+	ld a,2 ;direction à 0 or %10, histoire de gagner une commande
+	ld [_PLAYER_ANIMATION],a
 	ret	
 	
 		ENDC

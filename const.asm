@@ -37,7 +37,16 @@ _INPUT_COUNTER EQU $C002
 
 ;Points de vie du joueur
 _PLAYER_LIFE EQU $C003
-;Index de frame du joueur
+;Informations concernant l'animation du joueur bit 0->direction, bit 1->moved, bit 2->inversion
+; Ce qui nous donne pour la direction le schéma suivant (une fois ANIMATION and DIRECTION)
+; 0 -> down (0 vertical)
+; 1 -> up (inversion de down)
+; 4 -> left (0 horizontal)
+; 5 -> right (inversion de left)
+_PLAYER_ANIMATION EQU $C007
+_PLAYER_MOVED EQU %10
+_PLAYER_DIRECTION EQU %101
+;Adresse de l'index de frame du joueur
 _PLAYER_FRAME EQU $C004
 ;X et Y du joueur (x=_PLAYER_POS et y=_PLAYER_POS) $C006 est réservé
 _PLAYER_POS EQU $C005
@@ -45,7 +54,5 @@ _PLAYER_POS EQU $C005
 _PLAYER_MOVE_SPEED EQU 1
 ;index du premier sprite du joueur
 _PLAYER_SPRITE_INDEX EQU $80
-; Variable indiquant si le joueur a bouge 
-_PLAYER_MOVED EQU $C007
 
         ENDC
