@@ -90,7 +90,39 @@ SPRITE_SET_TILE::
 	ld a,b
 	ld [hl],b
 	ret
-
+	
+;SPRITE_SET_POS
+; Change la position d'un sprite
+; paramètres:
+; a-> index du sprite à modifier
+; b-> nouvelle position x
+; c -> nouvelle position y
+SPRITE_SET_POS::
+	ld h,0
+	ld l,a ;Récupération de l'index réel du sprite en terme du byte dans l'OAM
+	sla16 hl,2
+	ld a,h
+	ld [_TEMP],a
+	ld a,l
+	ld [_TEMP+1],a
+	ld hl,_OAMRAM
+	ld a,[_TEMP]
+	add a,h
+	ld h,a
+	ld a,[_TEMP+1]
+	add a,l
+	ld l,a
+	
+	ld a,c
+	add 16
+	ld [hl],a
+	ld a,l
+	add 1
+	ld l,a
+	ld a,b
+	add 8
+	ld [hl],a
+	ret
 
 
 		ENDC

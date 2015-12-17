@@ -3,6 +3,19 @@ CONST_ASM  SET  1
 
 INCLUDE "include/Hardware.inc"
 
+;Définition des variables de direction
+_DIR_LEFT EQU 0
+_DIR_UP EQU 1
+_DIR_RIGHT EQU 2
+_DIR_DOWN EQU 3
+
+;Définition des variables relatives au pad
+_PAD_LEFT EQU $CD
+_PAD_RIGHT EQU $CE
+_PAD_UP EQU $CB
+_PAD_DOWN EQU $C7
+
+
 ;Sprite Ram, point de départ pour le stockage des sprites
 _SRAM EQU _VRAM+$0800
 _SINVX EQU $20 ;code permettant d'inverser un sprite sur l'axe des x
@@ -15,18 +28,24 @@ _BG2RAM EQU _VRAM+$1C00
 ;Variable temporaire permettant de réaliser des calculs dans les fonctions nécessitant plus de trois registres
 ; A noter que _TEMP+1 est aussi réservé (pour les calculs d'adresse)
 _TEMP EQU $C000
+; Compteur d'input
+_INPUT_COUNTER EQU $C002
 
 
 ;INFORMATIONS CONCERNANT LE JOUEUR
 ; A noter que les 4 premiers sprites de l'OAM sont réservés au joueur
 
 ;Points de vie du joueur
-_PLAYER_LIFE EQU $C002
+_PLAYER_LIFE EQU $C003
 ;Index de frame du joueur
-_PLAYER_FRAME EQU $C003
-;X et Y du joueur (x=_PLAYER_POS et y=_PLAYER_POS)
-_PLAYER_POS EQU $C004
+_PLAYER_FRAME EQU $C004
+;X et Y du joueur (x=_PLAYER_POS et y=_PLAYER_POS) $C006 est réservé
+_PLAYER_POS EQU $C005
+;Vitesse du joueur
+_PLAYER_MOVE_SPEED EQU 1
 ;index du premier sprite du joueur
 _PLAYER_SPRITE_INDEX EQU $80
+; Variable indiquant si le joueur a bouge 
+_PLAYER_MOVED EQU $C007
 
         ENDC

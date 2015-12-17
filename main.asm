@@ -18,6 +18,7 @@
 	INCLUDE "data/spriteplayer.asm"
 	INCLUDE "const.asm"
 	INCLUDE "sprite.asm"
+	INCLUDE "game.asm"
 	INCLUDE "player.asm"
 	
 ;****************************************************************************************************************************************************
@@ -96,7 +97,7 @@ JOYPAD_VECT:
 	DB	$BB,$BB,$67,$63,$6E,$0E,$EC,$CC,$DD,$DC,$99,$9F,$BB,$B9,$33,$3E
 
 	; $0134-$013E (Game title - up to 11 upper case ASCII characters; pad with $00)
-	DB	"HELLO WORLD"
+	DB	"ATDGB"
 		;0123456789A
 
 	; $013F-$0142 (Product code - 4 ASCII characters, assigned by Nintendo, just leave blank)
@@ -153,7 +154,7 @@ Start::
 	ld	sp,$FFFE	;set the stack to $FFFE
 	call WAIT_VBLANK	;wait for v-blank
 
-	ld	a,0		;
+	ld	a,LCDCF_OFF		;
 	ldh	[rLCDC],a	;turn off LCD 
 
 	call CLEAR_MAP	;clear the BG map
@@ -164,33 +165,39 @@ Start::
 	ld bc,13
 	call LOAD_TILES	;load up our tiles
 	
+	;Chargement du sprite du joueur
 	ld hl,SPRITE_PLAYER
 	ld bc,14
 	ld de,0
 	call LOAD_SPRITE
 	
-	;call LOAD_MAP	;load up our map
-	
-	
 	;Intialisation des données mémoires
+	;Passage du compteur d'input à 0
+	ld a,0
+	ld [_INPUT_COUNTER],a
+	;Création du joueur
 	ld b,10
 	ld c,10
 	call PLAYER_INIT
 	
+	
+	
 
 	ld	a,%11100100	;load a normal palette up 11 10 01 00 - dark->light
-	ldh	[rBGP],a	;load the palette
+	ldh	[rBGP],a	;Chargement de la palette de background
+	ld	a,%11100100	;load a normal palette up 11 10 01 00 - dark->light
+	ldh	[rOBP0],a	;Chargement de la palette sprite
 	
-	ld	a,%10010001		;  =$91 
+	;Activation de l'écran et paramétrage de ce dernier
+	ld	a,LCDCF_ON | LCDCF_WINON | LCDCF_OBJON | LCDCF_BG8000 | LCDCF_BGON
 	ldh	[rLCDC],a	;turn on the LCD, BG, etc
+	ei
 
 	
-
+	
 
 Loop::
-	halt
-	nop
-    nop
+	call GAME_UPDATE
 	jp Loop
 
 ;***************************************************************
