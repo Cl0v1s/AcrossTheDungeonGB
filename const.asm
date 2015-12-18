@@ -56,4 +56,17 @@ _PLAYER_MOVE_SPEED EQU 2
 ;index du premier sprite du joueur
 _PLAYER_SPRITE_INDEX EQU $80
 
+
+;INFORMATIONS CONCERNANT LE DONJON
+;Debut des infos sur le donjon, chaque salle est écrite sur 6 bytes
+; 1 byte -> w et h de la salle
+; 2 byte -> doors meta
+; 3 byte -> doors pos
+; 4 byte -> destination de la porte 1 et 2
+; 5 byte -> destination de la porte 3 et 4
+; 6 byte -> inutile
+_DUNGEON_DATA EQU $C010
+_DUNGEON_MAX_ROOMS EQU 10
+_ROOM_MAX_SIDE EQU 15
+
         ENDC

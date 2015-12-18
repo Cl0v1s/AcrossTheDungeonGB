@@ -215,7 +215,7 @@ PLAYER_UPDATE::
   ld b,_SINVX
   ld a,2
   call SPRITE_SET_META
-	jp .player_update_pos
+  ;jp .player_update_pos optionnel étant donné que c'est la suite
 
 
 .player_update_pos
