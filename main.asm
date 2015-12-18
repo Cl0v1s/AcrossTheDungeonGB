@@ -20,7 +20,7 @@
 	INCLUDE "sprite.asm"
 	INCLUDE "game.asm"
 	INCLUDE "player.asm"
-	
+
 ;****************************************************************************************************************************************************
 ;*	user data (constants)
 ;****************************************************************************************************************************************************
@@ -36,11 +36,11 @@
 ;****************************************************************************************************************************************************
 
 	SECTION	"Org $00",HOME[$00]
-RST_00:	
+RST_00:
 	jp	$100
 
 	SECTION	"Org $08",HOME[$08]
-RST_08:	
+RST_08:
 	jp	$100
 
 	SECTION	"Org $10",HOME[$10]
@@ -70,7 +70,7 @@ RST_38:
 	SECTION	"V-Blank IRQ Vector",HOME[$40]
 VBL_VECT:
 	reti
-	
+
 	SECTION	"LCD IRQ Vector",HOME[$48]
 LCD_VECT:
 	reti
@@ -86,7 +86,7 @@ SERIAL_VECT:
 	SECTION	"Joypad IRQ Vector",HOME[$60]
 JOYPAD_VECT:
 	reti
-	
+
 	SECTION	"Start",HOME[$100]
 	nop
 	jp	Start
@@ -105,7 +105,7 @@ JOYPAD_VECT:
 		;0123
 
 	; $0143 (Color GameBoy compatibility code)
-	DB	$00	; $00 - DMG 
+	DB	$00	; $00 - DMG
 			; $80 - DMG/GBC
 			; $C0 - GBC Only cartridge
 
@@ -155,22 +155,23 @@ Start::
 	call WAIT_VBLANK	;wait for v-blank
 
 	ld	a,LCDCF_OFF		;
-	ldh	[rLCDC],a	;turn off LCD 
+	ldh	[rLCDC],a	;turn off LCD
 
-	call CLEAR_MAP	;clear the BG map
+	call CLEAR_RAM
+	call CLEAR_MAP
 	call CLEAR_OAM
-	
+
 	;Insérer ici le chargement des élements vidéo
 	ld hl,TILESET
 	ld bc,13
 	call LOAD_TILES	;load up our tiles
-	
+
 	;Chargement du sprite du joueur
 	ld hl,SPRITE_PLAYER
 	ld bc,14
 	ld de,0
 	call LOAD_SPRITE
-	
+
 	;Intialisation des données mémoires
 	;Passage du compteur d'input à 0
 	ld a,0
@@ -179,22 +180,24 @@ Start::
 	ld b,10
 	ld c,10
 	call PLAYER_INIT
-	
-	
-	
+
+	call DUNGEON_INIT
+
+
+
 
 	ld	a,%11100100	;load a normal palette up 11 10 01 00 - dark->light
 	ldh	[rBGP],a	;Chargement de la palette de background
 	ld	a,%11100100	;load a normal palette up 11 10 01 00 - dark->light
 	ldh	[rOBP0],a	;Chargement de la palette sprite
-	
+
 	;Activation de l'écran et paramétrage de ce dernier
 	ld	a,LCDCF_ON | LCDCF_WINON | LCDCF_OBJON | LCDCF_BG8000 | LCDCF_BGON
 	ldh	[rLCDC],a	;turn on the LCD, BG, etc
 	ei
 
-	
-	
+
+
 
 Loop::
 	call GAME_UPDATE
@@ -211,7 +214,7 @@ WAIT_VBLANK::
 	cp	$91			;Are we in v-blank yet?
 	jr	nz,WAIT_VBLANK	;if A-91 != 0 then loop
 	ret				;done
-	
+
 CLEAR_MAP::
 	ld	hl,_SCRN0		;loads the address of the bg map ($9800) into HL
 	ld	bc,32*32		;since we have 32x32 tiles, we'll need a counter so we can clear all of them
@@ -223,8 +226,8 @@ CLEAR_MAP_LOOP::
 	or	c			;if B or C != 0
 	jr	nz,CLEAR_MAP_LOOP	;then loop
 	ret				;done
-	
-CLEAR_OAM:
+
+CLEAR_OAM::
 	ld hl,_OAMRAM
 	ld bc,40*4 ;on a 40 fois 4 bytes à effacer
 CLEAR_OAM_LOOP::
@@ -235,8 +238,22 @@ CLEAR_OAM_LOOP::
 	or c
 	jr nz,CLEAR_OAM_LOOP
 	ret
-	  
-	  
+
+;Code de débuggage à supprimer
+;TODO: a supprimer
+CLEAR_RAM::
+	ld hl,$C000
+.clear_ram_for
+	ld [hl],0
+	inc hl
+	ld a,l
+	cp $00
+	jp nz,.clear_ram_for
+	ld a,h
+	cp $E0
+	jp nz,.clear_ram_for
+	ret
+
 ;LOAD_SPRITE
 ;hl -> adresse des sprites
 ;bc -> nombre de frame/parties à charger
@@ -265,18 +282,18 @@ LOAD_SPRITE_LOOP::
 	or	c		;
 	jr	nz,LOAD_SPRITE_LOOP	;then loop.
 	ret			;done
-	 
-    
+
+
 
 ; LOAD_TILES
 ; Charge les tuiles graphics dans la mémoire de tuiles
-; Paramètres: 
+; Paramètres:
 ; hl -> adresse des tuiles à charger
 ; bc -> nombre de tuiles à charger
 LOAD_TILES::
 	ld	de,_VRAM
 	sla16 bc,4
-	
+
 LOAD_TILES_LOOP::
 	ld	a,[hl+]	;get a byte from our tiles, and increment.
 	ld	[de],a	;put that byte in VRAM and
@@ -289,7 +306,7 @@ LOAD_TILES_LOOP::
 
 ; LOAD_MAP
 ; Place les tuiles dans la mémoire vidéo à afficher en fonction de la map précisée
-; Paramètres: 
+; Paramètres:
 ; hl -> adresse de la map servant de modèle
 ; c -> nombre de tuiles à charger
 LOAD_MAP::
@@ -301,7 +318,7 @@ LOAD_MAP_LOOP::
 	dec	c		;decrement our counter
 	jr	nz,LOAD_MAP_LOOP	;and of the counter != 0 then loop
 	ret			;done
-	
+
 
 
 

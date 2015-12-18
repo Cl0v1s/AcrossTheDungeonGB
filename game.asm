@@ -1,13 +1,15 @@
 INCLUDE "const.asm"
 INCLUDE "player.asm"
+INCLUDE "dungeon.asm"
 
         IF      !DEF(GAME_ASM)
-C_ASM  SET  1
+GAME_ASM  SET  1
 
 SECTION "Game", HOME
 
+;GAME_UPDATE
+;Met à jour les données du jeu
 GAME_UPDATE::
-
 	ld a,[_INPUT_COUNTER]
 	cp 0
 	jp nz,GAME_DECREASE_INPUT_COUNTER

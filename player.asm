@@ -15,6 +15,8 @@ PLAYER_INIT::
 	;Reglage déplacement
 	ld a,0
 	ld [_PLAYER_ANIMATION],a
+  ;Reglage salle courante
+  ld [_PLAYER_ROOM],a
 	;Réglage des points de vie du joueur
 	ld a,10
 	ld [_PLAYER_LIFE],a

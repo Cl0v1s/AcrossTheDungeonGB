@@ -1,17 +1,18 @@
+IF      !DEF(RANDOM_ASM)
+RANDOM_ASM  SET  1
+
+SECTION "Random", HOME
+
 ;-----> Generate a random number
 ; ouput a=answer 0<=a<=255
 ; all registers are preserved except: af
 random:
-        push    hl
-        push    de
-        ld      hl,[$FE00]
-        ld      a,1
-        ld      d,a
-        ld      e,(hl)
-        add     hl,de
-        add     a,l
-        xor     h
-        ld      [$FE00],hl
-        pop     de
-        pop     hl
+        push de
+        ld a,[$FF04]
+        ld e,a
+        ld a,[$FF44]
+        xor e  
+        pop de
         ret
+
+        ENDC
