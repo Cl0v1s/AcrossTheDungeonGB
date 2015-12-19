@@ -23,11 +23,7 @@ ld l,a
 ;Trouver nombre aléatoire supérieur ou égal à 5
 ;Boucle tant que
 call random
-ld c,a
-cp 5
-jp c,.dungeon_init_create_room_for
-;On écrit la taille de la salle
-ld a,c
+or %01010101
 ld [hl],a
 inc hl
 ;On écrit les infos sur les portes
@@ -67,12 +63,66 @@ ret
 ;Lit la map de la salle courante, la traite et la place dans la mémoire vidéo
 ;Nécessite de couper l'affichage
 DUNGEON_LOAD_MAP::
-
+  ;Récupération de l'adresse de la salle actuelle
+  ld hl,_DUNGEON_DATA
   ld a,[_PLAYER_ROOM]
   sla a
   sla a
   sla a
-  sla a
+  add l
+  ;Récupération de la largeur et de la hauteur de la salle
+  ld a,[hl]
+  ld d,a
+  and %11110000
+  srl a
+  srl a
+  srl a
+  srl a
+  add a
+  ld b,a
+  ld a,d
+  and %00001111
+  add a
+  ld c,a
+  ;Ecriture de la mémoire video en conséquence
+  push hl
+  ld hl,_SCRN0+$20
+  ;Ecriture du mur du haut
+  ld d,0
+.dungeon_load_map_draw_wall_top
+  ;mur du haut
+  ld [hl],_CELL_WALL_TOP
+  inc hl
+  inc d
+  ld a,d
+  cp b
+  jp nz,.dungeon_load_map_draw_wall_top
+;calcul du nouveau hl pour le mur du bas
+  ld hl,_SCRN0+$20
+  push hl
+  ld d,$20
+  ld e,c
+  call Multiply
+  ld a,h
+  ld [$C100],a
+  ld a,l
+  ld [$C101],a
+  ld d,h
+  ld e,l
+  pop hl
+  add hl,de
+
+.dungeon_load_map_draw_wall_bot
+  ;mur du bas
+  ld [hl],_CELL_WALL_TOP
+  inc hl
+  inc d
+  ld a,d
+  cp b
+  jp nz,.dungeon_load_map_draw_wall_bot
+
+
+  pop hl
 
 ret
 

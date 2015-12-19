@@ -183,6 +183,7 @@ Start::
 
 	call DUNGEON_INIT
 
+	call DUNGEON_LOAD_MAP
 
 
 
