@@ -138,33 +138,59 @@ DUNGEON_LOAD_MAP_DRAW_DOOR::
   ld a,e
   cp 0
   jp z,.dungeon_load_map_draw_door_left
+  ld a,e
+  cp 1
+  jp z,.dungeon_load_map_draw_door_top
+  ld a,e
+  cp 2
+  jp z,.dungeon_load_map_draw_door_right
 
 ;Dessin de la porte du mur gauche
 .dungeon_load_map_draw_door_left
-  ;on rabote la hauteur pour qu'elle ne dépasse pas la taille de la salle
-  ld a,[_TEMP+1]
-  ld c,a
-  ld a,b
-  cp c
-  jp c,.dungeon_load_map_draw_door_left_jump
-  ;Si la position n'est pas inférieur à la taille du mur on le limite
-  ld a,c
-  sub 2
-  ld b,a
-.dungeon_load_map_draw_door_left_jump;Sinon
+  ;TODO: Ajouter un maximum
   ld d,b
   ld e,$20
   call Multiply
   ld hl,_SCRN0
   add hl,de
-  ld [hl],_CELL_DOOR_V
+  ld [hl],_CELL_DOOR_L
   ld de,$20
   add hl,de
-  ld [hl],_CELL_DOOR_V
-
-
-
-ret
+  ld [hl],_CELL_DOOR_L
+  ret
+.dungeon_load_map_draw_door_top
+  ;TODO: ajouter un maxmimum
+  ld c,b
+  ld b,0
+  ld hl,_SCRN0
+  add hl,bc
+  ld [hl],_CELL_GROUND_EMPTY
+  inc hl
+  ld [hl],_CELL_GROUND_EMPTY
+  dec hl
+  ld de,$20
+  add hl,de
+  ld [hl],_CELL_DOOR_T
+  inc hl
+  ld [hl],_CELL_DOOR_T
+  ret
+.dungeon_load_map_draw_door_right
+  ;TODO: ajouter un maximum
+  ld a,[_TEMP]
+  sub 1
+  ld d,0
+  ld e,a
+  ld hl,_SCRN0
+  add hl,de
+  ld d,b
+  ld e,$20
+  call Multiply
+  add hl,de
+  ld [hl],_CELL_DOOR_R
+  ld de,$20
+  add hl,de
+  ld [hl],_CELL_DOOR_R
+  ret
 
 
 
