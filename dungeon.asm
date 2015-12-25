@@ -135,15 +135,18 @@ ret
 ; e-> index de la porte (0, gauche, 1 haut etc..)
 DUNGEON_LOAD_MAP_DRAW_DOOR::
   ;Lecture de l'index et saut en conséquence
-  ld a,e
-  cp 0
-  jp z,.dungeon_load_map_draw_door_left
+  ;ld a,e
+  ;cp 0
+  ;jp z,.dungeon_load_map_draw_door_left, on ne fait rien il va tout seul à left
   ld a,e
   cp 1
   jp z,.dungeon_load_map_draw_door_top
   ld a,e
   cp 2
   jp z,.dungeon_load_map_draw_door_right
+  ld a,e
+  cp 3
+  jp z,.dungeon_load_map_draw_door_bot
 
 ;Dessin de la porte du mur gauche
 .dungeon_load_map_draw_door_left
@@ -190,6 +193,27 @@ DUNGEON_LOAD_MAP_DRAW_DOOR::
   ld de,$20
   add hl,de
   ld [hl],_CELL_DOOR_R
+  ret
+.dungeon_load_map_draw_door_bot
+  ;TODO: ajouter un maximum
+  ld a,[_TEMP+1]
+  ld d,a
+  ld e,$20
+  call Multiply
+  ld hl,_SCRN0
+  add hl,de
+  ld d,0
+  ld e,b
+  add hl,de
+  ld [hl],_CELL_DOOR_B
+  inc hl
+  ld [hl],_CELL_DOOR_B
+  dec hl
+  ld e,$20
+  add hl,de
+  ld [hl],_CELL_GROUND_EMPTY
+  inc hl
+  ld [hl],_CELL_GROUND_EMPTY
   ret
 
 
