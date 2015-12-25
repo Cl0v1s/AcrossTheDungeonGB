@@ -16,6 +16,7 @@ random:
         ret
 
 Multiply:                        ; this routine performs the operation HL=D*E
+  push hl
   push bc
   push af
   ld hl,0
@@ -28,8 +29,11 @@ Multiply:                        ; this routine performs the operation HL=D*E
   ld a,c
   cp b
   jp nz,.Multiply_for
+  ld d,h
+  ld e,l
   pop af
   pop bc
+  pop hl
   ret
 
 
