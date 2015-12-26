@@ -40,32 +40,29 @@ GAME_UPDATE::
 	ret
 .game_update_pad_left
 	call PLAYER_MOVE_LEFT
-	ld a,20
+	ld a,70
 	ld [_INPUT_COUNTER],a
 	jp .game_update_after_pad
 .game_update_pad_right
 	call PLAYER_MOVE_RIGHT
-	ld a,20
+	ld a,70
 	ld [_INPUT_COUNTER],a
 	jp .game_update_after_pad
 .game_update_pad_up
 	call PLAYER_MOVE_UP
-	ld a,20
+	ld a,70
 	ld [_INPUT_COUNTER],a
 	jp .game_update_after_pad
 .game_update_pad_down
 	call PLAYER_MOVE_DOWN
-	ld a,20
+	ld a,70
 	ld [_INPUT_COUNTER],a
 	jp .game_update_after_pad
 
 
 GAME_DRAW::
-  ;ld a,[rIE]
-  ;and %11111100
-  ;ld [rIE],a
-  call IS_VBLANK
-  cp 1
+  ldh	a,[rLY]
+  cp $90
   jp nz,.game_draw_done
   call PLAYER_DRAW
   ld a,[_PLAYER_POS]
@@ -74,13 +71,7 @@ GAME_DRAW::
   ld a,[_PLAYER_POS+1]
   sub 64
   ldh [rSCY],a
-
-
-
 .game_draw_done
-  ;ld a,[rIE]
-  ;add 3
-  ;ld [rIE],a
   ret
 
 

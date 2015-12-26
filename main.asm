@@ -217,13 +217,6 @@ WAIT_VBLANK::
 	jr	nz,WAIT_VBLANK	;if A-91 != 0 then loop
 	ret				;done
 
-;IS_VBLANK
-; RETOURNE 1 si en VBLANK
-IS_VBLANK::
-	ldh a,[rSTAT]
-	and %00000011
-	ret
-
 CLEAR_MAP::
 	ld	hl,_SCRN0		;loads the address of the bg map ($9800) into HL
 	ld	bc,32*32		;since we have 32x32 tiles, we'll need a counter so we can clear all of them

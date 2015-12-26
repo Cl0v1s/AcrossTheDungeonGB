@@ -1,5 +1,6 @@
 INCLUDE "include/Hardware.inc"
 INCLUDE "include/Shift.inc"
+INCLUDE "entity.asm"
 INCLUDE "const.asm"
 
         IF      !DEF(PLAYER_ASM)
@@ -62,6 +63,7 @@ PLAYER_INIT::
 	ld a,3
 	ld b,_SINVX
 	call SPRITE_SET_META
+  call PLAYER_DRAW
 	ret
 
 ;PLAYER_DRAW
@@ -72,14 +74,15 @@ PLAYER_DRAW::
 	and %10
 	cp _PLAYER_MOVED
 	jp nz,.player_draw_pos_done
-
+  call WAIT_VBLANK
 	;Mise à jour des frames du sprite
 	;Récupération de l'index de frame
-	ld a,0
-	ld b,a
 	ld a,[_PLAYER_FRAME]
 	ld c,a
-	srl16 bc,4
+  srl c
+  srl c
+  srl c
+  srl c
   ;Remise à zéro des info meta des sprites
   ld b,_SNORM
   ld a,0
@@ -219,6 +222,7 @@ PLAYER_DRAW::
   call SPRITE_SET_META
   ;jp .player_draw_pos optionnel étant donné que c'est la suite
 .player_draw_pos
+  call WAIT_VBLANK
 	;Changement de position du sprite
   ;Chargement et calcul de la position du sprite
   ldh a,[rSCX]
@@ -271,11 +275,30 @@ PLAYER_DRAW::
 .player_draw_pos_done
 		ret
 
-
+;PLAYER_GET_POS
+; Retourne la position du joueur dans b et c
+; Retour
+; b-> position x du joueur
+; c->position y du joueur
+PLAYER_GET_POS::
+  ld a,[_PLAYER_POS]
+  ld b,a
+  ld a,[_PLAYER_POS+1]
+  ld c,a
+  ret
 
 ;PLAYER_MOVE
 ;Déplace le joueur dans la direction donnée
 PLAYER_MOVE_RIGHT::
+  call PLAYER_GET_POS
+  ;on ajoute des x pour tester la case à droite
+  ld a,b
+  add 16+_PLAYER_MOVE_SPEED
+  ld b,a
+  call ENTITY_COORD_TO_CELL
+  call ENTITY_CAN_WALK
+  cp 1
+  jp nz,player_move_done
 	ld a,[_PLAYER_POS]
 	add a,_PLAYER_MOVE_SPEED
 	ld [_PLAYER_POS],a
@@ -283,6 +306,15 @@ PLAYER_MOVE_RIGHT::
 	ld [_PLAYER_ANIMATION],a
 	ret
 PLAYER_MOVE_LEFT::
+  call PLAYER_GET_POS
+  ;on retire des x à gauche
+  ld a,b
+  sub _PLAYER_MOVE_SPEED
+  ld b,a
+  call ENTITY_COORD_TO_CELL
+  call ENTITY_CAN_WALK
+  cp 1
+  jp nz,player_move_done
 	ld a,[_PLAYER_POS]
 	sub _PLAYER_MOVE_SPEED
 	ld [_PLAYER_POS],a
@@ -290,6 +322,15 @@ PLAYER_MOVE_LEFT::
 	ld [_PLAYER_ANIMATION],a
 	ret
 PLAYER_MOVE_UP::
+  call PLAYER_GET_POS
+  ;on retire des y en haut
+  ld a,c
+  sub _PLAYER_MOVE_SPEED
+  ld c,a
+  call ENTITY_COORD_TO_CELL
+  call ENTITY_CAN_WALK
+  cp 1
+  jp nz,player_move_done
 	ld a,[_PLAYER_POS+1]
 	sub _PLAYER_MOVE_SPEED
 	ld [_PLAYER_POS+1],a
@@ -297,11 +338,25 @@ PLAYER_MOVE_UP::
 	ld [_PLAYER_ANIMATION],a
 	ret
 PLAYER_MOVE_DOWN::
+  call PLAYER_GET_POS
+  ;on retire des y en haut
+  ld a,c
+  add 8+_PLAYER_MOVE_SPEED
+  ld c,a
+  call ENTITY_COORD_TO_CELL
+  call ENTITY_CAN_WALK
+  cp 1
+  jp nz,player_move_done
 	ld a,[_PLAYER_POS+1]
 	add a,_PLAYER_MOVE_SPEED
 	ld [_PLAYER_POS+1],a
 	ld a,2 ;direction à 0 or %10, histoire de gagner une commande
 	ld [_PLAYER_ANIMATION],a
 	ret
+
+player_move_done:: ;Sortie commune à tout les player move
+  ret
+
+
 
 		ENDC
