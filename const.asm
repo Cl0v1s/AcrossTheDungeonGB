@@ -52,7 +52,7 @@ _PLAYER_FRAME EQU $C004
 ;X et Y du joueur (x=_PLAYER_POS et y=_PLAYER_POS) $C006 est réservé
 _PLAYER_POS EQU $C005
 ;Vitesse du joueur
-_PLAYER_MOVE_SPEED EQU 2
+_PLAYER_MOVE_SPEED EQU 1
 ;index du premier sprite du joueur
 _PLAYER_SPRITE_INDEX EQU $80
 _PLAYER_ROOM EQU $C008

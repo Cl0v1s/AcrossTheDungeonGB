@@ -193,7 +193,7 @@ Start::
 	ldh	[rOBP0],a	;Chargement de la palette sprite
 
 	;Activation de l'écran et paramétrage de ce dernier
-	ld	a,LCDCF_ON | LCDCF_WINON | LCDCF_OBJON | LCDCF_BG8000 | LCDCF_BGON
+	ld	a,LCDCF_ON | LCDCF_WINOFF | LCDCF_OBJON | LCDCF_BG8000 | LCDCF_BGON
 	ldh	[rLCDC],a	;turn on the LCD, BG, etc
 	ei
 
@@ -211,10 +211,18 @@ Loop::
 	SECTION "Support Routines",HOME
 
 WAIT_VBLANK::
-	ldh	a,[rLY]		;get current scanline
-	cp	$91			;Are we in v-blank yet?
+	ldh	a,[rSTAT]		;get current scanline
+	and %00000011
+	cp	%01			;Are we in v-blank yet?
 	jr	nz,WAIT_VBLANK	;if A-91 != 0 then loop
 	ret				;done
+
+;IS_VBLANK
+; RETOURNE 1 si en VBLANK
+IS_VBLANK::
+	ldh a,[rSTAT]
+	and %00000011
+	ret
 
 CLEAR_MAP::
 	ld	hl,_SCRN0		;loads the address of the bg map ($9800) into HL

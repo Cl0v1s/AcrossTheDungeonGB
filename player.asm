@@ -64,15 +64,15 @@ PLAYER_INIT::
 	call SPRITE_SET_META
 	ret
 
-;PLAYER_UPDATE
-;Met à jour la position du joueur
-PLAYER_UPDATE::
+;PLAYER_DRAW
+;Dessine le joueur
+PLAYER_DRAW::
 	;Mise à jour du sprite du joueur si il a bougé
 	ld a,[_PLAYER_ANIMATION]
 	and %10
 	cp _PLAYER_MOVED
-	jp nz,.player_update_pos_done
-  call WAIT_VBLANK
+	jp nz,.player_draw_pos_done
+
 	;Mise à jour des frames du sprite
 	;Récupération de l'index de frame
 	ld a,0
@@ -95,18 +95,18 @@ PLAYER_UPDATE::
 	and _PLAYER_DIRECTION
 	ld b,a
 	cp 4
-	jp z,.player_update_sprite_left
+	jp z,.player_draw_sprite_left
 	ld a,b
 	cp 1
-	jp z,.player_update_sprite_up
+	jp z,.player_draw_sprite_up
 	ld a,b
 	cp 5
-	jp z,.player_update_sprite_right
+	jp z,.player_draw_sprite_right
 	ld a,b
 	cp 0
-	jp z,.player_update_sprite_down
+	jp z,.player_draw_sprite_down
 ;Gestion des animations vers le bas
-.player_update_sprite_down
+.player_draw_sprite_down
 	ld a,0
 	ld b,_PLAYER_SPRITE_INDEX
 	call SPRITE_SET_TILE
@@ -129,9 +129,9 @@ PLAYER_UPDATE::
   ld b,_SINVX
   ld a,3
   call SPRITE_SET_META
-	jp .player_update_pos
+	jp .player_draw_pos
 ;Gestion des animations vers le haut
-.player_update_sprite_up
+.player_draw_sprite_up
 	ld a,_PLAYER_SPRITE_INDEX
 	add $A
 	ld b,a
@@ -156,9 +156,9 @@ PLAYER_UPDATE::
   ld b,_SINVX
   ld a,3
   call SPRITE_SET_META
-	jp .player_update_pos
+	jp .player_draw_pos
 ;Gestion des animations vers la gauche
-.player_update_sprite_left
+.player_draw_sprite_left
   ld a,_PLAYER_SPRITE_INDEX
   add $4
   ld b,a
@@ -181,8 +181,8 @@ PLAYER_UPDATE::
   ld b,a
   ld a,3
   call SPRITE_SET_TILE
-	jp .player_update_pos
-.player_update_sprite_right
+	jp .player_draw_pos
+.player_draw_sprite_right
   ld a,_PLAYER_SPRITE_INDEX
   add $4
   ld b,a
@@ -217,42 +217,46 @@ PLAYER_UPDATE::
   ld b,_SINVX
   ld a,2
   call SPRITE_SET_META
-  ;jp .player_update_pos optionnel étant donné que c'est la suite
-
-
-.player_update_pos
-  call WAIT_VBLANK
+  ;jp .player_draw_pos optionnel étant donné que c'est la suite
+.player_draw_pos
 	;Changement de position du sprite
+  ;Chargement et calcul de la position du sprite
+  ldh a,[rSCX]
+  ld b,a
+  ld a,[_PLAYER_POS]
+  sub b
+  ld b,a
+  ldh a,[rSCY]
+  ld c,a
+  ld a,[_PLAYER_POS+1]
+  sub c
+  ld c,a
 	;SUP gauche
-	ld a,[_PLAYER_POS]
-	ld b,a
-	ld a,[_PLAYER_POS+1]
-	ld c,a
 	ld a,0
 	call SPRITE_SET_POS
 	;SUP droite
-	ld a,[_PLAYER_POS]
-	add 8
-	ld b,a
-	ld a,[_PLAYER_POS+1]
-	ld c,a
+  push bc
+  ld a,b
+  add 8
+  ld b,a
 	ld a,1
 	call SPRITE_SET_POS
 	;INF Gauche
-	ld a,[_PLAYER_POS]
-	ld b,a
-	ld a,[_PLAYER_POS+1]
-	add 8
-	ld c,a
+  pop bc
+  push bc
+  ld a,c
+  add 8
+  ld c,a
 	ld a,2
 	call SPRITE_SET_POS
 	;INF Droite
-	ld a,[_PLAYER_POS]
-	add 8
-	ld b,a
-	ld a,[_PLAYER_POS+1]
-	add 8
-	ld c,a
+  pop bc
+  ld a,b
+  add 8
+  ld b,a
+  ld a,c
+  add 8
+  ld c,a
 	ld a,3
 	call SPRITE_SET_POS
 	;On indique que le déplacement a été effectué
@@ -264,8 +268,7 @@ PLAYER_UPDATE::
 	add 6
 	and %00011111
 	ld [_PLAYER_FRAME],a
-.player_update_pos_done
-
+.player_draw_pos_done
 		ret
 
 
