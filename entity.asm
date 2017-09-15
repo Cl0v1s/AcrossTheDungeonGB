@@ -39,23 +39,23 @@ ret
 ;Retour:
 ;a -> 1 si le joueur peut passer, 2 sinon
 ENTITY_CAN_WALK::
-;  ld hl,_SCRN0
-;  ;Récupération adresse mémoire verticale
-;  ld d,c
-;  ld e,$20
-;  call Multiply
-;  add hl,de
-;  ;Ajout de l'index mémoire vidéo horizontal
-;  ld d,0
-;  ld e,b
-;  add hl,de
-;  ;test de passage
-;  ld a,[hl]
-;  cp 0
-;  jp z,.entity_can_walk_yes
-;  ld a,2
-;  ret
-;.entity_can_walk_yes
+  ld hl,_SCRN0
+  ;Récupération adresse mémoire verticale
+  ld d,c
+  ld e,$20
+  call Multiply
+  add hl,de
+  ;Ajout de l'index mémoire vidéo horizontal
+  ld d,0
+  ld e,b
+  add hl,de
+  ;test de passage
+  ld a,[hl]
+  cp 0
+  jp z,.entity_can_walk_yes
+  ld a,2
+  ret
+.entity_can_walk_yes
   ld a,1
   ret
 

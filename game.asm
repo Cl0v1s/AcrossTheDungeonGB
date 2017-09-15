@@ -7,6 +7,13 @@ GAME_ASM  SET  1
 
 SECTION "Game", HOME
 
+;GAME_INIT
+;Initialise le jeu
+GAME_INIT::
+	ld a, IEF_VBLANK
+	ldh [rIE],a 
+	ret
+
 ;GAME_UPDATE
 ;Met à jour les données du jeu
 GAME_UPDATE::
@@ -36,7 +43,7 @@ GAME_UPDATE::
 	dec a
 	ld [_INPUT_COUNTER],a
 .game_update_after_pad
-	call GAME_DRAW
+	;call GAME_DRAW
 	ret
 .game_update_pad_left
 	call PLAYER_MOVE_LEFT
@@ -60,11 +67,12 @@ GAME_UPDATE::
 	jp .game_update_after_pad
 
 
-GAME_DRAW::
-  ldh	a,[rLY]
-  cp $90
-  jp nz,.game_draw_done
-  call PLAYER_DRAW
+
+GAME_DRAW_MAP::
+
+  ;call IS_VBLANK
+  ;cp 1
+  ;jp nz, .game_draw_done
   ld a,[_PLAYER_POS]
   sub 72
   ldh [rSCX],a
@@ -74,5 +82,16 @@ GAME_DRAW::
 .game_draw_done
   ret
 
+GAME_DRAW_SPRITES::
+	; on regarde si la OAM est busy
+	ldh	a,[rSTAT]
+	and STATF_OAM
+	cp STATF_OAM
+	;jp nz, .game_draw_sprites_done
 
-		ENDC
+	call PLAYER_DRAW
+.game_draw_sprites_done
+	ret
+
+ENDC
+

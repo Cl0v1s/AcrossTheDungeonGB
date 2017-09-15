@@ -69,6 +69,9 @@ RST_38:
 
 	SECTION	"V-Blank IRQ Vector",HOME[$40]
 VBL_VECT:
+	;call WAIT_VBLANK
+	call GAME_DRAW_MAP
+	call GAME_DRAW_SPRITES	
 	reti
 
 	SECTION	"LCD IRQ Vector",HOME[$48]
@@ -197,8 +200,7 @@ Start::
 	ldh	[rLCDC],a	;turn on the LCD, BG, etc
 	ei
 
-
-
+	call GAME_INIT
 
 Loop::
 	call GAME_UPDATE
@@ -209,6 +211,17 @@ Loop::
 ;***************************************************************
 
 	SECTION "Support Routines",HOME
+
+IS_VBLANK::
+  ldh	a,[rSTAT]
+  and %00000011
+  cp %01
+  jp nz, .is_vblank_no
+  ld a,1
+  ret
+.is_vblank_no
+ ld a,0
+ ret
 
 WAIT_VBLANK::
 	ldh	a,[rSTAT]		;get current scanline

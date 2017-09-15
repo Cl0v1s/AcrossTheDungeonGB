@@ -63,7 +63,7 @@ PLAYER_INIT::
 	ld a,3
 	ld b,_SINVX
 	call SPRITE_SET_META
-  call PLAYER_DRAW
+  ;call PLAYER_DRAW
 	ret
 
 ;PLAYER_DRAW
@@ -74,7 +74,6 @@ PLAYER_DRAW::
 	and %10
 	cp _PLAYER_MOVED
 	jp nz,.player_draw_pos_done
-  call WAIT_VBLANK
 	;Mise à jour des frames du sprite
 	;Récupération de l'index de frame
 	ld a,[_PLAYER_FRAME]
@@ -222,7 +221,6 @@ PLAYER_DRAW::
   call SPRITE_SET_META
   ;jp .player_draw_pos optionnel étant donné que c'est la suite
 .player_draw_pos
-  call WAIT_VBLANK
 	;Changement de position du sprite
   ;Chargement et calcul de la position du sprite
   ldh a,[rSCX]
