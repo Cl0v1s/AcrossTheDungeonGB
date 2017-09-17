@@ -285,6 +285,31 @@ PLAYER_GET_POS::
   ld c,a
   ret
 
+
+PLAYER_MOVE::
+  ld a, [_INPUT_LAST]
+  cp $CD
+	jp z, .player_move_left_step
+	cp $CE
+	jp z, .player_move_right_step
+	cp $CB
+	jp z, .player_move_up_step
+	cp $C7
+	jp z, .player_move_down_step
+  ret
+.player_move_left_step
+  call PLAYER_MOVE_LEFT
+  ret
+.player_move_right_step
+  call PLAYER_MOVE_RIGHT
+  ret
+.player_move_up_step
+  call PLAYER_MOVE_UP
+  ret
+.player_move_down_step
+  call PLAYER_MOVE_DOWN
+  ret
+
 ;PLAYER_MOVE
 ;Déplace le joueur dans la direction donnée
 PLAYER_MOVE_RIGHT::

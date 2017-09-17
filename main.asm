@@ -88,6 +88,7 @@ SERIAL_VECT:
 
 	SECTION	"Joypad IRQ Vector",HOME[$60]
 JOYPAD_VECT:
+	call GAME_INPUT
 	reti
 
 	SECTION	"Start",HOME[$100]

@@ -10,13 +10,20 @@ SECTION "Game", HOME
 ;GAME_INIT
 ;Initialise le jeu
 GAME_INIT::
-	ld a, IEF_VBLANK
+	ld a, IEF_VBLANK|IEF_HILO
 	ldh [rIE],a 
 	ret
 
 ;GAME_UPDATE
 ;Met à jour les données du jeu
 GAME_UPDATE::
+	call GAME_INPUT
+	ret
+
+
+;GAME_INPUT
+;Gère les entrées de jeu
+GAME_INPUT::
 	ld a,[_INPUT_COUNTER]
 	cp 0
 	jp nz,.game_update_decrease_input_counter
@@ -65,7 +72,7 @@ GAME_UPDATE::
 	ld a,70
 	ld [_INPUT_COUNTER],a
 	jp .game_update_after_pad
-
+	ret
 
 
 GAME_DRAW_MAP::
