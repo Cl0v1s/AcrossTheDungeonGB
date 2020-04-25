@@ -88,6 +88,8 @@ main:
 	ld sp,$FFF4 ;SP=$FFF4
 	call lcd.wait_vblank
 	call lcd.off
+	; reset des variables 
+	call variables.init
 	; Chargement de la police en VRAM
 	ld hl, VRAM_START+16
 	ld bc, FONT_DATA
@@ -111,30 +113,16 @@ main:
 	ld de, 40*4
 	call memory.clear
 
-	; Tete gauche
-	ld b, 16 
-	ld c, 8 
-	ld d, $2B
-	ld e, 0
-	call sprite.spawn
-	; Tete droite
+	ld b, $2B
+	ld c, $2B
+	ld d, $2C
+	ld e, $2C
+	call sprite.create_group
+
+	ld hl, SPRITEGROUPS_START
 	ld b, 16
-	ld c, 8+8 
-	ld d, $2B
-	ld e, %00100000
-	call sprite.spawn
-	; corps gauche
-	ld b, 16+8
-	ld c, 8 
-	ld d, $2C
-	ld e, 0
-	call sprite.spawn
-	; corps droite
-	ld b, 16+8
-	ld c, 8+8 
-	ld d, $2C
-	ld e, %00100000
-	call sprite.spawn
+	ld c, 32
+	call sprite.move_group
 
 	call lcd.on
 .loop:
