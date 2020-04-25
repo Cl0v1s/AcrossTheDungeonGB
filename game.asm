@@ -44,7 +44,7 @@ REPT 7
 ENDR
 
 ; $0040 - $0067: Interrupt handlers.
-jp draw
+call draw
 REPT 5
     nop
 ENDR
@@ -81,7 +81,6 @@ include "lib/address.asm"
 include "lib/variables.asm"
 
 main:
-
 	di
 	ld sp,$FFF4 ;SP=$FFF4
 	call lcd.wait_vblank
@@ -111,26 +110,17 @@ main:
 	ld de, 40*4
 	call memory.clear
 
-	ld b, $2B
-	ld c, $2B
-	ld d, $2C
-	ld e, $2C
-	call sprite.create_group
-
-
-
-	ld hl, SPRITEGROUPS_START
-	ld b, 16
-	ld c, 32
-	call sprite.move_group
+	call player.create
 
 	call lcd.on
+	ei 
 .loop:
-	ld b, %00001000
-	call input.is_pressed 
     jr .loop
 
 draw:
+	call player.update
+	call player.draw
+	reti
 stat:
 timer:
 serial:
@@ -141,6 +131,4 @@ include "lib/lcd.asm"
 include "lib/memory.asm"
 include "lib/sprite.asm"
 include "lib/input.asm"
-
-.failure: 
-	nop
+include "lib/player.asm"

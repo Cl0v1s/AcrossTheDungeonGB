@@ -1,5 +1,7 @@
 SECTION "variables", wram0[RAM_START]
 
+TEST db
+
 ; Adresses propres au jeu
 PLAYER_X db
 PLAYER_Y db
@@ -15,6 +17,9 @@ variables:
   ; Initialise les variables à 0
 .init: 
   push hl
+
+  ld hl, TEST
+  ld [hl], 0
 
   ld hl, SPRITEGROUPS_SIZE
   ld [hl], 0

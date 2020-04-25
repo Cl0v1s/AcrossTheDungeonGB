@@ -25,6 +25,11 @@ lcd:
     ld [$FF49],a ; Palette sprite 1 (ne sert pas)
     ld a,%10010011 ; Ecran on, Background on, tiles à $8000
     ld [LCD_CONTROL],a
+    ; Activation des interruptions VBLANK
+    ld a,%00010000
+    ld [LCD_STATUS],a
+    ld a,%00000001
+    ldh [IRQ],a
     ret
 
 
