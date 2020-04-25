@@ -28,7 +28,7 @@ OAM_START equ $FE00
 OAM_END equ $FE9F
 
 ; Registres de configuration pour le GPU et l'APU
-GPU equ $FF00
+JOYPAD equ $FF00
 LCD_CONTROL equ $FF40
 LCD_STATUS equ $FF41
 LCD_Y equ $FF44

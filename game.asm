@@ -1,8 +1,7 @@
 include "res/res.asm"
 
 
-SECTION "rom", rom0
-
+SECTION "rom", rom0[$0]
 ; $0000 - $003F: RST handlers.
 ret
 REPT 7
@@ -80,7 +79,6 @@ jp main
 include "data/header.asm"
 include "lib/address.asm"
 include "lib/variables.asm"
-include "lib/sprite.asm"
 
 main:
 
@@ -119,6 +117,8 @@ main:
 	ld e, $2C
 	call sprite.create_group
 
+
+
 	ld hl, SPRITEGROUPS_START
 	ld b, 16
 	ld c, 32
@@ -126,7 +126,8 @@ main:
 
 	call lcd.on
 .loop:
-		halt
+	ld b, %00001000
+	call input.is_pressed 
     jr .loop
 
 draw:
@@ -138,6 +139,8 @@ joypad:
 
 include "lib/lcd.asm"
 include "lib/memory.asm"
+include "lib/sprite.asm"
+include "lib/input.asm"
 
 .failure: 
 	nop

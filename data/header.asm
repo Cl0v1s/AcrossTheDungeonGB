@@ -1,3 +1,4 @@
+SECTION "header", rom0[$0104]
 ; $0104 - $0133: The Nintendo Logo.
 DB $CE, $ED, $66, $66, $CC, $0D, $00, $0B
 DB $03, $73, $00, $83, $00, $0C, $00, $0D
