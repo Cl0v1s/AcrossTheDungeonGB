@@ -121,9 +121,14 @@ main:
 	call memory.copy
 
 	; Chargement de la map de test
+	ld hl, MAP_CURRENT
+	ldi a, [hl]
+	ld b, a 
+	ld a, [hl]
+	ld c, a
 	ld hl, VRAM_BACKGROUNDMAP_START
-	ld bc, MAP_1_DATA
-	ld de, MAP_1_COUNT
+	; ld bc, bc
+	ld de, 32*32
 	call memory.copy
 
 	; Création du joueur 

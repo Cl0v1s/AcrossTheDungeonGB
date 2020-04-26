@@ -7,22 +7,30 @@ player:
     ld d, PLAYER_SPRITE_TILE+1
     ld e, PLAYER_SPRITE_TILE+1
     call sprite.create_group
+    ; centrage à l'écran
+    ld b, 16+160/2-16
+    ld c, 8+168/2-16
+    ld hl, SPRITEGROUPS_START
+    call sprite.move_group
     ret
 
   ; Test si la position demandée est accessible 
   ; b position x  
   ; c position y
-  ; return a: 0 -> accessible
-  .can_walk: 
+  ; return a cellule
+  .get_cell:
     push de
 
-    ld hl, VRAM_BACKGROUNDMAP_START
+    ld hl, MAP_CURRENT
+    ldi a, [hl]
+    ld d, a 
+    ld a, [hl]
+    ld l, a
+    ld h, d
     ; une ligne de la backgroundmap fait 32 bytes
     ld d, $00
     ld e, $20
     ld a, c
-    ; on ne prend que les pieds 
-    add 8
     ; on divise par 8, les cellules faisant chacune 8 pixels 
     srl a
     srl a
@@ -42,9 +50,63 @@ player:
     add hl, de
 
     ld a, [hl]
+    ld [TEST], a
+    pop de
+  ret
+
+  ; Test si la position demandée est accessible 
+  ; b position x  
+  ; c position y
+  ; return a: 0 -> accessible
+  ; optimisable en ne testant que les points concernés par direction
+  .can_walk: 
     ; ld [TEST], a
 
-    pop de
+    ; on ne prend que les pieds 
+    ld a, c 
+    add 8 
+    ld c, a
+
+    ; coin haut gauche 
+    ; ld b, b
+    ; ld c, c
+    call .get_cell
+    cp 0 
+    jr nz, .can_walk_no
+
+    ; coin haut droit 
+    ld a, b 
+    add 16 ; largeur personnage
+    ld b, a
+    ; ld c, c
+    call .get_cell
+    cp 0 
+    jr nz, .can_walk_no
+
+    ; coin bas droit 
+    ; ld b, b
+    ld a, c
+    add 8 ; 8 et non 16 car on ne prend que les pieds
+    ld c, a
+    call .get_cell 
+    cp 0 
+    jr nz, .can_walk_no
+
+    ; coin bas gauche 
+    ld a, b 
+    sub 16 
+    ld b, a
+    ; ld c, c
+    call .get_cell
+    cp 0 
+    jr nz, .can_walk_no
+
+    .can_walk_yes: 
+      ld a, 0
+      jp .can_walk_end
+    .can_walk_no: 
+      ld a, 1
+    .can_walk_end
   ret
 
   .input: 
@@ -172,7 +234,6 @@ player:
     ret
 
   .draw:
-
     ld hl, SPRITEGROUPS_START
     ld a, [PLAYER_DIR]
     cp 0
@@ -183,8 +244,6 @@ player:
     jr z, .draw_dir_up
     cp 3
     jr z, .draw_dir_right
-
-    
 
     .draw_dir_down:
       ld b, PLAYER_SPRITE_TILE
@@ -247,16 +306,23 @@ player:
     .draw_dir_end:
       call sprite.change_group
 
-    ; Gestion de la position 
-    ld a, [PLAYER_X]
-    add 8 ; x à l'écran commence à 8
-    ld b, a
-
+    ld b, 168/2-16-8
     ld a, [PLAYER_Y]
-    add 16 ; y à l'écran commence à 16 
-    ld c, a
+    sub b
+    ld [LDC_SCROLL_Y], a
 
-    ld hl, SPRITEGROUPS_START
-    call sprite.move_group
+    ld b, 160/2-8
+    ld a, [PLAYER_X]
+    sub b
+    ld [LDC_SCROLL_X], a
+
+    ; Déplacement du background 
+    ; ld a, [LDC_SCROLL_X]
+    ; add 16+160/2-16
+    ; ld [LDC_SCROLL_X], a
+    ; ld a, [LDC_SCROLL_Y]
+    ; ld a, [PLAYER_Y]
+    ; add 8+168/2-16
+    ; ld [LDC_SCROLL_Y], a
 
       ret
