@@ -93,7 +93,7 @@ main:
 	ld de, FONT_COUNT
 	call memory.copy
 	; Chargement du joueur en VRAM
-	ld hl, VRAM_START+FONT_COUNT+8
+	ld hl, VRAM_START+(PLAYER_SPRITE_TILE<<4)
 	ld bc, PLAYER_DATA
 	ld de, PLAYER_COUNT
 	call memory.copy
