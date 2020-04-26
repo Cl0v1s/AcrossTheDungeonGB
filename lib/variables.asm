@@ -2,9 +2,11 @@ SECTION "variables", wram0[RAM_START]
 
 TEST db
 
-; Adresses propres au jeu
+; Adresses propres au joeur
 PLAYER_X db
 PLAYER_Y db
+PLAYER_STEP db
+PLAYER_SPEED equ 15
 
 ; Emplacement mémoire de la liste des spritegroups
 SPRITEGROUPS_SIZE db

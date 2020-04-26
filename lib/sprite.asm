@@ -80,6 +80,22 @@ sprite:
   pop hl
   ret
 
+; Change un sprite 
+; hl doit contenir l'adresse OAM
+; b nouveau tile
+; c attributes
+.change:
+  push hl 
+
+  inc hl
+  inc hl 
+  ld [hl], b
+  inc hl 
+  ld [hl], c
+
+  pop hl
+ret
+
 ; Retourne l'adresse de la structure de spritegroup valide
 .get_group_address: 
   ld hl, SPRITEGROUPS_START
@@ -222,5 +238,104 @@ ret
   add 8 ; on décale de 8 pixels vers la droite
   ld b, a
   call .move
+  
+ret
+
+; Change les caractéristiques d'un groupe de sprite 
+; hl doit contenir l'adresse du groupe
+; a invert %4321
+; b tile 1
+; c tile 2
+; d tile 3
+; e tile 4
+.change_group:
+  push bc
+  push hl
+  push af 
+
+  ; haut gauche
+  ld a, [hl]
+  ld hl, OAM_START
+  ld l, a
+  ; ld b, b b a déjà la bonne valeur
+  ld c, 0 
+  pop af
+  push af
+  bit 0, a
+  jr z, .change_group_hg
+  ld c, %00100000
+  .change_group_hg:
+    call .change
+
+
+  pop af 
+  pop hl 
+  pop bc 
+  push bc 
+  push hl 
+  push af
+  ; haut droite
+  inc hl
+  ld a, [hl]
+  ld hl, OAM_START
+  ld l, a
+  ld b, c
+  ld c, 0
+  pop af
+  push af
+  bit 1, a
+  jr z, .change_group_hd
+  ld c, %00100000
+  .change_group_hd:
+    call .change
+
+  pop af 
+  pop hl 
+  pop bc 
+  push bc 
+  push hl 
+  push af
+  ; bas gauche
+  inc hl
+  inc hl 
+  ld a, [hl]
+  ld hl, OAM_START
+  ld l, a
+  ld b, d
+  ld c, 0
+  pop af
+  push af
+  bit 2, a
+  jr z, .change_group_bg
+  ld c, %00100000
+  .change_group_bg:
+    call .change
+
+  pop af 
+  pop hl 
+  pop bc 
+  push bc 
+  push hl 
+  push af
+  ; haut droite
+  inc hl
+  inc hl 
+  inc hl
+  ld a, [hl]
+  ld hl, OAM_START
+  ld l, a
+  ld b, e
+  ld c, 0
+  pop af
+  push af
+  bit 3, a
+  jr z, .change_group_bd
+  ld c, %00100000
+  .change_group_bd:
+    call .change
+
+  pop af 
+  pop hl 
+  pop bc
   
 ret

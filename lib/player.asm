@@ -36,24 +36,92 @@ player:
     ld a, [PLAYER_Y]
     add 1
     ld [PLAYER_Y], a
-    ret
+
+    ld a, [PLAYER_STEP]
+    add PLAYER_SPEED
+    ld [PLAYER_STEP], a
+
+    ld hl, SPRITEGROUPS_START
+    ld b, $2B
+    ld c, $2B
+    ld d, $2C
+    ld e, $2D
+    cp $7F
+    jr nc, .move_down_no_step
+    ld d, $2D
+    ld e, $2C
+    .move_down_no_step:
+      ld a, %1010
+      call sprite.change_group
+      ret
 
   .move_up:
     ld a, [PLAYER_Y]
     sub 1
     ld [PLAYER_Y], a
+
+    ld a, [PLAYER_STEP]
+    add PLAYER_SPEED
+    ld [PLAYER_STEP], a
+
+    ld hl, SPRITEGROUPS_START
+    ld b, $35
+    ld c, $35
+    ld d, $37
+    ld e, $36
+    cp $7F
+    jr nc, .move_up_no_step
+    ld d, $36
+    ld e, $37
+    .move_up_no_step:
+    ld a, %1010
+    call sprite.change_group
     ret
 
   .move_right:
     ld a, [PLAYER_X]
     add 1
     ld [PLAYER_X], a
-    ret
+
+    ld a, [PLAYER_STEP]
+    add PLAYER_SPEED
+    ld [PLAYER_STEP], a
+
+    ld hl, SPRITEGROUPS_START
+    ld b, $30
+    ld c, $2F
+    ld d, $32
+    ld e, $31
+    cp $7F
+    jr nc, .move_right_no_step
+      ld d, $34
+      ld e, $33
+    .move_right_no_step
+      ld a, %1111
+      call sprite.change_group
+      ret
 
   .move_left:
     ld a, [PLAYER_X]
     sub 1
     ld [PLAYER_X], a
+
+    ld a, [PLAYER_STEP]
+    add PLAYER_SPEED
+    ld [PLAYER_STEP], a
+
+    ld hl, SPRITEGROUPS_START
+    ld b, $2F
+    ld c, $30
+    ld d, $31
+    ld e, $32
+    cp $7F
+    jr nc, .move_left_no_step
+      ld d, $33
+      ld e, $34
+    .move_left_no_step
+    ld a, %0000
+    call sprite.change_group
     ret
 
   .draw:
