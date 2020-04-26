@@ -3,6 +3,7 @@ SECTION "variables", wram0[RAM_START]
 TEST db
 
 ; Adresses propres au joeur
+PLAYER_SPRITE_TILE EQU $80
 PLAYER_X db
 PLAYER_Y db
 PLAYER_STEP db

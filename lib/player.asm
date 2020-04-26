@@ -2,10 +2,10 @@ player:
 
   ; créer l'ensemble sprite du joueur 
   .create:
-    ld b, $2B
-    ld c, $2B
-    ld d, $2C
-    ld e, $2C
+    ld b, PLAYER_SPRITE_TILE
+    ld c, PLAYER_SPRITE_TILE
+    ld d, PLAYER_SPRITE_TILE+1
+    ld e, PLAYER_SPRITE_TILE+1
     call sprite.create_group
     ret
 
@@ -42,14 +42,14 @@ player:
     ld [PLAYER_STEP], a
 
     ld hl, SPRITEGROUPS_START
-    ld b, $2B
-    ld c, $2B
-    ld d, $2C
-    ld e, $2D
+    ld b, PLAYER_SPRITE_TILE
+    ld c, PLAYER_SPRITE_TILE
+    ld d, PLAYER_SPRITE_TILE+1
+    ld e, PLAYER_SPRITE_TILE+2
     cp $7F
     jr nc, .move_down_no_step
-    ld d, $2D
-    ld e, $2C
+    ld d, PLAYER_SPRITE_TILE+2
+    ld e, PLAYER_SPRITE_TILE+1
     .move_down_no_step:
       ld a, %1010
       call sprite.change_group
@@ -65,14 +65,14 @@ player:
     ld [PLAYER_STEP], a
 
     ld hl, SPRITEGROUPS_START
-    ld b, $35
-    ld c, $35
-    ld d, $37
-    ld e, $36
+    ld b, PLAYER_SPRITE_TILE+($35-$2B)
+    ld c, PLAYER_SPRITE_TILE+($35-$2B)
+    ld d, PLAYER_SPRITE_TILE+($37-$2B)
+    ld e, PLAYER_SPRITE_TILE+($36-$2B)
     cp $7F
     jr nc, .move_up_no_step
-    ld d, $36
-    ld e, $37
+    ld d, PLAYER_SPRITE_TILE+($36-$2B)
+    ld e, PLAYER_SPRITE_TILE+($37-$2B)
     .move_up_no_step:
     ld a, %1010
     call sprite.change_group
@@ -88,14 +88,14 @@ player:
     ld [PLAYER_STEP], a
 
     ld hl, SPRITEGROUPS_START
-    ld b, $30
-    ld c, $2F
-    ld d, $32
-    ld e, $31
+    ld b, PLAYER_SPRITE_TILE+($30-$2B)
+    ld c, PLAYER_SPRITE_TILE+($2F-$2B)
+    ld d, PLAYER_SPRITE_TILE+($32-$2B)
+    ld e, PLAYER_SPRITE_TILE+($31-$2B)
     cp $7F
     jr nc, .move_right_no_step
-      ld d, $34
-      ld e, $33
+      ld d, PLAYER_SPRITE_TILE+($34-$2B)
+      ld e, PLAYER_SPRITE_TILE+($33-$2B)
     .move_right_no_step
       ld a, %1111
       call sprite.change_group
@@ -111,14 +111,14 @@ player:
     ld [PLAYER_STEP], a
 
     ld hl, SPRITEGROUPS_START
-    ld b, $2F
-    ld c, $30
-    ld d, $31
-    ld e, $32
+    ld b, PLAYER_SPRITE_TILE+($2F-$2B)
+    ld c, PLAYER_SPRITE_TILE+($30-$2B)
+    ld d, PLAYER_SPRITE_TILE+($31-$2B)
+    ld e, PLAYER_SPRITE_TILE+($32-$2B)
     cp $7F
     jr nc, .move_left_no_step
-      ld d, $33
-      ld e, $34
+      ld d, PLAYER_SPRITE_TILE+($33-$2B)
+      ld e, PLAYER_SPRITE_TILE+($34-$2B)
     .move_left_no_step
     ld a, %0000
     call sprite.change_group
