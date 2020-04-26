@@ -4,6 +4,7 @@ TEST db
 
 ; Adresses propres au joeur
 PLAYER_SPRITE_TILE EQU $80
+PLAYER_DIR db ; 0: bas 1: gauche 2: haut 3: droite 
 PLAYER_X db
 PLAYER_Y db
 PLAYER_STEP db
@@ -25,6 +26,9 @@ variables:
   ld [hl], 0
 
   ld hl, SPRITEGROUPS_SIZE
+  ld [hl], 0
+
+  ld hl, PLAYER_DIR
   ld [hl], 0
 
   ld hl, PLAYER_X

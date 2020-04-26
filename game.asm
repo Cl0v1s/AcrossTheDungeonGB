@@ -1,4 +1,5 @@
 include "res/res.asm"
+include "data/maps/maps.asm"
 
 
 SECTION "rom", rom0[$0]
@@ -99,6 +100,10 @@ main:
 	ld hl, VRAM_WINDOWMAP_START
 	ld de, 32*32
 	call memory.clear
+	; Nettoyage OAM
+	ld hl, OAM_START
+	ld de, 40*4
+	call memory.clear
 	; Chargement de la police en VRAM
 	ld hl, VRAM_START+$1000 ; Police en $9000
 	ld bc, FONT_DATA
@@ -115,20 +120,23 @@ main:
 	ld de, PLAYER_COUNT
 	call memory.copy
 
-	; Nettoyage OAM
-	ld hl, OAM_START
-	ld de, 40*4
-	call memory.clear
+	; Chargement de la map de test
+	ld hl, VRAM_BACKGROUNDMAP_START
+	ld bc, MAP_1_DATA
+	ld de, MAP_1_COUNT
+	call memory.copy
 
+	; Création du joueur 
 	call player.create
 
 	call lcd.on
 	ei 
 .loop:
+	halt 
+	call player.update
     jr .loop
 
 draw:
-	call player.update
 	call player.draw
 	reti
 stat:

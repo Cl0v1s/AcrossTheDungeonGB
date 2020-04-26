@@ -1,4 +1,4 @@
-SECTION "res", rom0[$1000]
+SECTION "res", rom0
 
 include "res/font/font.asm";
 include "res/player/player.asm";
