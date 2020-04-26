@@ -87,16 +87,10 @@ main:
 	call lcd.off
 	; reset des variables 
 	call variables.init
-	; Chargement de la police en VRAM
-	ld hl, VRAM_START+16
-	ld bc, FONT_DATA
-	ld de, FONT_COUNT
-	call memory.copy
-	; Chargement du joueur en VRAM
-	ld hl, VRAM_START+FONT_COUNT+8
-	ld bc, PLAYER_DATA
-	ld de, PLAYER_COUNT
-	call memory.copy
+	; Nettoyage de la VRAM
+	ld hl, VRAM_START
+	ld de, VRAM_END-VRAM_START
+	call memory.clear
 	; Nettoyage de la map background 
 	ld hl, VRAM_BACKGROUNDMAP_START
 	ld de, 32*32
@@ -105,6 +99,23 @@ main:
 	ld hl, VRAM_WINDOWMAP_START
 	ld de, 32*32
 	call memory.clear
+	; Chargement de la police en VRAM
+	ld hl, VRAM_START+$1000 ; Police en $9000
+	ld bc, FONT_DATA
+	ld de, FONT_COUNT
+	call memory.copy
+	; Chargement du tileset en VRAM 
+	ld hl, VRAM_START
+	ld bc, TILESET_DATA
+	ld de, TILESET_COUNT
+	call memory.copy
+	; Chargement du joueur en VRAM
+	ld hl, VRAM_START+PLAYER_SPRITE
+	ld bc, PLAYER_DATA
+	ld de, PLAYER_COUNT
+	call memory.copy
+
+
 	; Nettoyage OAM
 	ld hl, OAM_START
 	ld de, 40*4
