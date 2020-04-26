@@ -32,10 +32,10 @@ variables:
   ld [hl], 0
 
   ld hl, PLAYER_X
-  ld [hl], 0
+  ld [hl], 10
 
   ld hl, PLAYER_Y
-  ld [hl], 0
+  ld [hl], 10
   
 
   pop hl 

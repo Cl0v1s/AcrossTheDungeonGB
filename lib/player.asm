@@ -9,38 +9,18 @@ player:
     call sprite.create_group
     ret
 
-  .input: 
-    call input.listen_directions
-    bit 3, a ; on test si le bit 3 vaut 0 -> la touche bas est pressé
-    jr nz, .nod
-    call .move_down
-    jp .input_end
-    .nod:
-      bit 2, a ; on test si le bit 2 vaut 0 -> la touche haut est pressé
-      jr nz, .nou
-      call .move_up
-      jp .input_end
-    .nou:
-      bit 1, a ; on test si le bit 1 vaut 0 -> la touche gauche est pressé
-      jr nz, .nol
-      call .move_left
-      jp .input_end
-    .nol:
-      bit 0, a ; on test si le bit 0 vaut 0 -> la touche droite est pressé
-      jr nz, .input_end
-      call .move_right
-    .input_end:
-    ret
-
-  ; Met à jour le joueur
-  .update:
-    call .input
+  ; Test si la position demandée est accessible 
+  ; b position x  
+  ; c position y
+  ; return a: 0 -> accessible
+  .can_walk: 
+    push de
 
     ld hl, VRAM_BACKGROUNDMAP_START
     ; une ligne de la backgroundmap fait 32 bytes
-    ld b, $00
-    ld c, $20
-    ld a, [PLAYER_Y]
+    ld d, $00
+    ld e, $20
+    ld a, c
     ; on ne prend que les pieds 
     add 8
     ; on divise par 8, les cellules faisant chacune 8 pixels 
@@ -48,25 +28,91 @@ player:
     srl a
     srl a
     .update_y_loop:
-      add hl, bc
+      add hl, de
       dec a
       cp 0
       jr nz, .update_y_loop
-    ld a, [PLAYER_X]
+    ld a, b
     ; on divise par 8, les cellules faisant chacune 8 pixels 
     srl a
     srl a
     srl a
-    ; ld b, $00
-    ld c, a
-    add hl, bc
+    ; ld d, $00
+    ld e, a
+    add hl, de
 
     ld a, [hl]
-    ld [TEST], a
+    ; ld [TEST], a
 
+    pop de
+  ret
 
+  .input: 
+    call input.listen_directions
+    bit 3, a ; on test si le bit 3 vaut 0 -> la touche bas est pressé
+    jr nz, .nod
 
+    ld a, [PLAYER_X]
+    ld b, a
+    ld a, [PLAYER_Y]
+    add 1
+    ld c, a
+    call .can_walk
+    cp 0
+    jr nz, .input_end
 
+    call .move_down
+    jp .input_end
+    .nod:
+      bit 2, a ; on test si le bit 2 vaut 0 -> la touche haut est pressé
+      jr nz, .nou
+
+      ld a, [PLAYER_X]
+      ld b, a
+      ld a, [PLAYER_Y]
+      sub 1
+      ld c, a
+      call .can_walk
+      cp 0
+      jr nz, .input_end
+
+      call .move_up
+      jp .input_end
+    .nou:
+      bit 1, a ; on test si le bit 1 vaut 0 -> la touche gauche est pressé
+      jr nz, .nol
+
+      ld a, [PLAYER_X]
+      sub 1
+      ld b, a
+      ld a, [PLAYER_Y]
+      ld c, a
+      call .can_walk
+      cp 0
+      jr nz, .input_end
+
+      call .move_left
+      jp .input_end
+    .nol:
+      bit 0, a ; on test si le bit 0 vaut 0 -> la touche droite est pressé
+      jr nz, .input_end
+
+      ld a, [PLAYER_X]
+      add 1
+      ld b, a
+      ld a, [PLAYER_Y]
+      ld c, a
+      call .can_walk
+      cp 0
+      jr nz, .input_end
+      
+      call .move_right
+    .input_end:
+    ret
+
+  ; Met à jour le joueur
+  .update:
+    call .input
   ret
 
   .move_down:
