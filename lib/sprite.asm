@@ -111,9 +111,10 @@ ret
 ; c tile 2
 ; d tile 3
 ; e tile 4
-; return a: index du groupe
+; return hl: index du groupe 
 .create_group
   call .get_group_address ; hl contient l'adresse du groupe
+  push hl
   push bc
   push de 
 
@@ -183,14 +184,16 @@ ret
   inc hl 
   ld [hl], c
 
-  ; Incrémentation du compteur de taille 
-  ld a, [SPRITEGROUPS_SIZE]
-  add 1 
-  ld [SPRITEGROUPS_SIZE], a
-  sub 1
-
   pop bc 
   pop de
+  pop hl
+  ; récupération de l'index à ajouter à l'adresse de début des spritegroups
+  ld a, l 
+  sub SPRITEGROUPS_START 
+  ld l, a
+  ld a, h 
+  sbc (SPRITEGROUPS_START >> 8)
+  ld h, a
 ret
 
 ; Déplace un groupe de sprite 

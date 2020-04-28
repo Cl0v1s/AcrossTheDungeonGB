@@ -7,6 +7,7 @@ PLAYER_SPRITE_TILE EQU $80
 
 
 ; Adresses propres au joueur
+PLAYER_INDEX db
 PLAYER_DIR db ; 0: bas 1: gauche 2: haut 3: droite 
 PLAYER_X db
 PLAYER_Y db
@@ -17,6 +18,7 @@ PLAYER_SPEED equ 15
 ; Adresse de la map courante
 MAP_CURRENT ds 2
 
+;SECTION "variables_1", wram0[$C010]
 ; Emplacement mémoire de la liste des spritegroups
 SPRITEGROUPS_MAX equ 4
 SPRITEGROUPS_SIZE equ 4
@@ -27,15 +29,18 @@ SPRITEGROUPS_START ds SPRITEGROUPS_MAX*SPRITEGROUPS_SIZE ; on peut avoir jusqu'�
 ; 2: Adresse OAM bas gauche
 ; 3: Adresse OAM bas droit
 
+;SECTION "variables_2", wram0[$C020]
 ; Emplacement mémoire de la liste des entités
-ENTITIES_SIZE db 
-ENTITIES_START ds 4*5 ; on peut avoir jusqu'à 4 entités
+ENTITIES_MAX equ 4
+ENTITIES_SIZE equ 5
+ENTITIES_START ds ENTITIES_MAX*ENTITIES_SIZE ; on peut avoir jusqu'à 4 entités
 ; 4 byte par entités
 ; 0: index sprite group
 ; 1: x
 ; 2: y
-; 3: step
-; 4: attributs
+; 3: dir
+; 4: step
+
 
 
 
@@ -58,14 +63,6 @@ variables:
   ld hl, SPRITEGROUPS_SIZE
   ld [hl], 0
 
-  ld hl, PLAYER_DIR
-  ld [hl], 0
-
-  ld hl, PLAYER_X
-  ld [hl], 16
-
-  ld hl, PLAYER_Y
-  ld [hl], 16
   
 
   pop hl 

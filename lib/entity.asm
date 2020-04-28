@@ -35,8 +35,6 @@ entity:
     ld e, a
     add hl, de
 
-    ld a, [hl]
-    ld [TEST], a
     pop de
   ret
 
@@ -97,17 +95,37 @@ entity:
     .can_walk_end
   ret
 
+  ; Libère l'ensemble de la zone occupée par l'entité
+  ; hl: adresse de l'entité dans la RAM
+  .free:
+  ld b, ENTITIES_SIZE
+  call memory.clear
 
-
-  ; créer l'ensemble sprite de l'entité
+  ; créer l'entité
   ; b tile supérieur
   ; c tile inférieur
+  ; return hl: index de l'entité
   .create:
     ld d, c
     ld e, c
     ld c, b
-    ld b, b
+    ; ld b, b
     call sprite.create_group
+    push hl 
+    ld hl, ENTITIES_START
+    ld b, ENTITIES_SIZE
+    ld c, ENTITIES_MAX
+    call memory.search_free
+    pop bc ; ancien hl maintenant dans bc
+    ld [hl], c ; sauvegarde de la position du spriteGroup
+    ; récupération de l'index à ajouter à l'adresse de début des spritegroups
+    ld a, l 
+    sub ENTITIES_START
+    ld l, a
+    ld a, h 
+    sbc (ENTITIES_START >> 8)
+    ld h, a
+    ret
     
     
   ret 
