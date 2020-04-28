@@ -86,6 +86,10 @@ main:
 	ld sp,$FFF4 ;SP=$FFF4
 	call lcd.wait_vblank
 	call lcd.off
+	; Nettoyage RAM 
+	ld hl, RAM_START
+	ld de, 1024
+	call memory.clear
 	; reset des variables 
 	call variables.init
 	; Nettoyage de la VRAM
@@ -154,4 +158,5 @@ include "lib/lcd.asm"
 include "lib/memory.asm"
 include "lib/sprite.asm"
 include "lib/input.asm"
+include "lib/entity.asm"
 include "lib/player.asm"

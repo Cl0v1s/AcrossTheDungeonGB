@@ -1,47 +1,47 @@
 sprite:
-; Libère un emplacement de sprite
-; hl emplacement à libérer
-.free: 
-  ld a, 0
-  ldi [hl], a ; y
-  ldi [hl], a ; x
-  ldi [hl], a ; tile
-  ldi [hl], a ; flag
-  ret
-  
-; Cherche un emplacement de sprite libre 
-; return hl
-.search_free: 
-  push bc
-  push de
-  ld hl, OAM_START
-  ld b, 0 ; compteur 
-  .search_free_loop:
-    ; Si hl sorti de OAM    
-    ld a, b 
-    cp 40 ; est ce qu'on a fait le tour des 40 emplacement ? 
-    jr z, .search_free_exit
-    ld c, [hl] ; position y
-    inc hl 
-    inc hl 
-    inc hl 
-    inc hl
-    ; comparaison à zéro
-    xor a ; raz
-    or c 
-    cp 0
-    jr nz, .search_free_loop
-    dec hl 
-    dec hl 
-    dec hl 
-    dec hl
-    jp .search_free_end
-    .search_free_exit:
-      ld hl, 0 ; si on a rien trouvé on met hl à 0
-  .search_free_end:
-    pop de
-    pop bc 
+  ; Libère un emplacement de sprite
+  ; hl emplacement à libérer
+  .free: 
+    ld a, 0
+    ldi [hl], a ; y
+    ldi [hl], a ; x
+    ldi [hl], a ; tile
+    ldi [hl], a ; flag
     ret
+  
+  ; Cherche un emplacement de sprite libre 
+  ; return hl
+  .search_free: 
+    push bc
+    push de
+    ld hl, OAM_START
+    ld b, 0 ; compteur 
+    .search_free_loop:
+      ; Si hl sorti de OAM    
+      ld a, b 
+      cp 40 ; est ce qu'on a fait le tour des 40 emplacement ? 
+      jr z, .search_free_exit
+      ld c, [hl] ; position y
+      inc hl 
+      inc hl 
+      inc hl 
+      inc hl
+      ; comparaison à zéro
+      xor a ; raz
+      or c 
+      cp 0
+      jr nz, .search_free_loop
+      dec hl 
+      dec hl 
+      dec hl 
+      dec hl
+      jp .search_free_end
+      .search_free_exit:
+        ld hl, 0 ; si on a rien trouvé on met hl à 0
+    .search_free_end:
+      pop de
+      pop bc 
+      ret
 
 ; Fait apparaitre un sprite à l'écran
 ; b position x
@@ -97,29 +97,21 @@ sprite:
 ret
 
 ; Retourne l'adresse de la structure de spritegroup valide
+; return hl: adresse 
 .get_group_address: 
   ld hl, SPRITEGROUPS_START
-  ld a, [SPRITEGROUPS_SIZE]
-  ; vérification initiale, si a = 0 pas besoin de continuer 
-  cp 0 
-  jr z, .get_group_address_end
-  .get_group_address_loop:
-    ; on augmente hl de 4 bytes
-    inc hl 
-    inc hl
-    inc hl 
-    inc hl 
-    dec a 
-    cp 0
-    jr nz, .get_group_address_loop
-  .get_group_address_end: 
-    ret
+  ld b, SPRITEGROUPS_SIZE
+  ld c, SPRITEGROUPS_MAX
+  call memory.search_free
+  ret
+
 
 ; Crée un groupe de sprites qui pourront être contrôlés ensemble
 ; b tile 1
 ; c tile 2
 ; d tile 3
 ; e tile 4
+; return a: index du groupe
 .create_group
   call .get_group_address ; hl contient l'adresse du groupe
   push bc
@@ -190,6 +182,12 @@ ret
   pop hl 
   inc hl 
   ld [hl], c
+
+  ; Incrémentation du compteur de taille 
+  ld a, [SPRITEGROUPS_SIZE]
+  add 1 
+  ld [SPRITEGROUPS_SIZE], a
+  sub 1
 
   pop bc 
   pop de
