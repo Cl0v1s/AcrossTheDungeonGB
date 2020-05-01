@@ -118,10 +118,16 @@ main:
 	ld bc, TILESET_DATA
 	ld de, TILESET_COUNT
 	call memory.copy
+
 	; Chargement du joueur en VRAM
 	ld hl, VRAM_START+(PLAYER_SPRITE_TILE<<4)
 	ld bc, PLAYER_DATA
 	ld de, PLAYER_COUNT
+	call memory.copy
+	; chargement du blob en VRAM 
+	ld hl, VRAM_START+(BLOB_SPRITE_TILE<<4)
+	ld bc, BLOB_DATA
+	ld de, BLOB_COUNT
 	call memory.copy
 
 	; Chargement de la map de test

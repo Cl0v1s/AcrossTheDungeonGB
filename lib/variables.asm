@@ -4,6 +4,7 @@ TEST db
 
 ; Adresses tiles 
 PLAYER_SPRITE_TILE EQU $80
+BLOB_SPRITE_TILE EQU $8E
 
 
 ; Adresses propres au joueur
@@ -21,7 +22,7 @@ MAP_CURRENT ds 2
 ;SECTION "variables_1", wram0[$C010]
 ; Emplacement mémoire de la liste des spritegroups
 SPRITEGROUPS_MAX equ 4
-SPRITEGROUPS_SIZE equ 4
+SPRITEGROUPS_SIZE equ 1
 SPRITEGROUPS_START ds SPRITEGROUPS_MAX*SPRITEGROUPS_SIZE ; on peut avoir jusqu'à 4 groupes de sprites
 ; 4 byte par groupe
 ; 0: Adresse OAM haut gauche

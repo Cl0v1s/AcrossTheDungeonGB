@@ -111,7 +111,7 @@ ret
 ; c tile 2
 ; d tile 3
 ; e tile 4
-; return hl: index du groupe 
+; return a: index du groupe 
 .create_group
   call .get_group_address ; hl contient l'adresse du groupe
   push hl
@@ -123,16 +123,17 @@ ret
   ld b, 16 
   ld c, 8 
   ld e, 0
-  push hl
   call .spawn
-  ld c, l
-  ; c contient l'adresse OAM du sprite (4 derniers bits)
+  ld a, l
+
+  pop de 
+  pop bc
+  ; a contient l'adresse OAM du sprite (4 derniers bits)
   pop hl ; hl contient l'adresse RAM du groupe
-  ld [hl], c
+  ld [hl], a
+  push hl
 
   ; On restaure et on re-sauve les paramètres
-  pop de
-  pop bc 
   push bc 
   push de
 
@@ -141,12 +142,8 @@ ret
   ld b, 16
   ld c, 8+8
   ld e, %00100000
-  push hl 
   call .spawn
   ld c, l 
-  pop hl 
-  inc hl 
-  ld [hl], c
 
   ; On restaure et on re-sauve les paramètres
   pop de
@@ -159,12 +156,8 @@ ret
   ld b, 16+8
   ld c, 8
   ld e, 0
-  push hl 
   call .spawn
   ld c, l 
-  pop hl 
-  inc hl 
-  ld [hl], c
 
   ; On restaure et on re-sauve les paramètres
   pop de
@@ -177,23 +170,15 @@ ret
   ld b, 16+8
   ld c, 8+8
   ld e, %00100000
-  push hl 
   call .spawn
   ld c, l 
-  pop hl 
-  inc hl 
-  ld [hl], c
 
-  pop bc 
-  pop de
+  pop de 
+  pop bc
   pop hl
   ; récupération de l'index à ajouter à l'adresse de début des spritegroups
-  ld a, l 
-  sub SPRITEGROUPS_START 
-  ld l, a
-  ld a, h 
-  sbc (SPRITEGROUPS_START >> 8)
-  ld h, a
+  ; ld hl, hl
+  M_memory_address_to_index SPRITEGROUPS_START
 ret
 
 ; Déplace un groupe de sprite 
@@ -202,14 +187,15 @@ ret
 ; c doit contenir nouvelle position y
 .move_group
 
-  ldi a, [hl] ; récupère 4 derniers bits de l'adresse du premier OAM
+  ld a, [hl] ; récupère 4 derniers bits de l'adresse du premier OAM
   push hl 
   ld hl, OAM_START
   ld l, a
   call .move
 
   pop hl 
-  ldi a, [hl]
+  ld a, [hl]
+  add $04
   push hl 
   ld hl, OAM_START
   ld l, a
@@ -219,7 +205,8 @@ ret
   call .move
 
   pop hl 
-  ldi a, [hl]
+  ld a, [hl]
+  add $08
   push hl 
   ld hl, OAM_START
   ld l, a
@@ -232,7 +219,8 @@ ret
   call .move
 
   pop hl 
-  ldi a, [hl]
+  ld a, [hl]
+  add $0C
   ld hl, OAM_START
   ld l, a
   ld a, b 
@@ -276,8 +264,8 @@ ret
   push hl 
   push af
   ; haut droite
-  inc hl
   ld a, [hl]
+  add $04
   ld hl, OAM_START
   ld l, a
   ld b, c
@@ -297,9 +285,8 @@ ret
   push hl 
   push af
   ; bas gauche
-  inc hl
-  inc hl 
   ld a, [hl]
+  add $08
   ld hl, OAM_START
   ld l, a
   ld b, d
@@ -319,10 +306,8 @@ ret
   push hl 
   push af
   ; haut droite
-  inc hl
-  inc hl 
-  inc hl
   ld a, [hl]
+  add $0C
   ld hl, OAM_START
   ld l, a
   ld b, e

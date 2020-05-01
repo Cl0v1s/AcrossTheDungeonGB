@@ -14,6 +14,7 @@ player:
     ld c, b
     ; ld b, b
     call sprite.create_group
+    ld [PLAYER_INDEX], a
 
     ; centrage à l'écran
     ld b, 16+160/2-16
@@ -149,7 +150,9 @@ player:
     ret
 
   .draw:
-    ld hl, SPRITEGROUPS_START
+    ld a, [PLAYER_INDEX]
+    M_memory_index_to_address SPRITEGROUPS_START
+
     ld a, [PLAYER_DIR]
     cp 0
     jr z, .draw_dir_down
