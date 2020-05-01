@@ -42,6 +42,16 @@ ENTITIES_START ds ENTITIES_MAX*ENTITIES_SIZE ; on peut avoir jusqu'à 4 entités
 ; 3: dir
 ; 4: step
 
+NPC_MAX equ 4
+NPC_SIZE equ 5
+NPC_START ds NPC_MAX*NPC_SIZE
+; 5 bytes par npc 
+; 0: Index entity 
+; 1: attr 1
+; 2: attr 2
+; 3: addr 1
+; 4: addr 2
+
 
 
 

@@ -60,6 +60,7 @@ memory
   ; b: taille de la zone à récupérer
   ; c: Nombre de parcours limit
   ; return hl: adresse libre 
+  ; si la taille de la zone est égale à 1 et que la donnée peut potentiellement contenir 0, pensez à inverser (avec xor $FF)
   .search_free: 
     ld d, b 
 

@@ -113,10 +113,15 @@ ret
 ; e tile 4
 ; return a: index du groupe 
 .create_group
-  call .get_group_address ; hl contient l'adresse du groupe
-  push hl
   push bc
   push de 
+  call .get_group_address ; hl contient l'adresse du groupe
+
+  pop de 
+  pop bc
+  push bc 
+  push de 
+  push hl
 
   ; Gestion sprite 1
   ld d, b
@@ -124,12 +129,12 @@ ret
   ld c, 8 
   ld e, 0
   call .spawn
-  ld a, l
 
+  pop hl ; hl contient l'adresse RAM du groupe
   pop de 
   pop bc
   ; a contient l'adresse OAM du sprite (4 derniers bits)
-  pop hl ; hl contient l'adresse RAM du groupe
+  xor $FF ; on inverse pr que 0 = FF et ne bug pas la recherche de mémoire
   ld [hl], a
   push hl
 
@@ -137,13 +142,13 @@ ret
   push bc 
   push de
 
+
   ; Gestion sprite 2
   ld d, c
   ld b, 16
   ld c, 8+8
   ld e, %00100000
   call .spawn
-  ld c, l 
 
   ; On restaure et on re-sauve les paramètres
   pop de
@@ -157,7 +162,6 @@ ret
   ld c, 8
   ld e, 0
   call .spawn
-  ld c, l 
 
   ; On restaure et on re-sauve les paramètres
   pop de
@@ -171,7 +175,6 @@ ret
   ld c, 8+8
   ld e, %00100000
   call .spawn
-  ld c, l 
 
   pop de 
   pop bc
@@ -188,6 +191,7 @@ ret
 .move_group
 
   ld a, [hl] ; récupère 4 derniers bits de l'adresse du premier OAM
+  xor $FF ; on inverse les bits
   push hl 
   ld hl, OAM_START
   ld l, a
@@ -195,6 +199,7 @@ ret
 
   pop hl 
   ld a, [hl]
+  xor $FF
   add $04
   push hl 
   ld hl, OAM_START
@@ -206,6 +211,7 @@ ret
 
   pop hl 
   ld a, [hl]
+  xor $FF
   add $08
   push hl 
   ld hl, OAM_START
@@ -220,6 +226,7 @@ ret
 
   pop hl 
   ld a, [hl]
+  xor $FF
   add $0C
   ld hl, OAM_START
   ld l, a
@@ -244,6 +251,7 @@ ret
 
   ; haut gauche
   ld a, [hl]
+  xor $FF
   ld hl, OAM_START
   ld l, a
   ; ld b, b b a déjà la bonne valeur
@@ -263,8 +271,10 @@ ret
   push bc 
   push hl 
   push af
+
   ; haut droite
   ld a, [hl]
+  xor $FF
   add $04
   ld hl, OAM_START
   ld l, a
@@ -286,6 +296,7 @@ ret
   push af
   ; bas gauche
   ld a, [hl]
+  xor $FF
   add $08
   ld hl, OAM_START
   ld l, a
@@ -307,6 +318,7 @@ ret
   push af
   ; haut droite
   ld a, [hl]
+  xor $FF
   add $0C
   ld hl, OAM_START
   ld l, a

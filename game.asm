@@ -144,6 +144,8 @@ main:
 	; Création du joueur 
 	call player.create
 
+	call npc.create
+
 	call lcd.on
 	ei 
 .loop:
@@ -166,3 +168,5 @@ include "lib/sprite.asm"
 include "lib/input.asm"
 include "lib/entity.asm"
 include "lib/player.asm"
+
+include "game/npc.asm"

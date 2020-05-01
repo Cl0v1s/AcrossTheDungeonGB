@@ -19,7 +19,8 @@ player:
     ; centrage à l'écran
     ld b, 16+160/2-16
     ld c, 8+168/2-16
-    ld hl, SPRITEGROUPS_START
+
+    M_memory_index_to_address SPRITEGROUPS_START
     call sprite.move_group
   ret
 

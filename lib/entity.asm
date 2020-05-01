@@ -106,7 +106,7 @@ entity:
   ; créer l'entité
   ; b tile supérieur
   ; c tile inférieur
-  ; return hl: index de l'entité
+  ; return a: index de l'entité
   .create:
     ld d, c
     ld e, c
@@ -121,14 +121,7 @@ entity:
     pop bc ; ancien hl maintenant dans bc
     ld [hl], c ; sauvegarde de la position du spriteGroup
     ; récupération de l'index à ajouter à l'adresse de début des entities
-    ld a, l 
-    sub ENTITIES_START
-    ld l, a
-    ld a, h 
-    sbc (ENTITIES_START >> 8)
-    ld h, a
-    ret
-    
+    M_memory_address_to_index ENTITIES_START
     
   ret 
 
