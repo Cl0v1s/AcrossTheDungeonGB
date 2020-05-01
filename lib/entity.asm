@@ -13,6 +13,8 @@ entity:
     ld a, [hl]
     ld l, a
     ld h, d
+    ; hl contient mnt l'adresse de la map dans la ROM
+
     ; une ligne de la backgroundmap fait 32 bytes
     ld d, $00
     ld e, $20
@@ -21,7 +23,7 @@ entity:
     srl a
     srl a
     srl a
-    .update_y_loop:
+    .update_y_loop: ; on ajoute 32 (une ligne) pour chaque y
       add hl, de
       dec a
       cp 0
@@ -31,10 +33,10 @@ entity:
     srl a
     srl a
     srl a
-    ; ld d, $00
+    ; ld d, $00 (d déja = 0)
     ld e, a
-    add hl, de
-
+    add hl, de ; on ajoute les x
+    ld a, [hl]
     pop de
   ret
 

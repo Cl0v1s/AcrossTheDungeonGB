@@ -2,31 +2,27 @@ player:
 
   ; créer l'ensemble sprite du joueur 
   .create:
+    ld hl, PLAYER_X
+    ld [hl], 16
+    ld hl, PLAYER_Y
+    ld [hl], 16
+
     ld b, PLAYER_SPRITE_TILE
     ld c, PLAYER_SPRITE_TILE+1
-    call entity.create
-    ld a, l 
-    ld [PLAYER_INDEX], a ; Sauvegarde dans la ram de la position de l'entité joueur
-
-    ld hl, ENTITIES_START
-    add l ; a contient déjà l'index de l'entité
-    ld l, a 
-
-    push hl
-    inc hl ; selection X 
-    ld [hl], 16 ; réglage x
-    inc hl
-    ld [hl], 16 ; réglage y
+    ld d, c
+    ld e, c
+    ld c, b
+    ; ld b, b
+    call sprite.create_group
 
     ; centrage à l'écran
-    pop hl
-    ld a, [hl] ; a contient mnt index du sprite
-    ld hl, SPRITEGROUPS_START
-    add l 
-    ld l, a ; hl contient adresse du groupe
     ld b, 16+160/2-16
     ld c, 8+168/2-16
+    ld hl, SPRITEGROUPS_START
     call sprite.move_group
+  ret
+
+
   
   .input: 
     call input.listen_directions
@@ -226,23 +222,14 @@ player:
       call sprite.change_group
 
     ; Déplacement du background 
-    ld a, [PLAYER_INDEX]
-    ld hl, ENTITIES_START
-    add l 
-    ld l, a 
-
-    inc hl ; séléction x
-    ld b, 160/2-8
-    ld a, [hl]
-    sub b
-    ld [LDC_SCROLL_X], a
-
-    inc hl ; sélection y
     ld b, 168/2-16-8
-    ld a, [hl]
+    ld a, [PLAYER_Y]
     sub b
     ld [LDC_SCROLL_Y], a
-
+    ld b, 160/2-8
+    ld a, [PLAYER_X]
+    sub b
+    ld [LDC_SCROLL_X], a
 
 
       ret
