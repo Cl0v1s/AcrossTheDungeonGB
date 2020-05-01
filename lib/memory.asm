@@ -1,3 +1,31 @@
+
+; get index to add to a certain address
+; max index = $FF
+; \1: starting address
+; hl: actual address
+; return a: contain index 
+M_memory_address_to_index: macro
+  ld bc, \1
+  ld a, l 
+  sub c
+endm
+
+; get adress from index added to certain address
+; max index = $FF
+; \1 starting address
+; a: actual index
+; retur hl: actual address
+M_memory_index_to_address: macro
+  ld hl, \1
+  add l
+  ld l, a 
+  ld a, h 
+  adc 0 ; on ajoute la retenue éventuelle à h
+  ld h, a 
+endm
+
+
+
 memory
   ; hl target
   ; bc data start

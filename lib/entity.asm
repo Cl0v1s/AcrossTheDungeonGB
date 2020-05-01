@@ -118,7 +118,7 @@ entity:
     call memory.search_free
     pop bc ; ancien hl maintenant dans bc
     ld [hl], c ; sauvegarde de la position du spriteGroup
-    ; récupération de l'index à ajouter à l'adresse de début des spritegroups
+    ; récupération de l'index à ajouter à l'adresse de début des entities
     ld a, l 
     sub ENTITIES_START
     ld l, a
