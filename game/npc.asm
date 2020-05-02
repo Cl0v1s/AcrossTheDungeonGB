@@ -1,7 +1,9 @@
 npc:
   ; créer le npc 
   ; a: type, indique comment remplir l'entité 
-  ; bc: adresse de la routine d'initialisation des valeurs 
+  ; hl: adresse de la routine d'initialisation des valeurs 
+  ; bc: adresse de la routine en interaction
+  ; de: adresse de la routine d'upadate
   .create: 
     push bc 
     ld hl, NPC_START
@@ -15,7 +17,9 @@ npc:
     call entity.create
 
     pop hl
-    ld [hl], a ; Chargement sprite index 
+    and $0F ; 
+    or %10000000
+    ld [hl], a ; Chargement entity index 
     ; Chargement des attrs 
     inc hl 
     ld [hl], $FF
@@ -29,9 +33,17 @@ npc:
     ldi [hl], a
     ld [hl], c 
 
+    ; Chargement de l'adresse de la routine d'interaction
+    inc hl 
+    ld a, d
+    ldi [hl], a
+    ld [hl], e 
+
     ; retour au début de la séquence npc
     dec hl 
     dec hl 
+    dec hl 
+    dec hl
     dec hl 
     dec hl
 
@@ -45,6 +57,7 @@ npc:
   .setPosition:
     M_memory_index_to_address NPC_START
     ld a, [hl] ; récupération de l'index entité
+    and $0F
     sla b ; on multiplie b par 8 pour avoir position en pixels 
     sla b
     sla b
