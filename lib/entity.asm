@@ -69,8 +69,6 @@ entity:
   ; return a: 0 -> accessible
   ; optimisable en ne testant que les points concernés par direction
   .can_walk: 
-    ; ld [TEST], a
-
     ; on ne prend que les pieds 
     ld a, c 
     add 8 
@@ -184,8 +182,15 @@ entity:
   ; c: vitesse
   .move: 
     M_memory_index_to_address ENTITIES_START
-    push hl
     set 6, [hl]
+
+    inc hl ; selection x 
+    ld a, [hl]
+    ld d, a 
+    inc hl ; selection y 
+    ld a, [hl]
+    ld e, a 
+
     ld a, b
     cp 0 ; down 
     jr z, .move_down
@@ -197,42 +202,48 @@ entity:
     ; jr z, .move_up
 
     .move_up:
-    inc hl ; selection y
-    inc hl  
-    ld a, [hl]
+    ld a, e
     sub c
-    ld [hl], a
+    ld e, a 
     jp .move_end
     .move_down: 
-    inc hl ; selection y
-    inc hl  
-    ld a, [hl]
-    add c
-    ld [hl], a
+    ld a, e 
+    add c 
+    ld e, a
     jp .move_end
     .move_left: 
-    inc hl ; selection x
-    ld a, [hl]
-    sub c
-    ld [hl], a
+    ld a, d
+    sub c 
+    ld d, a 
     jp .move_end
     .move_right: 
-    inc hl ; selection x
-    ld a, [hl]
-    add c
-    ld [hl], a
+    ld a, d
+    add c 
+    ld d, a 
     ;jp .move_end 
-
     .move_end: 
-    pop hl ; selection step
     inc hl 
-    inc hl 
-    inc hl 
+    ld a, b ; maj dir
+    ld [hl], a 
     inc hl 
     ld a, [hl] ; maj step
     add PLAYER_SPEED
     ld [hl], a 
-
+    dec hl 
+    dec hl ; selection y 
+    push hl 
+    ld b, d
+    ld c, e
+    call .can_walk
+    pop hl
+    cp 0 
+    jr nz, .move_no
+    ld a, e 
+    ld [hl], a 
+    dec hl ; selection x 
+    ld a, d 
+    ld [hl], a 
+    .move_no
   ret 
 
   ; Dessine l'entité 
@@ -364,14 +375,20 @@ entity:
       call sprite.change_group
       pop hl
 
+      ld a, [LDC_SCROLL_X]
+      ld d, a
       inc hl ; selection x 
       ld a, [hl]
       add 8
+      sub d
       ld b, a
 
+      ld a, [LDC_SCROLL_Y]
+      ld e, a 
       inc hl ; selection y 
       ld a, [hl]
       add 16 
+      sub e
       ld c, a
 
       dec hl ; selection sprite Index

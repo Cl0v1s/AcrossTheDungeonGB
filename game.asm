@@ -155,7 +155,7 @@ main:
 
 	call npc.create
 	ld b, 1
-	ld c, 0
+	ld c, 1
 	call npc.setPosition
 
 	call lcd.on
