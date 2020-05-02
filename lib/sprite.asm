@@ -129,6 +129,7 @@ ret
   ld c, 8 
   ld e, 0
   call .spawn
+  ld a, l
 
   pop hl ; hl contient l'adresse RAM du groupe
   pop de 

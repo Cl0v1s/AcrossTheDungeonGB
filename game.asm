@@ -145,6 +145,9 @@ main:
 	call player.create
 
 	call npc.create
+	ld b, 1
+	ld c, 0
+	call npc.setPosition
 
 	call lcd.on
 	ei 
@@ -155,6 +158,8 @@ main:
 
 draw:
 	call player.draw
+	ld a, 0 
+	call entity.draw
 	reti
 stat:
 timer:

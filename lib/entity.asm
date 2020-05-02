@@ -1,3 +1,10 @@
+
+
+
+M_entity_draw: macro 
+
+endm
+
 entity:
 
   ; Test si la position demandée est accessible 
@@ -108,21 +115,196 @@ entity:
   ; c tile inférieur
   ; return a: index de l'entité
   .create:
+    push bc 
+
+    ld hl, ENTITIES_START
+    ld b, ENTITIES_SIZE
+    ld c, ENTITIES_MAX
+    call memory.search_free
+
+    pop bc 
+    ; Sauvegarde du tile de départ
+    ld a, b
+    ld de, $0005
+    add hl, de 
+    ld [hl], b
+    dec hl 
+    dec hl 
+    dec hl 
+    dec hl
+    dec hl
+
+    push hl 
+
     ld d, c
     ld e, c
     ld c, b
     ; ld b, b
     call sprite.create_group
-    push hl 
-    ld hl, ENTITIES_START
-    ld b, ENTITIES_SIZE
-    ld c, ENTITIES_MAX
-    call memory.search_free
-    pop bc ; ancien hl maintenant dans bc
-    ld [hl], c ; sauvegarde de la position du spriteGroup
+
+    M_memory_address_to_index SPRITEGROUPS_START
+    pop hl
+    ld [hl], a ; sauvegarde de la position du spriteGroup
     ; récupération de l'index à ajouter à l'adresse de début des entities
     M_memory_address_to_index ENTITIES_START
-    
   ret 
 
+  ; déplace l'entité à la position demandée 
+  ; a: index de l'entité
+  ; b: position x
+  ; c: position y
+  .setPosition: 
+    M_memory_index_to_address ENTITIES_START
+    inc hl ; 1: x
+    ld [hl], b
+    inc hl ; 2: y
+    ld [hl], c
+  ret
+
+  ; Dessine l'entité 
+  ; a: index de l'entité 
+  .draw;
+    M_memory_index_to_address ENTITIES_START
+    push hl 
+    inc hl ; Sélection dir
+    inc hl 
+    inc hl
+    ld a, [hl] ; en fonction de la dir
+    cp 0
+    jr z, .draw_dir_down
+    cp 1
+    jr z, .draw_dir_left
+    cp 2
+    jr z, .draw_dir_up
+    cp 3
+    jr z, .draw_dir_right
+
+    .draw_dir_down:
+      inc hl ; selection tile 
+      inc hl 
+      ld a, [hl]
+      ld b, a ; tile
+      ld c, a ; tile
+      add 1
+      ld d, a ; tile + 1
+      add 1
+      ld e, a ; tile + 2
+      dec hl ; selection step
+      ld a, [hl]
+      cp $7F
+      jr nc, .draw_dir_down_no_step
+      ld b, d 
+      ld d, e ; tile + 2
+      ld e, b ; tile + 1
+      ld b, c ; tile
+      .draw_dir_down_no_step:
+        ld a, %1010
+      jp .draw_dir_end
+
+    .draw_dir_up:
+      inc hl ; selection tile
+      inc hl 
+      ld a, [hl]
+      add 10
+      ld b, a ; tile + 10
+      ld c, a ; tile + 10
+      add 1
+      ld e, a ; tile + 11
+      add 1
+      ld d, a ; tile + 12
+      dec hl ; selection step
+      ld a, [hl]
+      cp $7F
+      jr nc, .draw_dir_up_no_step
+      ld b, d 
+      ld d, e ; tile + 11
+      ld e, b ; tile + 12
+      ld b, c  ; tile + 10
+      .draw_dir_up_no_step:
+        ld a, %1010
+      jp .draw_dir_end
+
+
+    .draw_dir_right:
+      inc hl ; selection tile
+      inc hl 
+      ld a, [hl]
+      add 4
+      ld c, a ; tile + 4
+      add 1 
+      ld b, a ; tile + 5
+      add 1 
+      ld e, a ; tile + 6
+      add 1 
+      ld d, a ; tile + 7
+      dec hl ; selection step
+      ld a, [hl]
+      cp $7F
+      jr nc, .draw_dir_right_no_step
+        ld a, d
+        add 1 
+        ld e, a ; tile + 8
+        add 1 
+        ld d, a ; tile + 9
+      .draw_dir_right_no_step
+        ld a, %1111
+      jp .draw_dir_end
+      
+
+    .draw_dir_left: 
+      inc hl ; selection tile
+      inc hl 
+      ld a, [hl]
+      add 4
+      ld c, a ; tile + 4
+      add 1 
+      ld b, a ; tile + 5
+      add 1 
+      ld e, a ; tile + 6
+      add 1 
+      ld d, a ; tile + 7
+      dec hl ; selection step
+      ld a, [hl]
+      cp $7F
+      jr nc, .draw_dir_left_no_step
+        ld a, d
+        add 1 
+        ld e, a ; tile + 8
+        add 1 
+        ld d, a ; tile + 9
+      .draw_dir_left_no_step
+        ld a, %0000
+      jp .draw_dir_end
+
+    .draw_dir_end:
+      dec hl 
+      dec hl 
+      dec hl 
+      dec hl 
+      push hl
+      push af 
+      ld a, [hl]
+      M_memory_index_to_address SPRITEGROUPS_START
+      pop af
+      call sprite.change_group
+      pop hl
+
+      inc hl ; selection x 
+      ld a, [hl]
+      add 8
+      ld b, a
+
+      inc hl ; selection y 
+      ld a, [hl]
+      add 16 
+      ld c, a
+
+      dec hl ; selection sprite Index
+      dec hl 
+      ld a, [hl]
+      M_memory_index_to_address SPRITEGROUPS_START
+      call sprite.move_group
+
+  pop hl 
+  ret 
   

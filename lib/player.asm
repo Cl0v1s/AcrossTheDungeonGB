@@ -153,7 +153,6 @@ player:
   .draw:
     ld a, [PLAYER_INDEX]
     M_memory_index_to_address SPRITEGROUPS_START
-
     ld a, [PLAYER_DIR]
     cp 0
     jr z, .draw_dir_down

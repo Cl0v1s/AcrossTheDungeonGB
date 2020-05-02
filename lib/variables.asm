@@ -33,7 +33,7 @@ SPRITEGROUPS_START ds SPRITEGROUPS_MAX*SPRITEGROUPS_SIZE ; on peut avoir jusqu'�
 ;SECTION "variables_2", wram0[$C020]
 ; Emplacement mémoire de la liste des entités
 ENTITIES_MAX equ 4
-ENTITIES_SIZE equ 5
+ENTITIES_SIZE equ 6
 ENTITIES_START ds ENTITIES_MAX*ENTITIES_SIZE ; on peut avoir jusqu'à 4 entités
 ; 4 byte par entités
 ; 0: index sprite group
@@ -41,6 +41,7 @@ ENTITIES_START ds ENTITIES_MAX*ENTITIES_SIZE ; on peut avoir jusqu'à 4 entités
 ; 2: y
 ; 3: dir
 ; 4: step
+; 5: tile
 
 NPC_MAX equ 4
 NPC_SIZE equ 5
