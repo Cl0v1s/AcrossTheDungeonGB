@@ -171,11 +171,69 @@ entity:
   ; c: position y
   .setPosition: 
     M_memory_index_to_address ENTITIES_START
+    set 6, [hl]
     inc hl ; 1: x
     ld [hl], b
     inc hl ; 2: y
     ld [hl], c
   ret
+
+  ; déplace l'entité dans la direction demandée à la vitesse demandée 
+  ; a: index de l'entité 
+  ; b: direction 0:down 1:left 2:up 3:right
+  ; c: vitesse
+  .move: 
+    M_memory_index_to_address ENTITIES_START
+    push hl
+    set 6, [hl]
+    ld a, b
+    cp 0 ; down 
+    jr z, .move_down
+    cp 1 ; left 
+    jr z, .move_left
+    cp 3 
+    jr z, .move_right 
+    ; cp 2
+    ; jr z, .move_up
+
+    .move_up:
+    inc hl ; selection y
+    inc hl  
+    ld a, [hl]
+    sub c
+    ld [hl], a
+    jp .move_end
+    .move_down: 
+    inc hl ; selection y
+    inc hl  
+    ld a, [hl]
+    add c
+    ld [hl], a
+    jp .move_end
+    .move_left: 
+    inc hl ; selection x
+    ld a, [hl]
+    sub c
+    ld [hl], a
+    jp .move_end
+    .move_right: 
+    inc hl ; selection x
+    ld a, [hl]
+    add c
+    ld [hl], a
+    ;jp .move_end 
+
+    .move_end: 
+    pop hl ; selection step
+    inc hl 
+    inc hl 
+    inc hl 
+    inc hl 
+    ld a, [hl] ; maj step
+    add PLAYER_SPEED
+    ld [hl], a 
+
+  ret 
 
   ; Dessine l'entité 
   ; a: index de l'entité 
