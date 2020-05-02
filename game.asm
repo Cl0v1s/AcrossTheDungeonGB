@@ -81,6 +81,15 @@ include "data/header.asm"
 include "lib/address.asm"
 include "lib/variables.asm"
 
+include "lib/lcd.asm"
+include "lib/memory.asm"
+include "lib/sprite.asm"
+include "lib/input.asm"
+include "lib/entity.asm"
+include "lib/player.asm"
+
+include "game/npc.asm"
+
 main:
 	di
 	ld sp,$FFF4 ;SP=$FFF4
@@ -158,8 +167,7 @@ main:
 
 draw:
 	call player.draw
-	ld a, 0 
-	call entity.draw
+	M_entity_draw
 	reti
 stat:
 timer:
@@ -167,11 +175,3 @@ serial:
 joypad:
 		reti
 
-include "lib/lcd.asm"
-include "lib/memory.asm"
-include "lib/sprite.asm"
-include "lib/input.asm"
-include "lib/entity.asm"
-include "lib/player.asm"
-
-include "game/npc.asm"

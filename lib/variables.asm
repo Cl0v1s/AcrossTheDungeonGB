@@ -36,11 +36,11 @@ ENTITIES_MAX equ 4
 ENTITIES_SIZE equ 6
 ENTITIES_START ds ENTITIES_MAX*ENTITIES_SIZE ; on peut avoir jusqu'à 4 entités
 ; 4 byte par entités
-; 0: index sprite group
-; 1: x
-; 2: y
-; 3: dir
-; 4: step
+; 1: index sprite group / status -> ab00 xxxx / x = index a = existe b = to_update
+; 2: x
+; 3: y
+; 4: dir
+; 5: step
 ; 5: tile
 
 NPC_MAX equ 4

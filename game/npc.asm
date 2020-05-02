@@ -42,7 +42,7 @@ npc:
   ; a: index npc
   ; b: cellule x 
   ; c: cellule y
-  .setPosition
+  .setPosition:
     M_memory_index_to_address NPC_START
     ld a, [hl] ; récupération de l'index entité
     sla b ; on multiplie b par 8 pour avoir position en pixels 
@@ -56,11 +56,9 @@ npc:
 
   ; Libère la zone mémoire 
   ; a: index npc 
-  .free 
-  M_memory_index_to_address NPC_START
-  ld d, $00
-  ld e, $05
-  call memory.clear
-
-
+  .free:
+    M_memory_index_to_address NPC_START
+    ld d, $00
+    ld e, $05
+    call memory.clear
   ret 

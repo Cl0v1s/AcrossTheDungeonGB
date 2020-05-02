@@ -1,8 +1,22 @@
 
 
-
+; Dessine toutes les entités en mémoire
 M_entity_draw: macro 
-
+  ld hl, ENTITIES_START
+  ld b, ENTITIES_MAX
+  .M_entity_draw_loop:
+    ld a, [hl]
+    and %11000000
+    cp %11000000 ; si l'entité existe et qu'elle est à mettre à jour
+    jr nz, .M_entity_draw_loop_no_draw
+      push hl 
+      M_memory_address_to_index ENTITIES_START
+      call entity.draw
+      pop hl 
+      res 6, [hl] ; on signale que l'entité n'est plus à mettre à jour
+    .M_entity_draw_loop_no_draw:
+    dec b
+    jr nz, .M_entity_draw_loop
 endm
 
 entity:
@@ -143,6 +157,8 @@ entity:
     call sprite.create_group
 
     M_memory_address_to_index SPRITEGROUPS_START
+    and $0F
+    or %11000000
     pop hl
     ld [hl], a ; sauvegarde de la position du spriteGroup
     ; récupération de l'index à ajouter à l'adresse de début des entities
@@ -284,6 +300,7 @@ entity:
       push hl
       push af 
       ld a, [hl]
+      and $0F ; on ne récupère que l'index de sprite
       M_memory_index_to_address SPRITEGROUPS_START
       pop af
       call sprite.change_group
@@ -302,6 +319,7 @@ entity:
       dec hl ; selection sprite Index
       dec hl 
       ld a, [hl]
+      and $0F ; on ne récupère que l'index de sprite
       M_memory_index_to_address SPRITEGROUPS_START
       call sprite.move_group
 
