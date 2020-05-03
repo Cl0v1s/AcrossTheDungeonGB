@@ -36,7 +36,16 @@ player:
     ld a, [PLAYER_Y]
     add 1
     ld c, a
+    push bc 
     call entity.can_walk
+    pop bc 
+    cp 0
+    jr nz, .input_end
+
+    ld a, $FF ; chargement d'un index d'entité impossible 
+    ; ld b, b 
+    ; ld c, c
+    call entity.check_for_entities
     cp 0
     jr nz, .input_end
 
@@ -51,7 +60,16 @@ player:
       ld a, [PLAYER_Y]
       sub 1
       ld c, a
+      push bc 
       call entity.can_walk
+      pop bc 
+      cp 0
+      jr nz, .input_end
+
+      ld a, $FF ; chargement d'un index d'entité impossible 
+      ; ld b, b 
+      ; ld c, c
+      call entity.check_for_entities
       cp 0
       jr nz, .input_end
 
@@ -66,11 +84,18 @@ player:
       ld b, a
       ld a, [PLAYER_Y]
       ld c, a
+      push bc 
       call entity.can_walk
+      pop bc 
       cp 0
       jr nz, .input_end
 
-
+      ld a, $FF ; chargement d'un index d'entité impossible 
+      ; ld b, b 
+      ; ld c, c
+      call entity.check_for_entities
+      cp 0
+      jr nz, .input_end
 
       call .move_left
       jp .input_end
@@ -83,7 +108,16 @@ player:
       ld b, a
       ld a, [PLAYER_Y]
       ld c, a
+      push bc 
       call entity.can_walk
+      pop bc 
+      cp 0
+      jr nz, .input_end
+
+      ld a, $FF ; chargement d'un index d'entité impossible 
+      ; ld b, b 
+      ; ld c, c
+      call entity.check_for_entities
       cp 0
       jr nz, .input_end
 

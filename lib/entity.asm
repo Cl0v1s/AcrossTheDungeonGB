@@ -183,6 +183,105 @@ entity:
     ld [hl], c
   ret
 
+  ; vérifie qu'aucune entité ne se trouve aux coordonnées demandées 
+  ; a: index de l'entité courante 
+  ; b: position x à vérifier 
+  ; c: position y à vérifier 
+  ; return a -> 0: ok, 1: pas possible 
+  .check_for_entities:
+    ld hl, ENTITIES_START
+    ld d, ENTITIES_MAX
+    ld e, a 
+
+    .check_for_entities_loop:
+      push bc 
+      push de 
+      push hl 
+      ld a, [hl]
+      and %10000000
+      cp %10000000 ; si l'entité existe 
+      jr nz, .check_for_entities_loop_pass
+      push bc 
+      M_memory_address_to_index ENTITIES_START
+      pop bc
+      cp e ; on regarde si c'est la même entité 
+      jr z, .check_for_entities_loop_pass ; si c'est le cas on saute
+      ; a contient l'index de l'autre entité
+      call .collision
+      cp 0 
+      jr nz, .check_for_entities_no
+
+      .check_for_entities_loop_pass:
+      pop hl 
+      ld d, $00 
+      ld e, ENTITIES_SIZE
+      add hl, de 
+      pop de 
+      pop bc 
+      dec d 
+      jr nz, .check_for_entities_loop
+
+    ; .check_for_entities_yes:
+    ld a, 0 
+    ret
+    .check_for_entities_no:
+    pop hl 
+    pop de 
+    pop bc 
+    ld a, 1 
+    ret 
+
+  ; vérifie si l'entité a entre en collision avec les cordonnées passées en paramètres 
+  ; a: index de l'entit é
+  ; b: coordonnée x 
+  ; c: coordonnée y
+  .collision
+    M_memory_index_to_address ENTITIES_START
+    inc hl ; selection x 
+    ldi a, [hl]
+    ;sra a ; divise par 8 pour avoir la cellule 
+    ;sra a 
+    ;sra a 
+    ld d, a ; x de l'entité 
+    ld a, [hl]
+    ;add 8 ; on ne veut que les pieds 
+    ;sra a ; on divise par 8 pour avoir la cellule 
+    ;sra a 
+    ;sra a 
+    ld e, a ; y de l'entité 
+
+    ;sra b 
+    ;sra b 
+    ;sra b 
+    ;sra c 
+    ;sra c 
+    ;sra c 
+
+    ld a, e 
+    add 16 ; e + 2 >= c 
+    cp c 
+    jr c, .collision_no
+    ; a contient e + 1
+    sub 32 ; e - 2 <= c 
+    cp c 
+    jr nc, .collision_no
+
+    ld a, d 
+    add 16 ; d + 2 >= b 
+    cp b 
+    jr c, .collision_no
+    ; a contient d + 1
+    sub 32 ; d - 2 <= b
+    cp b  
+    jr nc, .collision_no
+
+    ; .collision_yes 
+    ld a, 1
+    ret 
+    .collision_no 
+    ld a, 0 
+  ret 
+
   ; Vérifie si l'entité se trouve au coordonnées demandées
   ; a: index de l'entité 
   ; b: x 
@@ -220,32 +319,15 @@ entity:
 
     ; ld a, e 
     cp c 
-    jr nz, .is_at_cell_no
+    jr z, .is_at_cell_test_x
+    jp .is_at_cell_no
 
+    .is_at_cell_test_x
     ld a, d 
     cp b 
-    jr nz, .is_at_cell_0_no
-
-    ld a, 1 ; si on est sur la même cellule, on arrête là
-    ret
-    .is_at_cell_0_no:
-    ; a contient d
-    add 1 
-    cp b
-    jr nz, .is_at_cell_1_no
-
-    ld a, 1 ; si on est sur la même cellule, on arrête là
-    ret
-
-    .is_at_cell_1_no: 
-    ; a contient d+1
-    sub 3
-    cp b
     jr nz, .is_at_cell_no
-
-    ld a, 1 
-    ret 
-
+      ld a, 1 ; si on est sur la même cellule, on arrête là
+      ret
     .is_at_cell_no: 
     ld a, 0 
   ret
@@ -255,6 +337,7 @@ entity:
   ; b: direction 0:down 1:left 2:up 3:right
   ; c: vitesse
   .move: 
+    push af 
     M_memory_index_to_address ENTITIES_START
     set 6, [hl]
 
@@ -305,15 +388,32 @@ entity:
     ld [hl], a 
     dec hl 
     dec hl ; selection y 
-    push hl 
 
+    push de 
+    push hl 
     ld b, d
     ld c, e
     call .can_walk
-
     pop hl
+    pop bc ; ancien de maintenant dans bc 
+    pop de ; ancien af maintenant dans de 
     cp 0 
     jr nz, .move_no
+
+    push hl 
+    push bc 
+    ld a, d 
+    call .check_for_entities
+    pop de ; ancien bc maintenant dans de 
+    pop hl 
+    cp 0 
+    jr nz, .move_no
+    
+
+
+
+
+
     ld a, e 
     ld [hl], a 
     dec hl ; selection x 

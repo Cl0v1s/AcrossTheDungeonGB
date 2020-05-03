@@ -162,12 +162,7 @@ main:
 
 	call npc.create
 	ld b, 5
-	ld c, 4
-	call npc.setPosition
-
-	call npc.create
-	ld b, 2
-	ld c, 2
+	ld c, 10
 	call npc.setPosition
 
 
@@ -177,7 +172,7 @@ main:
 .loop:
 	halt 
 	call player.update
-	ld a, 6
+	ld a, 0
 	ld b, 0
 	ld c, 1
 	call entity.move 
