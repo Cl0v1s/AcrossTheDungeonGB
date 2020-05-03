@@ -63,6 +63,9 @@ memory
   ; si la taille de la zone est égale à 1 et que la donnée peut potentiellement contenir 0, pensez à inverser (avec xor $FF)
   .search_free: 
     ld d, b 
+    ld a, c 
+    add 1 
+    ld c, a 
 
     jp .search_free_0_reset
 

@@ -153,20 +153,35 @@ main:
 	; Création du joueur 
 	call player.create
 
+	
+
 	call npc.create
-	ld b, 1
+	ld b, 5
 	ld c, 1
 	call npc.setPosition
+
+	call npc.create
+	ld b, 5
+	ld c, 4
+	call npc.setPosition
+
+	call npc.create
+	ld b, 2
+	ld c, 2
+	call npc.setPosition
+
+
 
 	call lcd.on
 	ei 
 .loop:
 	halt 
 	call player.update
-	ld a, 0 
+	ld a, 6
 	ld b, 0
 	ld c, 1
 	call entity.move 
+	
 
     jr .loop
 

@@ -6,16 +6,21 @@ M_entity_draw: macro
   ld b, ENTITIES_MAX
   .M_entity_draw_loop:
     ld a, [hl]
-    and %11000000
-    cp %11000000 ; si l'entité existe et qu'elle est à mettre à jour
+    and %10000000
+    cp %10000000 ; si l'entité existe et qu'elle est à mettre à jour
     jr nz, .M_entity_draw_loop_no_draw
       push hl 
+      push bc 
       M_memory_address_to_index ENTITIES_START
       call entity.draw
+      pop bc 
       pop hl 
       res 6, [hl] ; on signale que l'entité n'est plus à mettre à jour
     .M_entity_draw_loop_no_draw:
     dec b
+    ld d, $00
+    ld e, ENTITIES_SIZE
+    add hl, de
     jr nz, .M_entity_draw_loop
 endm
 
@@ -64,6 +69,7 @@ entity:
   
 
   ; Test si la position demandée est accessible 
+  ; a index de l'entité
   ; b position x  
   ; c position y
   ; return a: 0 -> accessible
@@ -74,6 +80,7 @@ entity:
     add 8 
     ld c, a
 
+    ; vérification map
     ; coin haut gauche 
     ; ld b, b
     ; ld c, c
@@ -176,6 +183,73 @@ entity:
     ld [hl], c
   ret
 
+  ; Vérifie si l'entité se trouve au coordonnées demandées
+  ; a: index de l'entité 
+  ; b: x 
+  ; c: y 
+  ; return a-> 1: oui, 0: non
+  .is_at_coord:
+    sra b 
+    sra b 
+    sra b 
+    sra c 
+    sra c 
+    sra c 
+
+    jp .is_at_cell
+
+  ; Vérifie si l'entité se trouve à la cellule demandée 
+  ; a: index de l'entité 
+  ; b: x cellule 
+  ; c: y cellule 
+  ; return a-> 1: oui, 0: non
+  .is_at_cell:
+    M_memory_index_to_address ENTITIES_START
+    inc hl ; selection x 
+    ldi a, [hl]
+    sra a ; divise par 8 pour avoir la cellule 
+    sra a 
+    sra a 
+    ld d, a ; x de l'entité 
+    ld a, [hl]
+    ;add 8 ; on ne veut que les pieds 
+    sra a ; on divise par 8 pour avoir la cellule 
+    sra a 
+    sra a 
+    ld e, a ; y de l'entité 
+
+    ; ld a, e 
+    cp c 
+    jr nz, .is_at_cell_no
+
+    ld a, d 
+    cp b 
+    jr nz, .is_at_cell_0_no
+
+    ld a, 1 ; si on est sur la même cellule, on arrête là
+    ret
+    .is_at_cell_0_no:
+    ; a contient d
+    add 1 
+    cp b
+    jr nz, .is_at_cell_1_no
+
+    ld a, 1 ; si on est sur la même cellule, on arrête là
+    ret
+
+    .is_at_cell_1_no: 
+    ; a contient d+1
+    sub 3
+    cp b
+    jr nz, .is_at_cell_no
+
+    ld a, 1 
+    ret 
+
+    .is_at_cell_no: 
+    ld a, 0 
+  ret
+
   ; déplace l'entité dans la direction demandée à la vitesse demandée 
   ; a: index de l'entité 
   ; b: direction 0:down 1:left 2:up 3:right
@@ -232,9 +306,11 @@ entity:
     dec hl 
     dec hl ; selection y 
     push hl 
+
     ld b, d
     ld c, e
     call .can_walk
+
     pop hl
     cp 0 
     jr nz, .move_no

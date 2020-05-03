@@ -71,8 +71,8 @@ sprite:
 ; c position y
 .move: 
   push hl
-
-  ld a, c 
+  ld a, c
+  call lcd.wait_vram_writable
   ldi [hl], a
   ld a, b
   ldi [hl], a
@@ -86,9 +86,9 @@ sprite:
 ; c attributes
 .change:
   push hl 
-
   inc hl
   inc hl 
+  call lcd.wait_vram_writable
   ld [hl], b
   inc hl 
   ld [hl], c
@@ -190,7 +190,6 @@ ret
 ; b doit contenir nouvelle position x 
 ; c doit contenir nouvelle position y
 .move_group
-
   ld a, [hl] ; récupère 4 derniers bits de l'adresse du premier OAM
   xor $FF ; on inverse les bits
   push hl 

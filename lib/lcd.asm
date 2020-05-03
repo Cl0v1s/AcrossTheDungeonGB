@@ -6,12 +6,13 @@ lcd:
     ret
 
   .wait_vram_writable: 
-    push hl
+    push hl 
     ld   hl,LCD_STATUS    ;-STAT Register
     .wait_vram_writable_loop:            ;\
       bit  1,[hl]     ; Wait until Mode is 0 or 1
       jr   nz,.wait_vram_writable_loop    ;/
-    pop hl
+    pop hl 
+    ret
 
   .off:
     xor a

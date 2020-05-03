@@ -3,7 +3,7 @@ player:
   ; créer l'ensemble sprite du joueur 
   .create:
     ld hl, PLAYER_X
-    ld [hl], 16
+    ld [hl], 30
     ld hl, PLAYER_Y
     ld [hl], 16
 
@@ -70,6 +70,8 @@ player:
       cp 0
       jr nz, .input_end
 
+
+
       call .move_left
       jp .input_end
     .nol:
@@ -84,7 +86,7 @@ player:
       call entity.can_walk
       cp 0
       jr nz, .input_end
-      
+
       call .move_right
     .input_end:
     ret
