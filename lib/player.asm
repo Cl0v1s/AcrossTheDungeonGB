@@ -5,7 +5,7 @@ player:
     ld hl, PLAYER_X
     ld [hl], 30
     ld hl, PLAYER_Y
-    ld [hl], 16
+    ld [hl], 40
 
     ld b, PLAYER_SPRITE_TILE
     ld c, PLAYER_SPRITE_TILE+1
@@ -23,6 +23,36 @@ player:
     M_memory_index_to_address SPRITEGROUPS_START
     call sprite.move_group
   ret
+
+  ; check les collisions avec le joueur 
+  ; b: position x de l'entité 
+  ; c: position y de l'entité 
+  ; return a -> 1: collision 0: ok
+  .collision: 
+    ld a, [PLAYER_Y] 
+    add 16 ; e + 2 >= c 
+    cp c 
+    jr c, .collision_no
+    ; a contient e + 1
+    sub 32 ; e - 2 <= c 
+    cp c 
+    jr nc, .collision_no
+
+    ld a, [PLAYER_X]
+    add 16 ; d + 2 >= b 
+    cp b 
+    jr c, .collision_no
+    ; a contient d + 1
+    sub 32 ; d - 2 <= b
+    cp b  
+    jr nc, .collision_no
+
+    ; .collision_yes 
+    ld a, 1
+    ret 
+    .collision_no 
+    ld a, 0 
+    ret
 
 
   

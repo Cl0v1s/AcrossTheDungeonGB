@@ -400,6 +400,10 @@ entity:
     cp 0 
     jr nz, .move_no
 
+    call player.collision 
+    cp 0 
+    jr nz, .move_no
+
     push hl 
     push bc 
     ld a, d 
