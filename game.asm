@@ -157,7 +157,7 @@ main:
 
 	call npc.create
 	ld b, 5
-	ld c, 1
+	ld c, 3
 	call npc.setPosition
 
 	call npc.create
