@@ -187,7 +187,7 @@ entity:
   ; a: index de l'entité courante 
   ; b: position x à vérifier 
   ; c: position y à vérifier 
-  ; return a -> 0: ok, 1: pas possible 
+  ; return a -> 0: ok, 1: pas possible, index de l'entité responsable de la collision 
   .check_for_entities:
     ld hl, ENTITIES_START
     ld d, ENTITIES_MAX
@@ -207,8 +207,10 @@ entity:
       cp e ; on regarde si c'est la même entité 
       jr z, .check_for_entities_loop_pass ; si c'est le cas on saute
       ; a contient l'index de l'autre entité
+      push af 
       call .collision
       cp 0 
+      pop bc ; ancien af maintenant dans bc, index de l'autre entité dans b 
       jr nz, .check_for_entities_no
 
       .check_for_entities_loop_pass:
@@ -225,10 +227,10 @@ entity:
     ld a, 0 
     ret
     .check_for_entities_no:
+    ld a, b
     pop hl 
     pop de 
     pop bc 
-    ld a, 1 
     ret 
 
   ; vérifie si l'entité a entre en collision avec les cordonnées passées en paramètres 
@@ -336,6 +338,7 @@ entity:
   ; a: index de l'entité 
   ; b: direction 0:down 1:left 2:up 3:right
   ; c: vitesse
+  ; return 0: si pas de collision, 1: si avec le terrain, 2: Si avec une entitié 
   .move: 
     push af 
     M_memory_index_to_address ENTITIES_START
@@ -398,11 +401,11 @@ entity:
     pop bc ; ancien de maintenant dans bc 
     pop de ; ancien af maintenant dans de 
     cp 0 
-    jr nz, .move_no
+    jr nz, .move_done
 
     call player.collision 
     cp 0 
-    jr nz, .move_no
+    jr nz, .move_no_collision
 
     push hl 
     push bc 
@@ -411,19 +414,21 @@ entity:
     pop de ; ancien bc maintenant dans de 
     pop hl 
     cp 0 
-    jr nz, .move_no
+    jr nz, .move_no_entities 
     
-
-
-
-
-
     ld a, e 
     ld [hl], a 
     dec hl ; selection x 
     ld a, d 
-    ld [hl], a 
-    .move_no
+    ld [hl], a
+    ld a, 0 ; Renvoie 0 si pas de soucis 
+    jp .move_done 
+    .move_no_collision
+    ld a, 1 ; renvoie 1 si collision avec le terrain
+    jp .move_done
+    .move_no_entities 
+    ld a, 2 ; renvoie 2 si collision avec une entit é
+    .move_done
   ret 
 
   ; Dessine l'entité 
