@@ -161,12 +161,6 @@ main:
 	ld c, 3
 	call npc.setPosition
 
-	call npc_blob.create
-	ld b, 5
-	ld c, 10
-	call npc.setPosition
-
-
 
 	call lcd.on
 	ei 

@@ -29,15 +29,24 @@ npc_blob:
   .update: 
     ld h, b 
     ld l, c 
+    push hl 
     ld a, [hl] 
     and $0F ; a index de l'entité 
     ld b, 0
     ld c, 1
     call entity.move 
-  jp npc.update_after ; on retourne au code appelant 
+    pop hl 
+    cp 0 
+    jr z, .update_end
+    xor $FF ; récupération de l'index de l'entité problématique 
+    ld b, a 
+    call .interact
+
+  .update_end:
+    jp npc.update_after ; on retourne au code appelant 
 
   ; Le blob intéragit avec une entité 
-  ; a: index du npc blob 
+  ; hl: adresse du npc blob 
   ; b: index de l'autre entité 
   .interact:
 

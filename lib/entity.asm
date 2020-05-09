@@ -187,7 +187,7 @@ entity:
   ; a: index de l'entité courante 
   ; b: position x à vérifier 
   ; c: position y à vérifier 
-  ; return a -> 0: ok, 1: pas possible, index de l'entité responsable de la collision 
+  ; return a -> 0: ok, >0 pas possible, index (inversé) de l'entité responsable de la collision 
   .check_for_entities:
     ld hl, ENTITIES_START
     ld d, ENTITIES_MAX
@@ -228,6 +228,7 @@ entity:
     ret
     .check_for_entities_no:
     ld a, b
+    xor $FF ; on inverse 
     pop hl 
     pop de 
     pop bc 

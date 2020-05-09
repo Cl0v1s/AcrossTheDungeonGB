@@ -27,7 +27,7 @@ npc:
   ; Lance la routine de mise à jour de l'entité
   ; a index de l'entité 
   .update:
-    M_memory_address_to_index NPC_START
+    M_memory_index_to_address NPC_START
     push hl
     ld de, $0005
     add hl, de ; routine d'update 
