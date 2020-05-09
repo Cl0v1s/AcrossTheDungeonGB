@@ -174,9 +174,7 @@ main:
 	halt 
 	call player.update
 	ld a, 0
-	ld b, 0
-	ld c, 1
-	call entity.move 
+	call npc.update 
 	
 
     jr .loop

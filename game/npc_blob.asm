@@ -25,9 +25,15 @@ npc_blob:
     ret
 
   ; Met à jour le blob
-  ; hl: adresse du npc blob
+  ; bc: adresse du npc blob
   .update: 
-
+    ld h, b 
+    ld l, c 
+    ld a, [hl] 
+    and $0F ; a index de l'entité 
+    ld b, 0
+    ld c, 1
+    call entity.move 
   jp npc.update_after ; on retourne au code appelant 
 
   ; Le blob intéragit avec une entité 

@@ -37,7 +37,8 @@ npc:
     ld e, a 
     ld h, d
     ld l, e
-    pop hl
+    pop bc ; bc contient l'ancien hl 
+    jp hl
     .update_after:
   ret 
 
