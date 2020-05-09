@@ -1,54 +1,45 @@
 npc:
   ; créer le npc 
   ; a: type, indique comment remplir l'entité 
-  ; hl: adresse de la routine d'initialisation des valeurs 
-  ; bc: adresse de la routine en interaction
-  ; de: adresse de la routine d'upadate
-  .create: 
-    push bc 
+  .create:
+    push af 
     ld hl, NPC_START
     ld b, NPC_SIZE
     ld c, NPC_MAX
     call memory.search_free
+
+    pop af ; récupération de la valeur de a 
     push hl ; adresse du npc entry 
 
-    ld b, BLOB_SPRITE_TILE
-    ld c, BLOB_SPRITE_TILE+1
-    call entity.create
+    ld b, a
+    add 1
+    ld c, a
+    call entity.create ; a contient l'index de l'entité 
 
     pop hl
     and $0F ; 
     or %10000000
     ld [hl], a ; Chargement entity index 
-    ; Chargement des attrs 
-    inc hl 
-    ld [hl], $FF
-    inc hl 
-    ld [hl], $FF 
-    
-    ; Chargement de l'adresse de la routine d'interaction
-    pop bc 
-    inc hl 
-    ld a, b
-    ldi [hl], a
-    ld [hl], c 
-
-    ; Chargement de l'adresse de la routine d'interaction
-    inc hl 
-    ld a, d
-    ldi [hl], a
-    ld [hl], e 
-
-    ; retour au début de la séquence npc
-    dec hl 
-    dec hl 
-    dec hl 
-    dec hl
-    dec hl 
-    dec hl
 
     M_memory_address_to_index NPC_START
   ret
+
+  ; Lance la routine de mise à jour de l'entité
+  ; a index de l'entité 
+  .update:
+    M_memory_address_to_index NPC_START
+    push hl
+    ld de, $0005
+    add hl, de ; routine d'update 
+    ldi a, [hl]
+    ld d, a
+    ld a, [hl]
+    ld e, a 
+    ld h, d
+    ld l, e
+    pop hl
+    .update_after:
+  ret 
 
   ; déplace directement le npc à la cellule demandée
   ; a: index npc

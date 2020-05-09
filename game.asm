@@ -89,6 +89,7 @@ include "lib/entity.asm"
 include "lib/player.asm"
 
 include "game/npc.asm"
+include "game/npc_blob.asm"
 
 main:
 	di
@@ -155,12 +156,12 @@ main:
 
 	
 
-	call npc.create
+	call npc_blob.create
 	ld b, 5
 	ld c, 3
 	call npc.setPosition
 
-	call npc.create
+	call npc_blob.create
 	ld b, 5
 	ld c, 10
 	call npc.setPosition
