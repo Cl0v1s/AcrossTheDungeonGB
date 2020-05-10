@@ -3,7 +3,7 @@ player:
   ; créer l'ensemble sprite du joueur 
   .create:
     ld hl, PLAYER_X
-    ld [hl], 30
+    ld [hl], 16
     ld hl, PLAYER_Y
     ld [hl], 40
 

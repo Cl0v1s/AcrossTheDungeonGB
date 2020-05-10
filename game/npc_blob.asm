@@ -38,17 +38,38 @@ npc_blob:
     pop hl 
     cp 0 
     jr z, .update_end
-    xor $FF ; récupération de l'index de l'entité problématique 
     ld b, a 
-    call .interact
+    and $F0  
+    cp $F0
+    jr z, .update_col_entity
 
-  .update_end:
-    jp npc.update_after ; on retourne au code appelant 
+    ld a, b
+    cp 1 
+    jr z, .bump ; si collision avec le terrain on bump
+    cp 2
+    call z, .interact_player ; si collision avec le joueur on interagit 
+    jp .update_end
+
+    .update_col_entity: 
+      ld a, b
+      xor $FF ; récupération de l'index de l'entité problématique 
+      call .interact ; interaction avec entité 
+
+    .update_end:
+      jp npc.update_after ; on retourne au code appelant 
+
+  .bump: 
+  nop 
+  ret
+
+  .interact_player: 
+  nop
+  ret
 
   ; Le blob intéragit avec une entité 
   ; hl: adresse du npc blob 
-  ; b: index de l'autre entité 
+  ; a: index de l'autre entité 
   .interact:
-
+  nop
   ret
 

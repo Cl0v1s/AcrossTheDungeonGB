@@ -339,7 +339,7 @@ entity:
   ; a: index de l'entité 
   ; b: direction 0:down 1:left 2:up 3:right
   ; c: vitesse
-  ; return 0: si pas de collision, 1: si avec le terrain, 2: Si avec une entitié 
+  ; return 0: si pas de collision, 1: si avec le terrain, 2: si avec le joueur; 0xFX: ID de l'entité collisionnée inversée
   .move: 
     push af 
     M_memory_index_to_address ENTITIES_START
@@ -406,7 +406,7 @@ entity:
 
     call player.collision 
     cp 0 
-    jr nz, .move_no_collision
+    jr nz, .move_no_player
 
     push hl 
     push bc 
@@ -424,11 +424,14 @@ entity:
     ld [hl], a
     ld a, 0 ; Renvoie 0 si pas de soucis 
     jp .move_done 
+    .move_no_player: 
+    ld a, 2
+    jp .move_done
     .move_no_collision
     ld a, 1 ; renvoie 1 si collision avec le terrain
     jp .move_done
     .move_no_entities 
-    ld a, 2 ; renvoie 2 si collision avec une entit é
+    ; ld a, a renvoie 2 si collision avec une entit é a contient l'inverse de l'id de l'entité collisionnée 
     .move_done
   ret 
 
