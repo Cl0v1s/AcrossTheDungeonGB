@@ -30,24 +30,25 @@ player:
   ; return a -> 1: collision 0: ok
   .collision: 
     ld a, [PLAYER_Y] 
-    add 16 ; e + 2 >= c 
+    add 15 ; e + 2 >= c 
     cp c 
     jr c, .collision_no
     ; a contient e + 1
-    sub 32 ; e - 2 <= c 
+    sub 31 ; e - 2 <= c 
     cp c 
     jr nc, .collision_no
 
     ld a, [PLAYER_X]
-    add 16 ; d + 2 >= b 
+    add 15 ; d + 2 >= b 
     cp b 
     jr c, .collision_no
+  
     ; a contient d + 1
-    sub 32 ; d - 2 <= b
+    sub 31 ; d - 2 <= b
     cp b  
     jr nc, .collision_no
 
-    ; .collision_yes 
+    .collision_yes 
     ld a, 1
     ret 
     .collision_no 

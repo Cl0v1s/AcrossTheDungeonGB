@@ -265,7 +265,7 @@ entity:
     cp c 
     jr c, .collision_no
     ; a contient e + 1
-    sub 30 ; e - 2 <= c 
+    sub 31 ; e - 2 <= c 
     cp c 
     jr nc, .collision_no
 
@@ -274,7 +274,7 @@ entity:
     cp b 
     jr c, .collision_no
     ; a contient d + 1
-    sub 30 ; d - 2 <= b
+    sub 31 ; d - 2 <= b
     cp b  
     jr nc, .collision_no
 
