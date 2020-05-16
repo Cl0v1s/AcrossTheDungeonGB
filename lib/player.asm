@@ -56,7 +56,8 @@ player:
     ret
 
 
-  
+  ; Gère les commandes saisies par le joueur 
+  ; return 0: pas de collision, > 0: Collision, id inversé de l'entité responsable  
   .input: 
     call input.listen_directions
     bit 3, a ; on test si le bit 3 vaut 0 -> la touche bas est pressé
@@ -102,7 +103,7 @@ player:
       ; ld c, c
       call entity.check_for_entities
       cp 0
-      jr nz, .input_end
+      jr nz, .input_end_col
 
       call .move_up
       jp .input_end
@@ -126,7 +127,7 @@ player:
       ; ld c, c
       call entity.check_for_entities
       cp 0
-      jr nz, .input_end
+      jr nz, .input_end_col
 
       call .move_left
       jp .input_end
@@ -150,15 +151,46 @@ player:
       ; ld c, c
       call entity.check_for_entities
       cp 0
-      jr nz, .input_end
+      jr nz, .input_end_col
 
       call .move_right
     .input_end:
+      ld a, 0
+    ret
+    .input_end_col:
+      ;ld a, a 
     ret
 
   ; Met à jour le joueur
   .update:
     call .input
+    ; a contient 0 si pas de collision avec entité, id de l'entité inversé sinon 
+    cp 0 
+    jr nz, .update_collision
+    ret
+    .update_collision:
+      xor $FF ; a contient l'id de l'entité avec laquelle il est rentré en collision 
+      ld b, a 
+      call npc.search_npc_by_entity_id ; hl contient l'adresse du npc, ou $00 si collision n'est pas avec npc 
+      ld a, h 
+      cp 0 
+      jr nz, .update_collision_with_npc 
+      ret ; si la collision n'est pas avec un npc, on ne fait rien 
+      .update_collision_with_npc:
+        ld bc, $03
+        add hl, bc
+        ld bc, .update_collision_end ; on push l'adresse à laquelle retourner après la routine d'interaction
+        push bc 
+        ldi a, [hl] 
+        cp 0 
+        jr z, .update_collision_end ; si l'adresse de la routine d'update est invalide (commence par zéro, on ne fait rien)
+        ld b, a 
+        ld a, [hl]
+        ld c, a 
+        ld hl, $00
+        add hl, bc 
+        jp hl ; on se rend au code de la routine d'interaction 
+    .update_collision_end:
   ret
 
   .move_down:

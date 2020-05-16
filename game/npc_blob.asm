@@ -12,9 +12,9 @@ npc_blob:
 
 
     inc hl ; selection de l'emplacement de routine d'interaction
-    ld [hl], (npc_blob.interact >> 8)
+    ld [hl], (npc_blob.interact_player >> 8)
     inc hl 
-    ld [hl], (npc_blob.interact & $00FF) ; overflow prévu
+    ld [hl], (npc_blob.interact_player & $00FF) ; overflow prévu
 
     inc hl ; selection de l'emplacement de la routine d'update 
     ld [hl], (npc_blob.update >> 8)

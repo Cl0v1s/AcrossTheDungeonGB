@@ -67,3 +67,28 @@ npc:
     ld e, $05
     call memory.clear
   ret 
+
+  ; Retourne l'adresse du npc associé à l'entité passée en paramètre 
+  ; b: index de l'entité à rechercher 
+  ; hl: Adresse du npc correspondant, $00 si non-trouvé 
+  .search_npc_by_entity_id:
+    ld hl, (NPC_START - NPC_SIZE)
+    ld de, NPC_SIZE
+    ld c, NPC_MAX
+
+    .search_npc_by_entity_id_loop:
+      add hl, de
+      ld a, [hl]
+      and $0F
+      cp b
+      jr z, .search_npc_by_entity_id_loop_done
+      dec c
+      jr nz, .search_npc_by_entity_id_loop
+      
+      .search_npc_by_entity_id_loop_no:
+      ld hl, $00
+      ret 
+
+    .search_npc_by_entity_id_loop_done:
+    ; hl contient la bonne adresse 
+  ret 
