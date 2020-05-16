@@ -87,8 +87,8 @@ include "lib/sprite.asm"
 include "lib/input.asm"
 include "lib/entity.asm"
 include "lib/player.asm"
+include "lib/npc.asm"
 
-include "game/npc.asm"
 include "game/npc_blob.asm"
 
 main:
