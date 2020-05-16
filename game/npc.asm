@@ -1,3 +1,26 @@
+M_npc_update: macro 
+  ld hl, (NPC_START - NPC_SIZE)
+  ld de, NPC_SIZE
+  ld b, NPC_MAX
+
+  .M_npc_update_loop:
+    add hl, de 
+    bit 7, [hl]
+    jr z, .M_npc_update_loop_next
+    push hl 
+    push bc 
+    push de 
+    M_memory_address_to_index NPC_START
+    call npc.update 
+    pop de 
+    pop bc 
+    pop hl 
+    .M_npc_update_loop_next:
+    dec b 
+    jr nz, .M_npc_update_loop
+endm
+
+
 npc:
   ; créer le npc 
   ; a: type, indique comment remplir l'entité 
@@ -23,6 +46,21 @@ npc:
 
     M_memory_address_to_index NPC_START
   ret
+  
+  ; Libère le NPC 
+  ; hl: Adresse du npc à libérer
+  .free: 
+    ; Récupération de l'index de l'entité 
+    ld a, [hl]
+    and $0F
+    push hl 
+    M_memory_index_to_address ENTITIES_START
+    call entity.free
+    pop hl 
+    ld de, NPC_SIZE
+    call memory.clear ; libération du npc 
+  ret
+
 
   ; Lance la routine de mise à jour de l'entité
   ; a index de l'entité 
@@ -59,14 +97,6 @@ npc:
     call entity.setPosition
   ret 
 
-  ; Libère la zone mémoire 
-  ; a: index npc 
-  .free:
-    M_memory_index_to_address NPC_START
-    ld d, $00
-    ld e, $05
-    call memory.clear
-  ret 
 
   ; Retourne l'adresse du npc associé à l'entité passée en paramètre 
   ; b: index de l'entité à rechercher 

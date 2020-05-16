@@ -166,8 +166,7 @@ main:
 .loop:
 	halt 
 	call player.update
-	ld a, 0
-	call npc.update 
+	M_npc_update 
 	
 
     jr .loop

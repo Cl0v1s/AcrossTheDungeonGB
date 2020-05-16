@@ -62,8 +62,12 @@ npc_blob:
   nop 
   ret
 
+  ; Le blob intéragit avec le joueur  
+  ; bc: adresse du npc blob 
   .interact_player: 
-  nop
+  ld h, b
+  ld l, c 
+  call npc.free
   ret
 
   ; Le blob intéragit avec une entité 

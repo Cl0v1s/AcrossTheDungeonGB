@@ -177,10 +177,10 @@ player:
       jr nz, .update_collision_with_npc 
       ret ; si la collision n'est pas avec un npc, on ne fait rien 
       .update_collision_with_npc:
+        push hl ; On sauvegarde l'adresse hl
         ld bc, $03
         add hl, bc
-        ld bc, .update_collision_end ; on push l'adresse à laquelle retourner après la routine d'interaction
-        push bc 
+
         ldi a, [hl] 
         cp 0 
         jr z, .update_collision_end ; si l'adresse de la routine d'update est invalide (commence par zéro, on ne fait rien)
@@ -189,6 +189,9 @@ player:
         ld c, a 
         ld hl, $00
         add hl, bc 
+        pop bc ; ancien hl dans bc, contient l'adresse du bloc 
+        ld de, .update_collision_end ; on push l'adresse à laquelle retourner après la routine d'interaction
+        push de 
         jp hl ; on se rend au code de la routine d'interaction 
     .update_collision_end:
   ret

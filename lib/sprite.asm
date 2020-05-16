@@ -5,8 +5,6 @@ sprite:
     ld a, 0
     ldi [hl], a ; y
     ldi [hl], a ; x
-    ldi [hl], a ; tile
-    ldi [hl], a ; flag
     ret
   
   ; Cherche un emplacement de sprite libre 
@@ -337,3 +335,28 @@ ret
   pop bc
   
 ret
+
+
+; Libère le groupe de sprite 
+; hl: adresse du groupe de sprite 
+.free_group:
+  ld a, [hl] ; a contient l'adresse du premier sprite du groupe, inversé 
+  xor $FF 
+  ld b, 0 
+  ld c, a 
+  ld hl, OAM_START
+  add hl, bc 
+  call sprite.free
+  ; hl est déjà augmenté par la fonction sprite.free précédente
+  inc hl
+  inc hl 
+  call sprite.free
+  ; hl est déjà augmenté par la fonction sprite.free précédente
+  inc hl
+  inc hl 
+  call sprite.free
+  ; hl est déjà augmenté par la fonction sprite.free précédente
+  inc hl
+  inc hl 
+  call sprite.free
+ret 

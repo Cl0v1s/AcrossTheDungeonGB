@@ -1,14 +1,16 @@
 
 
+
+
 ; Dessine toutes les entités en mémoire
 M_entity_draw: macro 
   ld hl, ENTITIES_START
   ld b, ENTITIES_MAX
   .M_entity_draw_loop:
-    ld a, [hl]
-    and %10000000
-    cp %10000000 ; si l'entité existe et qu'elle est à mettre à jour
-    jr nz, .M_entity_draw_loop_no_draw
+    bit 7, [hl]
+    jr z, .M_entity_draw_loop_no_draw
+    bit 6, [hl] ; si le bit 6 (à supprimer) est réglé 
+    jr nz, .M_entity_draw_loop_free
       push hl 
       push bc 
       M_memory_address_to_index ENTITIES_START
@@ -16,6 +18,18 @@ M_entity_draw: macro
       pop bc 
       pop hl 
       res 6, [hl] ; on signale que l'entité n'est plus à mettre à jour
+      jp .M_entity_draw_loop_no_draw
+      .M_entity_draw_loop_free
+        push hl 
+        push bc 
+        ld a, [hl] 
+        and $0F 
+        M_memory_index_to_address SPRITEGROUPS_START
+        call sprite.free_group
+        pop bc 
+        pop hl
+        ld a, $00
+        ld [hl], a 
     .M_entity_draw_loop_no_draw:
     dec b
     ld d, $00
@@ -126,8 +140,11 @@ entity:
   ; Libère l'ensemble de la zone occupée par l'entité
   ; hl: adresse de l'entité dans la RAM
   .free:
-  ld b, ENTITIES_SIZE
-  call memory.clear
+    set 6, [hl] ; on marque l'entité comme devant être détruite
+    inc hl ; on efface le reste de l'entité 
+    ld de, (ENTITIES_SIZE-1)
+    call memory.clear 
+    ret 
 
   ; créer l'entité
   ; b tile supérieur
@@ -163,7 +180,7 @@ entity:
 
     M_memory_address_to_index SPRITEGROUPS_START
     and $0F
-    or %11000000
+    or %10000000
     pop hl
     ld [hl], a ; sauvegarde de la position du spriteGroup
     ; récupération de l'index à ajouter à l'adresse de début des entities
@@ -176,7 +193,6 @@ entity:
   ; c: position y
   .setPosition: 
     M_memory_index_to_address ENTITIES_START
-    set 6, [hl]
     inc hl ; 1: x
     ld [hl], b
     inc hl ; 2: y
@@ -343,7 +359,6 @@ entity:
   .move: 
     push af 
     M_memory_index_to_address ENTITIES_START
-    set 6, [hl]
 
     inc hl ; selection x 
     ld a, [hl]
