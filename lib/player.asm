@@ -79,7 +79,7 @@ player:
     ; ld c, c
     call entity.check_for_entities
     cp 0
-    jr nz, .input_end
+    jr nz, .input_end_col
 
     call .move_down
     jp .input_end

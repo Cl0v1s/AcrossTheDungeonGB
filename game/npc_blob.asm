@@ -34,7 +34,7 @@ npc_blob:
     and $0F ; a index de l'entité 
     ld b, 0
     ld c, 1
-    call entity.move 
+    ; call entity.move 
     pop hl 
     cp 0 
     jr z, .update_end
@@ -65,6 +65,13 @@ npc_blob:
   ; Le blob intéragit avec le joueur  
   ; bc: adresse du npc blob 
   .interact_player: 
+  call input.listen_actions
+  call input.listen_actions ; doit être effectué deux fois pour des raisons de hardware
+  bit 0, a 
+  jr z, .interact_player_a
+  ret 
+  .interact_player_a:
+
   ld h, b
   ld l, c 
   call npc.free

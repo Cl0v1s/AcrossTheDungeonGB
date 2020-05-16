@@ -158,7 +158,7 @@ main:
 
 	call npc_blob.create
 	ld b, 5
-	ld c, 3
+	ld c, 5
 	call npc.setPosition
 
 	call lcd.on
