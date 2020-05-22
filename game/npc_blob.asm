@@ -72,10 +72,20 @@ npc_blob:
   ret 
   .interact_player_a:
 
-  ld h, b
-  ld l, c 
-  call npc.free
+  ;ld h, b
+  ;ld l, c 
+  ;call npc.free
+  ld bc, TEST_DATA
+	ld de, .interact_player_1
+	call dialog.create
   ret
+
+  .interact_player_1: 
+  ld bc, TEST1_DATA
+	ld de, $00
+	call dialog.create
+
+  ret 
 
   ; Le blob intéragit avec une entité 
   ; hl: adresse du npc blob 

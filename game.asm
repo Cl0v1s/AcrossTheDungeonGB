@@ -162,12 +162,7 @@ main:
 	ld c, 5
 	call npc.setPosition
 
-	ld bc, TEST_DATA
-	ld de, $00
-	call dialog.create
-
 	call lcd.on
-	call lcd.window_on
 
 	ei 
 .loop:

@@ -4,6 +4,7 @@ dialog:
 ; bc: dialog content address
 ; de: next adress
 .create:
+  call lcd.window_on
   ld hl, DIALOG_NEXT_ADDR
   ld [hl], d
   inc hl 
@@ -32,14 +33,15 @@ ret
   bit 0, a 
   jr nz, .update_done_running ; on regarde si le bouton a est pressé 
 
-  ld a, $FF ; on marque le dialogue comme terminé 
+  call lcd.window_off
+  ld a, ($FE - DIALOG_CONTENT_SIZE) ; on marque le dialogue comme à effacer  
   ld [DIALOG_INDEX], a 
 
-  ld hl, .update_done_finish 
+  ld hl, .update_done_running 
   push hl ; on trompe le prochain ret 
   ld a, [DIALOG_NEXT_ADDR] ; on récupère le DIALOG_NEXT_ADDR
   cp 0 
-  jr z, .update_done_finish ; si l'adresse est invalide (8 bits hauts à 0), alors on n'y va pas 
+  jr z, .update_done_running ; si l'adresse est invalide (8 bits hauts à 0), alors on n'y va pas 
   ld h, a 
   ld a, [DIALOG_NEXT_ADDR+1]
   ld l, a 
@@ -51,12 +53,35 @@ ret
   ld a, 0
 ret 
 
+; Efface le dialogue à l'écran
+.draw_reset:
+  ld hl, VRAM_WINDOWMAP_START
+  ld a, [DIALOG_INDEX]
+  ld b, a ; sauvegarde dialog_index
+  sub ($FE - DIALOG_CONTENT_SIZE) 
+  cp 20 
+  jr c, .draw_reset_do
+  sub 20 
+  add 32
+ .draw_reset_do: 
+  add l
+  ld l, a 
+  ld a, 0
+  ldi [hl], a 
+  ldi [hl], a 
+  ldi [hl], a
+  ld a, b ; restauration dialog_index
+  add 1 
+  ld [DIALOG_INDEX],a 
+ret
+
 ; Dessine une lettre dans la fenêtre du dialogue 
 .draw:
   ld a, [DIALOG_INDEX]
   cp DIALOG_CONTENT_SIZE
-  jr nc, .draw_buffer_done
+  jr nc, .draw_buffer_sup_content_size
 
+  .draw_start:
   ld b, a ; sauvegarde dialog_index
   M_memory_index_to_address DIALOG_CONTENT
   ld a, [hl] 
@@ -74,5 +99,10 @@ ret
   ld a, b ; restauration dialog_index 
   add 1 
   ld [DIALOG_INDEX], a 
-  .draw_buffer_done:
+  ret 
+  .draw_buffer_sup_content_size:
+  jr z, .draw_done
+  cp $FF 
+  jr c, .draw_reset
+  .draw_done:
 ret
