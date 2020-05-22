@@ -179,9 +179,12 @@ main:
     jr .loop
 
 draw:
+	call dialog.draw
+	cp 1 
+	jr z, .draw_done
 	call player.draw
 	M_entity_draw
-	call dialog.draw
+	.draw_done
 	reti
 stat:
 timer:

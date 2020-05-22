@@ -28,13 +28,12 @@ ret
   jr c, .update_done_running ; si le texte est encore en cours d'écriture, on saute 
 
   call input.listen_actions ; on double call pour éviter le bug d'input
-  call input.listen_actions
 
   bit 0, a 
   jr nz, .update_done_running ; on regarde si le bouton a est pressé 
 
   call lcd.window_off
-  ld a, ($FE - DIALOG_CONTENT_SIZE) ; on marque le dialogue comme à effacer  
+  ld a, $FE ; on marque le dialogue comme à effacer  
   ld [DIALOG_INDEX], a 
 
   ld hl, .update_done_running 
@@ -50,29 +49,25 @@ ret
   ld a, 1
   ret
   .update_done_finish: 
+
   ld a, 0
 ret 
 
 ; Efface le dialogue à l'écran
 .draw_reset:
   ld hl, VRAM_WINDOWMAP_START
-  ld a, [DIALOG_INDEX]
-  ld b, a ; sauvegarde dialog_index
-  sub ($FE - DIALOG_CONTENT_SIZE) 
-  cp 20 
-  jr c, .draw_reset_do
-  sub 20 
-  add 32
- .draw_reset_do: 
-  add l
-  ld l, a 
-  ld a, 0
-  ldi [hl], a 
-  ldi [hl], a 
-  ldi [hl], a
-  ld a, b ; restauration dialog_index
-  add 1 
-  ld [DIALOG_INDEX],a 
+  ld de, 32*2
+  .draw_reset_loop:
+    ld a, 0
+    ldi [hl], a
+    dec de
+    ld a, e
+    or d ; vaut 0 si de = 0
+    cp 0
+    jr nz, .draw_reset_loop
+  ld a, $FF 
+  ld [DIALOG_INDEX], a 
+  ld a, 1
 ret
 
 ; Dessine une lettre dans la fenêtre du dialogue 
@@ -99,10 +94,12 @@ ret
   ld a, b ; restauration dialog_index 
   add 1 
   ld [DIALOG_INDEX], a 
+  ld a, 1 
   ret 
   .draw_buffer_sup_content_size:
   jr z, .draw_done
-  cp $FF 
-  jr c, .draw_reset
+  cp $FE 
+  jr z, .draw_reset
   .draw_done:
+  ld a, 0
 ret
