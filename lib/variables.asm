@@ -2,6 +2,8 @@ SECTION "variables", wram0[RAM_START]
 
 TEST db
 
+DRAW_STEP db 
+
 ; Adresses tiles 
 PLAYER_SPRITE_TILE EQU $80
 BLOB_SPRITE_TILE EQU $8E

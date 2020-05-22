@@ -182,8 +182,17 @@ draw:
 	call dialog.draw
 	cp 1 
 	jr z, .draw_done
+
+	ld a, [DRAW_STEP]
+	add 1 
+	ld [DRAW_STEP], a
+	bit 0, a
+	jr z, .draw_entity
+	
 	call player.draw
-	M_entity_draw
+	jp .draw_done	
+	.draw_entity
+		M_entity_draw
 	.draw_done
 	reti
 stat:
