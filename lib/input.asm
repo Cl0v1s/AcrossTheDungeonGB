@@ -17,6 +17,6 @@ input:
   ret
 
 .reset 
-  ld a, 0
+  ld a, $FF
   ld [JOYPAD],a 
   ret 

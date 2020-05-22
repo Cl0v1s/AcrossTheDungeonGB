@@ -4,6 +4,7 @@ dialog:
 ; bc: dialog content address
 ; de: next adress
 .create:
+  call dialog.wait_clear
   call lcd.window_on
   ld hl, DIALOG_NEXT_ADDR
   ld [hl], d
@@ -19,6 +20,7 @@ dialog:
 ret 
 
 ; Gère les étapes dans dialogues 
+; return a: 1 -> dialogue en cours / 0 -> ok
 .update: 
   ld a, [DIALOG_INDEX]
   cp $FF 
@@ -71,10 +73,13 @@ ret
 ret
 
 ; Dessine une lettre dans la fenêtre du dialogue 
+; return a: 1-> dessin en cours / 0 -> ok
 .draw:
   ld a, [DIALOG_INDEX]
+  cp $FE 
+  jr z, .draw_reset
   cp DIALOG_CONTENT_SIZE
-  jr nc, .draw_buffer_sup_content_size
+  jr nc, .draw_done
 
   .draw_start:
   ld b, a ; sauvegarde dialog_index
@@ -96,10 +101,12 @@ ret
   ld [DIALOG_INDEX], a 
   ld a, 1 
   ret 
-  .draw_buffer_sup_content_size:
-  jr z, .draw_done
-  cp $FE 
-  jr z, .draw_reset
   .draw_done:
   ld a, 0
 ret
+
+.wait_clear:
+  ld a, [DIALOG_INDEX]
+  cp $FF
+  jr nz, .wait_clear
+ret 
