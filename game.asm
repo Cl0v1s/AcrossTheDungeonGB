@@ -88,6 +88,7 @@ include "lib/input.asm"
 include "lib/entity.asm"
 include "lib/player.asm"
 include "lib/npc.asm"
+include "lib/dialog.asm"
 
 include "game/npc_blob.asm"
 
@@ -119,7 +120,7 @@ main:
 	ld de, 40*4
 	call memory.clear
 	; Chargement de la police en VRAM
-	ld hl, VRAM_START+$1000 ; Police en $9000
+	ld hl, VRAM_START+$500 ; Police en $9000
 	ld bc, FONT_DATA
 	ld de, FONT_COUNT
 	call memory.copy
@@ -161,19 +162,31 @@ main:
 	ld c, 5
 	call npc.setPosition
 
+	ld bc, TEST_DATA
+	ld de, $00
+	call dialog.create
+
 	call lcd.on
+	call lcd.window_on
+
 	ei 
 .loop:
 	halt 
+	call dialog.update 
+	cp 1
+	jr z, .loop_done ; si un dialogue est en cours, on ne mets pas à jour le reste du jeu
+
 	call player.update
 	M_npc_update 
 	
 
+	.loop_done:
     jr .loop
 
 draw:
 	call player.draw
 	M_entity_draw
+	call dialog.draw
 	reti
 stat:
 timer:

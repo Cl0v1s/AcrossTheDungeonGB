@@ -55,6 +55,13 @@ NPC_START ds NPC_MAX*NPC_SIZE
 ; 5: update addr 1
 ; 6: update addr 2
 
+; Index du prochain caractère à afficher 
+DIALOG_TEXT_TILE_START equ $50
+DIALOG_CONTENT_SIZE equ 24
+DIALOG_NEXT_ADDR ds 2
+DIALOG_INDEX db
+DIALOG_CONTENT ds DIALOG_CONTENT_SIZE
+
 
 
 
@@ -76,6 +83,9 @@ variables:
 
   ld hl, SPRITEGROUPS_SIZE
   ld [hl], 0
+
+  ld hl, DIALOG_INDEX
+  ld [hl], $FF
 
   
 

@@ -33,5 +33,20 @@ lcd:
     ldh [IRQ],a
     ret
 
+  .window_on: 
+    ld hl, LCD_CONTROL
+    set 6, [hl]
+    set 5, [hl] 
+    ld a, 7
+    ld [LCD_WINDOW_X], a
+    ld a, 108
+    ld [LCD_WINDOW_Y], a
+    ret
+
+  .window_off: 
+    ld hl, LCD_CONTROL
+    res 5, [hl]
+    ret
+
 
   
