@@ -1,3 +1,5 @@
+SECTION "game_blob",rom0
+
 npc_blob:
   ; Initialise le blob 
   .create: 

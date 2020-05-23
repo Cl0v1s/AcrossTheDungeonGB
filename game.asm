@@ -91,7 +91,9 @@ include "lib/npc.asm"
 include "lib/dialog.asm"
 include "lib/random.asm"
 
+include "game/variables.asm"
 include "game/npc_blob.asm"
+include "game/player.asm"
 
 main:
 	di
@@ -158,10 +160,15 @@ main:
 
 	
 
-	call npc_blob.create
+	;call npc_blob.create
 	ld b, 5
 	ld c, 5
-	call npc.setPosition
+	;call npc.setPosition
+
+	;call npc_blob.create
+	ld b, 10
+	ld c, 5
+	;call npc.setPosition
 
 	call lcd.on
 
@@ -172,7 +179,7 @@ main:
 	cp 1
 	jr z, .loop_done ; si un dialogue est en cours, on ne mets pas à jour le reste du jeu
 
-	call player.update
+	call game_player.update
 	M_npc_update 
 	
 
