@@ -89,6 +89,7 @@ include "lib/entity.asm"
 include "lib/player.asm"
 include "lib/npc.asm"
 include "lib/dialog.asm"
+include "lib/random.asm"
 
 include "game/npc_blob.asm"
 

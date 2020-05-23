@@ -24,18 +24,77 @@ npc_blob:
     pop af ; récupération de l'index du npc 
     ret
 
+  ; gère le déplacement du blob 
+  ; hl: adresse du blob 
+  ; return a: > 0 -> collision /  0 -> Ok
+  .move:
+  push hl 
+  ld a, [hl]
+  and $0F
+  ld d, a ; sauvegarde a 
+  inc hl 
+  inc hl 
+  ld a, [hl] ; récupération attr 2
+  and %00000011 ; récupération des 2 bits inférieurs 
+
+  bit 1, a
+  jr z, .move_horizontally
+  
+  ; .move_vertically:
+    bit 0, a 
+    jr z, .move_down
+    ;.move_up:
+      ld a, d
+      ld b, 2 
+      ld c, 1
+      call entity.move
+      jp .move_done
+    .move_down: 
+      ld a, d
+      ld b, 0 
+      ld c, 1
+      call entity.move
+      jp .move_done
+
+  .move_horizontally:
+    bit 0, a 
+    jr z, .move_right
+    ;.move_left: 
+      ld a, d
+      ld b, 1 
+      ld c, 1
+      call entity.move
+    jp .move_done
+    .move_right:
+      ld a, d
+      ld b, 3
+      ld c, 1
+      call entity.move
+
+  ; jp .move_done
+  .move_done:
+  pop hl 
+  ret 
+
+  ; Change la direction du blob 
+  ; hl: adresse du blob 
+  .change_dir:
+  call random.generate
+  and %00000011 ; on ne conserve que les 2 derniers bits 
+  ld b, a 
+  inc hl 
+  inc hl 
+  ld a, [hl] 
+  xor b
+  ld [hl], a
+  ret 
+
   ; Met à jour le blob
   ; bc: adresse du npc blob
   .update: 
     ld h, b 
     ld l, c 
-    push hl 
-    ld a, [hl] 
-    and $0F ; a index de l'entité 
-    ld b, 0
-    ld c, 1
-    ; call entity.move 
-    pop hl 
+    call .move
     cp 0 
     jr z, .update_end
     ld b, a 
@@ -59,7 +118,7 @@ npc_blob:
       jp npc.update_after ; on retourne au code appelant 
 
   .bump: 
-  nop 
+    call .change_dir
   ret
 
   ; Le blob intéragit avec le joueur  
