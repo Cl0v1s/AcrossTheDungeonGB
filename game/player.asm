@@ -53,7 +53,7 @@ game_player:
       ld [PLAYER_DIR], a
 
       ld a, c 
-      sub 16 
+      sub 8
       ld c, a 
       call entity.can_walk
       cp 0 
