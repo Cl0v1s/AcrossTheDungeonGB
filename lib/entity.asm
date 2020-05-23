@@ -104,7 +104,7 @@ entity:
 
     ; coin haut droit 
     ld a, b 
-    add 16 ; largeur personnage
+    add 8 ; largeur personnage
     ld b, a
     ; ld c, c
     call .get_cell
@@ -114,7 +114,7 @@ entity:
     ; coin bas droit 
     ; ld b, b
     ld a, c
-    add 8 ; 8 et non 16 car on ne prend que les pieds
+    add 0 ; 8 et non 16 car on ne prend que les pieds
     ld c, a
     call .get_cell 
     cp 0 
@@ -122,7 +122,7 @@ entity:
 
     ; coin bas gauche 
     ld a, b 
-    sub 16 
+    sub 8 
     ld b, a
     ; ld c, c
     call .get_cell

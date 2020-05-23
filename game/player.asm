@@ -32,6 +32,11 @@ game_player:
 
   ; Gère les inputs 
   .input: 
+    ld a, [PLAYER_X]
+    ld b, a 
+    ld a, [PLAYER_Y]
+    ld c, a 
+
     call input.listen_directions
     bit 3, a 
     jr z, .input_down
@@ -46,21 +51,47 @@ game_player:
     .input_up: 
       ld a, 2 
       ld [PLAYER_DIR], a
+
+      ld a, c 
+      sub 16 
+      ld c, a 
+      call entity.can_walk
+      cp 0 
+      jr nz, .input_done
       jp .input_dir_done
+      
 
     .input_down:
       ld a, 0 
       ld [PLAYER_DIR], a
+      ld a, c 
+      add 16
+      ld c, a 
+      call entity.can_walk
+      cp 0 
+      jr nz, .input_done
       jp .input_dir_done
 
     .input_left:
       ld a, 1
       ld [PLAYER_DIR], a
+      ld a, b 
+      sub 16
+      ld b, a 
+      call entity.can_walk
+      cp 0 
+      jr nz, .input_done
       jp .input_dir_done
 
     .input_right:
       ld a, 3 
       ld [PLAYER_DIR], a
+      ld a, b 
+      add 16 
+      ld b, a 
+      call entity.can_walk
+      cp 0 
+      jr nz, .input_done
       ; jp .input_dir_done
 
     .input_dir_done: 
