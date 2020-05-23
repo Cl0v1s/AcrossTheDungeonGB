@@ -161,8 +161,8 @@ main:
 	
 
 	call npc_blob.create
-	ld b, 5
-	ld c, 5
+	ld b, 4
+	ld c, 3
 	call npc.setPosition
 
 	;call npc_blob.create
@@ -180,7 +180,7 @@ main:
 	jr z, .loop_done ; si un dialogue est en cours, on ne mets pas à jour le reste du jeu
 
 	call game_player.update
-	M_npc_update 
+	; M_npc_update 
 	
 
 	.loop_done:

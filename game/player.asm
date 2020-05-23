@@ -81,6 +81,7 @@ game_player:
       call entity.can_walk
       cp 0 
       jr nz, .input_done
+
       jp .input_dir_done
 
     .input_right:
@@ -95,6 +96,13 @@ game_player:
       ; jp .input_dir_done
 
     .input_dir_done: 
+      ld a, $FF ; chargement d'un index d'entité impossible 
+      ; ld b, b 
+      ; ld c, c
+      call entity.check_for_entities
+      cp 0
+      jr nz, .input_done
+
       ld a, 16
       ld [PLAYER_MOVING], a
     .input_done:
