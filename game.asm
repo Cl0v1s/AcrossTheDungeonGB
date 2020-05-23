@@ -160,10 +160,10 @@ main:
 
 	
 
-	;call npc_blob.create
+	call npc_blob.create
 	ld b, 5
 	ld c, 5
-	;call npc.setPosition
+	call npc.setPosition
 
 	;call npc_blob.create
 	ld b, 10

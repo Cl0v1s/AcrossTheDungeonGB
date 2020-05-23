@@ -104,7 +104,7 @@ entity:
 
     ; coin haut droit 
     ld a, b 
-    add 8 ; largeur personnage
+    add 15 ; largeur personnage
     ld b, a
     ; ld c, c
     call .get_cell
@@ -114,7 +114,7 @@ entity:
     ; coin bas droit 
     ; ld b, b
     ld a, c
-    add 0 ; 8 et non 16 car on ne prend que les pieds
+    add 7 ; 8 et non 16 car on ne prend que les pieds
     ld c, a
     call .get_cell 
     cp 0 
@@ -122,7 +122,7 @@ entity:
 
     ; coin bas gauche 
     ld a, b 
-    sub 8 
+    sub 15 
     ld b, a
     ; ld c, c
     call .get_cell
@@ -384,7 +384,7 @@ entity:
     jp .move_end
     .move_down: 
     ld a, e 
-    add c 
+    add c
     ld e, a
     jp .move_end
     .move_left: 
