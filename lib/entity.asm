@@ -544,13 +544,13 @@ entity:
       inc hl ; selection tile
       inc hl 
       ld a, [hl]
-      add 4
+      add 5
       ld c, a ; tile + 4
-      add 1 
+      sub 1 
       ld b, a ; tile + 5
-      add 1 
+      add 3 
       ld e, a ; tile + 6
-      add 1 
+      sub 1 
       ld d, a ; tile + 7
       dec hl ; selection step
       ld a, [hl]

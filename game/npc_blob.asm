@@ -28,7 +28,6 @@ npc_blob:
   ; hl: adresse du blob 
   ; return a: > 0 -> collision /  0 -> Ok
   .move:
-  push hl 
   ld a, [hl]
   and $0F
   ld d, a ; sauvegarde a 
@@ -73,7 +72,6 @@ npc_blob:
 
   ; jp .move_done
   .move_done:
-  pop hl 
   ret 
 
   ; Change la direction du blob 
@@ -94,7 +92,14 @@ npc_blob:
   .update: 
     ld h, b 
     ld l, c 
+    push hl
+    call random.generate 
+    cp 3
+    call c, .change_dir
+    pop hl 
+    push hl
     call .move
+    pop hl 
     cp 0 
     jr z, .update_end
     ld b, a 
